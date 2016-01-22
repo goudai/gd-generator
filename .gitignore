@@ -1,0 +1,7 @@
+/.idea
+*.class
+target/
+.project
+.settings/
+.classpath
+web.xml
