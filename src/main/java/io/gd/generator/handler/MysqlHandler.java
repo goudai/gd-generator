@@ -29,4 +29,16 @@ public class MysqlHandler implements Handler<MysqlTableMeta> {
 		
 	}
 
+	@Override
+	public void init(Context context) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void destroy(Context context) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

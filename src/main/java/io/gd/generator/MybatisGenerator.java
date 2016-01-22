@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 
 public class MybatisGenerator extends AbstractGenerator {
 
-	Logger logger = LoggerFactory.getLogger(MybatisGenerator.class);
+	static final Logger logger = LoggerFactory.getLogger(MybatisGenerator.class);
 
 	public MybatisGenerator(Config config) {
 		super(config);

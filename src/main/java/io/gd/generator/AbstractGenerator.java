@@ -17,7 +17,7 @@ import freemarker.template.Configuration;
 
 public class AbstractGenerator implements Generator {
 
-	Logger logger = LoggerFactory.getLogger(AbstractGenerator.class);
+	static final Logger logger = LoggerFactory.getLogger(AbstractGenerator.class);
 
 	protected Configuration freemarkerConfiguration;
 
@@ -68,10 +68,15 @@ public class AbstractGenerator implements Generator {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected void handle(Handler handler, Context context) throws Exception {
-		Object read = handler.read(context);
-		Object parsed = handler.parse(context);
-		Object meta = handler.merge(parsed, read, context);
-		handler.write(meta, context);
+		try {
+			handler.init(context);
+			Object read = handler.read(context);
+			Object parsed = handler.parse(context);
+			Object meta = handler.merge(parsed, read, context);
+			handler.write(meta, context);
+		} finally {
+			handler.destroy(context);
+		}
 	}
 
 }
