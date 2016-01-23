@@ -23,7 +23,7 @@ public class AbstractGenerator implements Generator {
 
 	protected Config config;
 
-	protected List<Handler<?>> handlers;
+	protected List<Handler> handlers;
 
 	public AbstractGenerator(Config config) {
 		this.freemarkerConfiguration = null;
@@ -56,26 +56,13 @@ public class AbstractGenerator implements Generator {
 	}
 
 	protected void generateOne(Class<?> entityClass, Class<?> queryModelClass) throws Exception {
-		for (Handler<?> handler : handlers) {
+		for (Handler handler : handlers) {
 			Context context = new Context();
 			context.setConfig(config);
 			context.setEntityClass(entityClass);
 			context.setQueryModelClass(queryModelClass);
 			context.setFreemarkerConfiguration(freemarkerConfiguration);
-			handle(handler, context);
-		}
-	}
-
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	protected void handle(Handler handler, Context context) throws Exception {
-		try {
-			handler.init(context);
-			Object read = handler.read(context);
-			Object parsed = handler.parse(context);
-			Object meta = handler.merge(parsed, read, context);
-			handler.write(meta, context);
-		} finally {
-			handler.destroy(context);
+			handler.handle(context);
 		}
 	}
 

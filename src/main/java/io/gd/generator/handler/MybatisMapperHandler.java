@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MybatisMapperHandler implements Handler<String> {
+public class MybatisMapperHandler implements Handler {
 
 	@Override
 	public String read(Context context) throws Exception {
