@@ -33,7 +33,7 @@ public abstract class AbstractGenerator<T extends Context> implements Generator 
 		this.handlers = new ArrayList<>();
 	}
 	
-	protected void init() throws Exception {
+	protected  void init() throws Exception {
 		freemarkerConfiguration =  new Configuration(new Version("2.3.0"));
 		freemarkerConfiguration.setDefaultEncoding("UTF-8");
 		freemarkerConfiguration.setDirectoryForTemplateLoading(new File(AbstractGenerator.class.getClassLoader().getResource("template").getPath()));

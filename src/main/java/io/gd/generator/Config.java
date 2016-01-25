@@ -6,8 +6,12 @@ public class Config {
 
 	private String entityPackage;
 	private String queryModelPackage;
+
+	/* 任选一组 */
 	private String mybatisMapperPath;
 	private String mybatisXmlPath;
+	private String mybatisMapperPackage;
+	private String mybatisXmlPackage;
 
 	private String url = "jdbc:mysql://127.0.0.1/test";
 	private String username = "root";
@@ -15,6 +19,22 @@ public class Config {
 
 	private String javaSrc = "/src/main/java";
 	private String resources = "/src/main/resources";
+
+	public String getMybatisMapperPackage() {
+		return mybatisMapperPackage;
+	}
+
+	public void setMybatisMapperPackage(String mybatisMapperPackage) {
+		this.mybatisMapperPackage = mybatisMapperPackage;
+	}
+
+	public String getMybatisXmlPackage() {
+		return mybatisXmlPackage;
+	}
+
+	public void setMybatisXmlPackage(String mybatisXmlPackage) {
+		this.mybatisXmlPackage = mybatisXmlPackage;
+	}
 
 	public String getEntityPackage() {
 		return entityPackage;

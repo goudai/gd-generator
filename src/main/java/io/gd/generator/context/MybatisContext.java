@@ -5,26 +5,46 @@ import java.sql.Connection;
 
 public class MybatisContext extends Context {
 
-	private File mapperFie;
+	private String xmlPath;
 
-	private File xmlFIle;
+	private String mapperPath;
+
+	private File mapperFile;
+
+	private File xmlFile;
 
 	private Connection connection;
 
-	public File getMapperFie() {
-		return mapperFie;
+	public String getXmlPath() {
+		return xmlPath;
 	}
 
-	public void setMapperFie(File mapperFie) {
-		this.mapperFie = mapperFie;
+	public void setXmlPath(String xmlPath) {
+		this.xmlPath = xmlPath;
 	}
 
-	public File getXmlFIle() {
-		return xmlFIle;
+	public String getMapperPath() {
+		return mapperPath;
 	}
 
-	public void setXmlFIle(File xmlFIle) {
-		this.xmlFIle = xmlFIle;
+	public void setMapperPath(String mapperPath) {
+		this.mapperPath = mapperPath;
+	}
+
+	public File getMapperFile() {
+		return mapperFile;
+	}
+
+	public void setMapperFile(File mapperFile) {
+		this.mapperFile = mapperFile;
+	}
+
+	public File getXmlFile() {
+		return xmlFile;
+	}
+
+	public void setXmlFile(File xmlFile) {
+		this.xmlFile = xmlFile;
 	}
 
 	public Connection getConnection() {

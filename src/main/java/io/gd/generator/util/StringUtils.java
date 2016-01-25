@@ -2,8 +2,12 @@ package io.gd.generator.util;
 
 public class StringUtils {
 
+	public static boolean isBank(String string) {
+		return string == null || "".equals(string);
+	}
+	
 	public static boolean isNotBank(String string) {
-		return (null != string && !"".equals(string));
+		return !(string == null || "".equals(string));
 	}
 
 	public static final char UNDERLINE = '_';
