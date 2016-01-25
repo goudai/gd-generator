@@ -1,10 +1,15 @@
 package io.gd.generator.meta.mybatis.mapper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MybatisMapperMeta {
 	private String modelName;
 	private String simpleName;
 	private String queryModel;
 	private String simpleQuery;
+	
+	private List<String> otherMethods = new ArrayList<>();
 
 	public String getModelName() {
 		return modelName;

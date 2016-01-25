@@ -1,39 +1,31 @@
 package io.gd.generator.handler;
 
-import io.gd.generator.Context;
+import io.gd.generator.context.Context;
 
-public abstract class AbstractHandler<T> implements Handler {
+public abstract class AbstractHandler<T, S extends Context> implements Handler<S> {
 
-	protected void init(Context context) throws Exception {
-		// TO NOTHING
-	}
+	abstract void preRead(S context) throws Exception;
 
-	protected T read(Context context) throws Exception {
-		return null;
-	}
+	abstract T read(S context) throws Exception;
 
-	abstract T parse(Context context) throws Exception;
+	abstract T parse(S context) throws Exception;
 
-	protected T merge(T parsed, T read, Context context) throws Exception {
-		return parsed;
-	}
+	abstract T merge(T parsed, T read, S context) throws Exception;
 
-	abstract void write(T merged, Context context) throws Exception;
+	abstract void write(T merged, S context) throws Exception;
 
-	protected void destroy(Context context) throws Exception {
-		// TO NOTHING
-	}
+	abstract void postWrite(S context) throws Exception;
 
 	@Override
-	public void handle(Context context) throws Exception {
+	public void handle(S context) throws Exception {
 		try {
-			init(context);
+			preRead(context);
 			T read = read(context);
 			T parsed = parse(context);
 			T meta = merge(parsed, read, context);
 			write(meta, context);
 		} finally {
-			destroy(context);
+			postWrite(context);
 		}
 
 	}

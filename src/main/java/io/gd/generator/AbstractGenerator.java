@@ -1,5 +1,6 @@
 package io.gd.generator;
 
+import io.gd.generator.context.Context;
 import io.gd.generator.handler.Handler;
 import io.gd.generator.util.ClassHelper;
 
@@ -17,7 +18,7 @@ import org.slf4j.LoggerFactory;
 import freemarker.template.Configuration;
 import freemarker.template.Version;
 
-public abstract class AbstractGenerator implements Generator {
+public abstract class AbstractGenerator<T extends Context> implements Generator {
 
 	static final Logger logger = LoggerFactory.getLogger(AbstractGenerator.class);
 
@@ -25,7 +26,7 @@ public abstract class AbstractGenerator implements Generator {
 
 	protected Config config;
 
-	protected List<Handler> handlers;
+	protected List<Handler<T>> handlers;
 
 	public AbstractGenerator(Config config) {
 		this.config = config;
@@ -75,14 +76,12 @@ public abstract class AbstractGenerator implements Generator {
 	}
 
 	protected void generateOne(Class<?> entityClass, Class<?> queryModelClass) throws Exception {
-		for (Handler handler : handlers) {
-			Context context = new Context();
-			context.setConfig(config);
-			context.setEntityClass(entityClass);
-			context.setQueryModelClass(queryModelClass);
-			context.setFreemarkerConfiguration(freemarkerConfiguration);
+		T context = createContext(entityClass, queryModelClass);
+		for (Handler<T> handler : handlers) {
 			handler.handle(context);
 		}
 	}
+	
+	abstract T createContext(Class<?> entityClass, Class<?> queryModelClass);
 
 }

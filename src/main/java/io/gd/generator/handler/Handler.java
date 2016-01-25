@@ -1,10 +1,9 @@
 package io.gd.generator.handler;
 
-import io.gd.generator.Context;
+import io.gd.generator.context.Context;
 
-/* T: meta object or String */
-public interface Handler {
+public interface Handler<T extends Context> {
 
-	void handle(Context context) throws Exception;
+	void handle(T context) throws Exception;
 
 }

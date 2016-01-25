@@ -1,43 +1,18 @@
-package io.gd.generator;
-
-import java.io.File;
+package io.gd.generator.context;
 
 import freemarker.template.Configuration;
+import io.gd.generator.Config;
 
-public class Context {
+public abstract class Context {
 	
-	private enum Status {
-		NEW, READ, PARSED, MERGED, WRITTEN;
-	}
+	protected Config config;
 
-	private Config config;
+	protected Class<?> entityClass;
 
-	private Class<?> entityClass;
+	protected Class<?> queryModelClass;
 
-	private Class<?> queryModelClass;
-
-	private Configuration freemarkerConfiguration;
+	protected Configuration freemarkerConfiguration;
 	
-	private File destFile;
-	
-	private Status status;
-	
-	public Status getStatus() {
-		return status;
-	}
-
-	public void setStatus(Status status) {
-		this.status = status;
-	}
-
-	public File getDestFile() {
-		return destFile;
-	}
-
-	public void setDestFile(File destFile) {
-		this.destFile = destFile;
-	}
-
 	public Config getConfig() {
 		return config;
 	}
