@@ -20,6 +20,26 @@ public class Config {
 	private String javaSrc = "/src/main/java";
 	private String resources = "/src/main/resources";
 
+	private String freemakerVersion = "2.3.0";
+	private String template = "io/gd/generator/template";
+	private String defaultEncoding = "UTF-8";
+
+	public String getFreemakerVersion() {
+		return freemakerVersion;
+	}
+
+	public void setFreemakerVersion(String freemakerVersion) {
+		this.freemakerVersion = freemakerVersion;
+	}
+
+	public String getTemplate() {
+		return template;
+	}
+
+	public void setTemplate(String template) {
+		this.template = template;
+	}
+
 	public String getMybatisMapperPackage() {
 		return mybatisMapperPackage;
 	}
@@ -114,6 +134,14 @@ public class Config {
 
 	public void setQueryModelSuffix(String queryModelSuffix) {
 		this.queryModelSuffix = queryModelSuffix;
+	}
+
+	public String getDefaultEncoding() {
+		return defaultEncoding;
+	}
+
+	public void setDefaultEncoding(String defaultEncoding) {
+		this.defaultEncoding = defaultEncoding;
 	}
 
 }

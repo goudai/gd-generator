@@ -34,14 +34,14 @@ public abstract class AbstractGenerator<T extends Context> implements Generator 
 		this.config = config;
 		this.handlers = new ArrayList<>();
 	}
-	
-	protected  void init() throws Exception {
-		freemarkerConfiguration =  new Configuration(new Version("2.3.0"));
-		freemarkerConfiguration.setDefaultEncoding("UTF-8");
-		URL url = getClass().getClassLoader().getResource("io/gd/generator/template");
+
+	protected void init() throws Exception {
+		freemarkerConfiguration = new Configuration(new Version(config.getFreemakerVersion()));
+		freemarkerConfiguration.setDefaultEncoding(config.getDefaultEncoding());
+		URL url = getClass().getClassLoader().getResource(config.getTemplate());
 		freemarkerConfiguration.setDirectoryForTemplateLoading(new File(url.getPath()));
 	}
-	
+
 	protected void destroy() throws Exception {
 
 	}
@@ -55,7 +55,7 @@ public abstract class AbstractGenerator<T extends Context> implements Generator 
 			/* 获取所有 query model */
 			Map<String, Class<?>> queryModelClasses = ClassHelper.getQuerysClasses(config.getQueryModelPackage());
 			/* 遍历生成 */
-			//entityClasses.parallelStream().forEach(entityClass -> {
+			// entityClasses.parallelStream().forEach(entityClass -> {
 			entityClasses.stream().forEach(entityClass -> {
 				if (entityClass.getDeclaredAnnotation(Table.class) != null) {
 					try {
@@ -68,9 +68,9 @@ public abstract class AbstractGenerator<T extends Context> implements Generator 
 					logger.info("skip " + entityClass.getName());
 				}
 			});
-		} catch(Exception e) {
+		} catch (Exception e) {
 			logger.error("generate error", e);
-		}	finally {
+		} finally {
 			try {
 				destroy();
 			} catch (Exception e) {
@@ -85,7 +85,7 @@ public abstract class AbstractGenerator<T extends Context> implements Generator 
 			handler.handle(context);
 		}
 	}
-	
+
 	abstract T createContext(Class<?> entityClass, Class<?> queryModelClass);
 
 }
