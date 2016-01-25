@@ -9,13 +9,13 @@ import java.sql.Connection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class MysqlMybatisGenerator extends AbstractGenerator {
+public class MybatisGenerator extends AbstractGenerator {
 
-	static final Logger logger = LoggerFactory.getLogger(MysqlMybatisGenerator.class);
+	static final Logger logger = LoggerFactory.getLogger(MybatisGenerator.class);
 	
 	private Connection connection;
 
-	public MysqlMybatisGenerator(Config config) {
+	public MybatisGenerator(Config config) {
 		super(config);
 		handlers.add(new MybatisMapperHandler());
 		handlers.add(new MybatisXmlHandler());
