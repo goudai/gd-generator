@@ -1,25 +1,21 @@
 package test.com;
 
 import io.gd.generator.Config;
-import io.gd.generator.Generater;
-
-import java.io.File;
+import io.gd.generator.Generator;
+import io.gd.generator.MybatisGenerator;
 
 public class Main {
 	public static void main(String[] S) {
 		Config config = new Config();
-/*		config.setEntityPackage("com.ke.entity");
-		config.setMapperPackage("com.ke.mapper");
-		config.setQueryModelPackage("com.ke.model.query");
-		config.setXMLPackage("com.mapping");*/
-		config.setUrl("jdbc:mysql://192.168.1.66/test");
+		config.setUrl("jdbc:mysql://127.0.0.1/ke");
 		config.setEntityPackage("test.com.entity");
-		config.setMapperPackage("test.com.mapper");
+		config.setMybatisMapperPackage("test.com.mapper");
 		config.setQueryModelPackage("test.com.model.query");
-		config.setXMLPackage("test.com.mapping");
+		config.setMybatisXmlPackage("test.com.mapping");
 		config.setUsername("root");
 		config.setPassword("123456");
-		Generater.run(config,new File("D:/LOGS3.LOG"));
+		Generator generator = new MybatisGenerator(config);
+		generator.generate();
 	}
 
 }

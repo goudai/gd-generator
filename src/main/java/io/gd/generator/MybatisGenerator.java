@@ -34,11 +34,11 @@ public class MybatisGenerator extends AbstractGenerator<MybatisContext> {
 	protected void init() throws Exception {
 		super.init();
 		connection = DriverManager.getConnection(config.getUrl(), config.getUsername(), config.getPassword());
-		if (!StringUtils.isNotBank(config.getMybatisMapperPath()) && !StringUtils.isNotBank(config.getMybatisXmlPath())) {
+		if (StringUtils.isNotBank(config.getMybatisMapperPath()) && StringUtils.isNotBank(config.getMybatisXmlPath())) {
 			xmlPath = config.getMybatisXmlPath();
 			mapperPath = config.getMybatisMapperPath();
-		} else if (!StringUtils.isNotBank(config.getMybatisMapperPackage()) && !StringUtils.isNotBank(config.getMybatisXmlPackage())
-				&& !StringUtils.isNotBank(config.getJavaSrc()) && !StringUtils.isNotBank(config.getResources())) {
+		} else if (StringUtils.isNotBank(config.getMybatisMapperPackage()) && StringUtils.isNotBank(config.getMybatisXmlPackage())
+				&& StringUtils.isNotBank(config.getJavaSrc()) && StringUtils.isNotBank(config.getResources())) {
 			String projectPath = Thread.currentThread().getContextClassLoader().getResource("").getPath().replace("/target/classes/", "");
 			xmlPath = (projectPath + config.getResources() + File.separator + (config.getMybatisXmlPackage().replace(".", File.separator))).replace("/",
 					File.separator).replace("\\", File.separator);
@@ -47,6 +47,21 @@ public class MybatisGenerator extends AbstractGenerator<MybatisContext> {
 		} else {
 			throw new IllegalArgumentException("xmlPath, mapperPath's config error");
 		}
+		/* 初始化文件夹 */
+		File xmlPathDir = new File(xmlPath);
+		if (!xmlPathDir.exists()) {
+			xmlPathDir.mkdirs();
+		} else if (!xmlPathDir.isDirectory()) {
+			throw new IllegalArgumentException("xmlPath is not a dorectory");
+		}
+
+		File mapperPathDir = new File(mapperPath);
+		if (!mapperPathDir.exists()) {
+			mapperPathDir.mkdirs();
+		} else if (!mapperPathDir.isDirectory()) {
+			throw new IllegalArgumentException("mapperPath is not a dorectory");
+		}
+
 	}
 
 	@Override

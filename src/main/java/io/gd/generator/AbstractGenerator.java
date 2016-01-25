@@ -5,6 +5,7 @@ import io.gd.generator.handler.Handler;
 import io.gd.generator.util.ClassHelper;
 
 import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +37,8 @@ public abstract class AbstractGenerator<T extends Context> implements Generator 
 	protected  void init() throws Exception {
 		freemarkerConfiguration =  new Configuration(new Version("2.3.0"));
 		freemarkerConfiguration.setDefaultEncoding("UTF-8");
-		freemarkerConfiguration.setDirectoryForTemplateLoading(new File(AbstractGenerator.class.getClassLoader().getResource("template").getPath()));
+		URL url = getClass().getClassLoader().getResource("io/gd/generator/template");
+		freemarkerConfiguration.setDirectoryForTemplateLoading(new File(url.getPath()));
 	}
 	
 	protected void destroy() throws Exception {
@@ -52,7 +54,8 @@ public abstract class AbstractGenerator<T extends Context> implements Generator 
 			/* 获取所有 query model */
 			Map<String, Class<?>> queryModelClasses = ClassHelper.getQuerysClasses(config.getQueryModelPackage());
 			/* 遍历生成 */
-			entityClasses.parallelStream().forEach(entityClass -> {
+			//entityClasses.parallelStream().forEach(entityClass -> {
+			entityClasses.stream().forEach(entityClass -> {
 				if (entityClass.getDeclaredAnnotation(Table.class) != null) {
 					try {
 						/* 生成mapper */

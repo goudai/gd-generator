@@ -7,7 +7,7 @@ public class StringUtils {
 	}
 	
 	public static boolean isNotBank(String string) {
-		return !(string == null || "".equals(string));
+		return string != null && !"".equals(string);
 	}
 
 	public static final char UNDERLINE = '_';
@@ -47,6 +47,10 @@ public class StringUtils {
 			}
 		}
 		return sb.toString();
+	}
+	
+	public static void main(String[] args) {
+		System.out.println(StringUtils.isNotBank(null));
 	}
 
 }
