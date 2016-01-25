@@ -3,28 +3,28 @@ package ${basePackage};
 
 import org.apache.ibatis.annotations.Param;
 
-import ${mmm.modelName};
+import ${mmm.entityName};
 <#if mmm.hasQueryModel>
 import java.util.List;
-import ${mmm.queryModel};
+import ${mmm.queryModelName};
 </#if>
 
-public interface ${mmm.simpleName}Mapper {
+public interface ${mmm.entitySimpleName}Mapper {
 
-	int insert(${mmm.simpleName} ${mmm.simpleName?uncap_first});
+	int insert(${mmm.entitySimpleName} ${mmm.entitySimpleName?uncap_first});
 
-	int update(${mmm.simpleName} ${mmm.simpleName?uncap_first});
+	int update(${mmm.entitySimpleName} ${mmm.entitySimpleName?uncap_first});
 
-	int merge(@Param("${mmm.simpleName?uncap_first}") ${mmm.simpleName} ${mmm.simpleName?uncap_first}, @Param("fields")String... fields);
+	int merge(@Param("${mmm.entitySimpleName?uncap_first}") ${mmm.entitySimpleName} ${mmm.entitySimpleName?uncap_first}, @Param("fields")String... fields);
 
 	int delete(Long id);
 
-	${mmm.simpleName} findOne(Long id);
+	${mmm.entitySimpleName} findOne(Long id);
 	<#if mmm.hasQueryModel>
 
-	List<${mmm.simpleName}> findAll(${mmm.simpleQuery} ${mmm.simpleQuery?uncap_first});
+	List<${mmm.entitySimpleName}> findAll(${mmm.queryModelSimpleName} ${mmm.queryModelSimpleName?uncap_first});
 
-	long count(${mmm.simpleQuery} ${mmm.simpleQuery?uncap_first});
+	long count(${mmm.queryModelSimpleName} ${mmm.queryModelSimpleName?uncap_first});
 	</#if>
 	<#if mmm.otherMethods??>
 	<#list mmm.otherMethods as otherMethod>

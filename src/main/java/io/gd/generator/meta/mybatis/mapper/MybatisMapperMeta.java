@@ -3,44 +3,45 @@ package io.gd.generator.meta.mybatis.mapper;
 import java.util.List;
 
 public class MybatisMapperMeta {
-	private String modelName;
-	private String simpleName;
-	private String queryModel;
-	private String simpleQuery;
+
+	private String entityName;
+	private String entitySimpleName;
+	private String queryModelName;
+	private String queryModelSimpleName;
 	private boolean hasQueryModel;
 	private List<String> otherMethods; // 其他方法
 	private List<String> otherImports; // 其他引包
 
-	public String getModelName() {
-		return modelName;
+	public String getEntityName() {
+		return entityName;
 	}
 
-	public void setModelName(String modelName) {
-		this.modelName = modelName;
+	public void setEntityName(String entityName) {
+		this.entityName = entityName;
 	}
 
-	public String getSimpleName() {
-		return simpleName;
+	public String getEntitySimpleName() {
+		return entitySimpleName;
 	}
 
-	public void setSimpleName(String simpleName) {
-		this.simpleName = simpleName;
+	public void setEntitySimpleName(String entitySimpleName) {
+		this.entitySimpleName = entitySimpleName;
 	}
 
-	public String getQueryModel() {
-		return queryModel;
+	public String getQueryModelName() {
+		return queryModelName;
 	}
 
-	public void setQueryModel(String queryModel) {
-		this.queryModel = queryModel;
+	public void setQueryModelName(String queryModelName) {
+		this.queryModelName = queryModelName;
 	}
 
-	public String getSimpleQuery() {
-		return simpleQuery;
+	public String getQueryModelSimpleName() {
+		return queryModelSimpleName;
 	}
 
-	public void setSimpleQuery(String simpleQuery) {
-		this.simpleQuery = simpleQuery;
+	public void setQueryModelSimpleName(String queryModelSimpleName) {
+		this.queryModelSimpleName = queryModelSimpleName;
 	}
 
 	public boolean isHasQueryModel() {

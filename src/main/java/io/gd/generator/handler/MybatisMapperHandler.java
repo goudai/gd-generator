@@ -55,11 +55,11 @@ public class MybatisMapperHandler extends AbstractHandler<MybatisMapperMeta, Myb
 		MybatisMapperMeta meta = new MybatisMapperMeta();
 		if (queryModelClass != null) {
 			meta.setHasQueryModel(true);
-			meta.setQueryModel(queryModelClass.getName());
-			meta.setSimpleQuery(queryModelClass.getSimpleName());
+			meta.setQueryModelName(queryModelClass.getName());
+			meta.setQueryModelSimpleName(queryModelClass.getSimpleName());
 		}
-		meta.setModelName(entityClass.getName());
-		meta.setSimpleName(entityClass.getSimpleName());
+		meta.setEntityName(entityClass.getName());
+		meta.setEntitySimpleName(entityClass.getSimpleName());
 		return meta;
 	}
 
