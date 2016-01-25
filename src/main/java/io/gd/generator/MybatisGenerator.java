@@ -1,5 +1,6 @@
 package io.gd.generator;
 
+import io.gd.generator.config.Config;
 import io.gd.generator.context.MybatisContext;
 import io.gd.generator.handler.MybatisMapperHandler;
 import io.gd.generator.handler.MybatisXmlHandler;

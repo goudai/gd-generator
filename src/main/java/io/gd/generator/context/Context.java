@@ -1,7 +1,7 @@
 package io.gd.generator.context;
 
 import freemarker.template.Configuration;
-import io.gd.generator.Config;
+import io.gd.generator.config.Config;
 
 public abstract class Context {
 	

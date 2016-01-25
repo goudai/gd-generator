@@ -1,8 +1,8 @@
 package test.com;
 
-import io.gd.generator.Config;
 import io.gd.generator.Generator;
 import io.gd.generator.MybatisGenerator;
+import io.gd.generator.config.Config;
 
 public class Main {
 	public static void main(String[] S) {

@@ -4,10 +4,11 @@ package ${basePackage};
 import org.apache.ibatis.annotations.Param;
 
 import ${mmm.modelName};
-<#if mmm.simpleQuery != ''>
+<#if mmm.hasQueryModel>
 import java.util.List;
 import ${mmm.queryModel};
 </#if>
+
 public interface ${mmm.simpleName}Mapper {
 
 	int insert(${mmm.simpleName} ${mmm.simpleName?uncap_first});
@@ -19,10 +20,17 @@ public interface ${mmm.simpleName}Mapper {
 	int delete(Long id);
 
 	${mmm.simpleName} findOne(Long id);
-	<#if mmm.simpleQuery != ''>
-	
+	<#if mmm.hasQueryModel>
+
 	List<${mmm.simpleName}> findAll(${mmm.simpleQuery} ${mmm.simpleQuery?uncap_first});
 
 	long count(${mmm.simpleQuery} ${mmm.simpleQuery?uncap_first});
 	</#if>
+	<#if mmm.otherMethods??>
+	<#list mmm.otherMethods as otherMethod>
+
+	${otherMethod};
+	</#list>
+	</#if>
+
 }

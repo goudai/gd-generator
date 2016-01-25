@@ -1,5 +1,6 @@
 package io.gd.generator;
 
+import io.gd.generator.config.Config;
 import io.gd.generator.context.Context;
 import io.gd.generator.handler.Handler;
 import io.gd.generator.util.ClassHelper;

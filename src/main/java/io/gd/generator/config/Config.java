@@ -1,8 +1,8 @@
-package io.gd.generator;
+package io.gd.generator.config;
 
 public class Config {
 
-	private String queryModelSuffix;
+	private String queryModelSuffix = "QueryModel";
 
 	private String entityPackage;
 	private String queryModelPackage;
