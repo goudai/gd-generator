@@ -88,6 +88,7 @@ public class MysqlHandler extends AbstractHandler<MysqlTableMeta, MybatisContext
 				String sql = renderTemplate("mysql", model, context);
 				st.executeUpdate(sql);
 				genLog.info(sql);
+				logger.info(sql);
 			} else {
 				DatabaseMetaData metaData = connection.getMetaData();
 				String string = metaData.getURL().toString();
@@ -98,9 +99,10 @@ public class MysqlHandler extends AbstractHandler<MysqlTableMeta, MybatisContext
 							+ "' AND column_name = '" + cm.getName() + "'";
 					try (ResultSet rs = st.executeQuery(sql)) {
 						if (!rs.next()) {
-							sql = "ALTER TABLE `" + table + "` ADD COLUMN `" + cm.getName() + "` " + cm.getType();
-							st.executeUpdate(sql);
-							genLog.info(sql);
+							String addColumn = "ALTER TABLE `" + table + "` ADD COLUMN `" + cm.getName() + "` " + cm.getType();
+							st.executeUpdate(addColumn);
+							genLog.info(addColumn);
+							logger.info(addColumn);
 						}
 					}
 				}
@@ -127,7 +129,7 @@ public class MysqlHandler extends AbstractHandler<MysqlTableMeta, MybatisContext
 			for (String un : merged.getUniques()) {
 				try {
 					if (!un.contains(",")) {
-						String sql = "ALTER TABLE `" + table + "` ADD   UNIQUE unique_" + StringUtils.camelToUnderline(un) + "("
+						String sql = "ALTER TABLE `" + table + "` ADD UNIQUE unique_" + StringUtils.camelToUnderline(un) + "("
 								+ StringUtils.camelToUnderline(un) + ");";
 						createStatement.executeUpdate(sql);
 						genLog.info(sql);
@@ -137,7 +139,7 @@ public class MysqlHandler extends AbstractHandler<MysqlTableMeta, MybatisContext
 								.reduce((p, n) -> StringUtils.camelToUnderline(p) + "_" + StringUtils.camelToUnderline(n)).get();
 						String unique = Arrays.asList(un.split(",")).stream()
 								.reduce((p, n) -> StringUtils.camelToUnderline(p) + "," + StringUtils.camelToUnderline(n)).get();
-						String sql = "ALTER TABLE `" + table + "` ADD   UNIQUE unique_" + uniqueName + "(" + unique + ");";
+						String sql = "ALTER TABLE `" + table + "` ADD UNIQUE unique_" + uniqueName + "(" + unique + ");";
 						createStatement.executeUpdate(sql);
 						genLog.info(sql);
 						logger.info(sql);
