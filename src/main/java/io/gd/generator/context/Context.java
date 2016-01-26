@@ -4,7 +4,7 @@ import freemarker.template.Configuration;
 import io.gd.generator.config.Config;
 
 public abstract class Context {
-	
+
 	protected Config config;
 
 	protected Class<?> entityClass;
@@ -12,7 +12,17 @@ public abstract class Context {
 	protected Class<?> queryModelClass;
 
 	protected Configuration freemarkerConfiguration;
-	
+
+	protected GenLog genLog;
+
+	public GenLog getGenLog() {
+		return genLog;
+	}
+
+	public void setGenLog(GenLog genLog) {
+		this.genLog = genLog;
+	}
+
 	public Config getConfig() {
 		return config;
 	}

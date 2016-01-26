@@ -4,7 +4,7 @@ public class Config {
 
 	private String queryModelSuffix = "QueryModel";
 
-	private String sqlLogFile;
+	private String genLogFile;
 
 	private String entityPackage;
 	private String queryModelPackage;
@@ -26,12 +26,12 @@ public class Config {
 	private String template = "io/gd/generator/template";
 	private String defaultEncoding = "UTF-8";
 
-	public String getSqlLogFile() {
-		return sqlLogFile;
+	public String getGenLogFile() {
+		return genLogFile;
 	}
 
-	public void setSqlLogFile(String sqlLogFile) {
-		this.sqlLogFile = sqlLogFile;
+	public void setGenLogFile(String genLogFile) {
+		this.genLogFile = genLogFile;
 	}
 
 	public String getFreemakerVersion() {

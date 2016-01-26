@@ -2,6 +2,7 @@ package io.gd.generator;
 
 import io.gd.generator.config.Config;
 import io.gd.generator.context.Context;
+import io.gd.generator.context.GenLog;
 import io.gd.generator.handler.Handler;
 import io.gd.generator.util.ClassHelper;
 
@@ -29,7 +30,9 @@ public abstract class AbstractGenerator<T extends Context> implements Generator 
 	protected Config config;
 
 	protected List<Handler<T>> handlers;
-
+	
+	protected GenLog genLog;
+	
 	public AbstractGenerator(Config config) {
 		this.config = config;
 		this.handlers = new ArrayList<>();
@@ -40,6 +43,7 @@ public abstract class AbstractGenerator<T extends Context> implements Generator 
 		freemarkerConfiguration.setDefaultEncoding(config.getDefaultEncoding());
 		URL url = getClass().getClassLoader().getResource(config.getTemplate());
 		freemarkerConfiguration.setDirectoryForTemplateLoading(new File(url.getPath()));
+		genLog = new GenLog(config.getGenLogFile());
 	}
 
 	protected void destroy() throws Exception {

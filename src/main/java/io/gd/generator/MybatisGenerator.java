@@ -76,6 +76,7 @@ public class MybatisGenerator extends AbstractGenerator<MybatisContext> {
 	protected MybatisContext createContext(Class<?> entityClass, Class<?> queryModelClass) {
 		MybatisContext mybatisContext = new MybatisContext();
 		mybatisContext.setEntityClass(entityClass);
+		mybatisContext.setGenLog(genLog);
 		mybatisContext.setConnection(connection);
 		mybatisContext.setQueryModelClass(queryModelClass);
 		mybatisContext.setFreemarkerConfiguration(freemarkerConfiguration);

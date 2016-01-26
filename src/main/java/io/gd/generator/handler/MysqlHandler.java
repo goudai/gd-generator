@@ -1,7 +1,7 @@
 package io.gd.generator.handler;
 
 import io.gd.generator.context.MybatisContext;
-import io.gd.generator.context.SqlLogger;
+import io.gd.generator.context.GenLog;
 import io.gd.generator.meta.mysql.MysqlColumnMeta;
 import io.gd.generator.meta.mysql.MysqlTableMeta;
 import io.gd.generator.util.ClassHelper;
@@ -37,8 +37,6 @@ public class MysqlHandler extends AbstractHandler<MysqlTableMeta, MybatisContext
 
 	@Override
 	protected void preRead(MybatisContext context) throws Exception {
-		SqlLogger sqlLogger = new SqlLogger(context.getConfig().getSqlLogFile());
-		context.setSqlLogger(sqlLogger);
 	}
 
 	@Override
@@ -79,7 +77,7 @@ public class MysqlHandler extends AbstractHandler<MysqlTableMeta, MybatisContext
 
 	@Override
 	protected void write(MysqlTableMeta merged, MybatisContext context) throws Exception {
-		SqlLogger sqlLogger = context.getSqlLogger();
+		GenLog genLog = context.getGenLog();
 		Connection connection = context.getConnection();
 		String table = merged.getTable();
 		Class<?> entityClass = context.getEntityClass();
@@ -88,8 +86,8 @@ public class MysqlHandler extends AbstractHandler<MysqlTableMeta, MybatisContext
 				Map<String, Object> model = new HashMap<>();
 				model.put("mtm", merged);
 				String sql = renderTemplate("mysql", model, context);
-				sqlLogger.info(sql);
 				st.executeUpdate(sql);
+				genLog.info(sql);
 			} else {
 				DatabaseMetaData metaData = connection.getMetaData();
 				String string = metaData.getURL().toString();
@@ -101,8 +99,8 @@ public class MysqlHandler extends AbstractHandler<MysqlTableMeta, MybatisContext
 					try (ResultSet rs = st.executeQuery(sql)) {
 						if (!rs.next()) {
 							sql = "ALTER TABLE `" + table + "` ADD COLUMN `" + cm.getName() + "` " + cm.getType();
-							sqlLogger.info(sql);
 							st.executeUpdate(sql);
+							genLog.info(sql);
 						}
 					}
 				}
@@ -119,7 +117,7 @@ public class MysqlHandler extends AbstractHandler<MysqlTableMeta, MybatisContext
 					entityClass.getDeclaredField(field);
 				} catch (NoSuchFieldException e) {
 					String message = "数据库中的列  [" + string + " --> " + field + " ]" + "在实体类 " + entityClass.getSimpleName() + " 不存在";
-					sqlLogger.warn(message);
+					genLog.warn(message);
 					logger.warn(message);
 				}
 			}
@@ -132,7 +130,7 @@ public class MysqlHandler extends AbstractHandler<MysqlTableMeta, MybatisContext
 						String sql = "ALTER TABLE `" + table + "` ADD   UNIQUE unique_" + StringUtils.camelToUnderline(un) + "("
 								+ StringUtils.camelToUnderline(un) + ");";
 						createStatement.executeUpdate(sql);
-						sqlLogger.info(sql);
+						genLog.info(sql);
 						logger.info(sql);
 					} else {
 						String uniqueName = Arrays.asList(un.split(",")).stream()
@@ -141,8 +139,8 @@ public class MysqlHandler extends AbstractHandler<MysqlTableMeta, MybatisContext
 								.reduce((p, n) -> StringUtils.camelToUnderline(p) + "," + StringUtils.camelToUnderline(n)).get();
 						String sql = "ALTER TABLE `" + table + "` ADD   UNIQUE unique_" + uniqueName + "(" + unique + ");";
 						createStatement.executeUpdate(sql);
-						sqlLogger.info(sql);
-						System.out.println(sql);
+						genLog.info(sql);
+						logger.info(sql);
 					}
 				} catch (Exception e) {
 					String message = e.getMessage();
@@ -157,7 +155,6 @@ public class MysqlHandler extends AbstractHandler<MysqlTableMeta, MybatisContext
 
 	@Override
 	protected void postWrite(MybatisContext context) throws Exception {
-		context.getSqlLogger().flush();
 	}
 
 	private MysqlColumnMeta parseColumn(Field field) {

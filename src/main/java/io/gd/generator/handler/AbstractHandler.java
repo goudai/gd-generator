@@ -24,7 +24,7 @@ public abstract class AbstractHandler<T, S extends Context> implements Handler<S
 	abstract protected void write(T merged, S context) throws Exception;
 
 	abstract protected void postWrite(S context) throws Exception;
-
+	
 	@Override
 	public void handle(S context) throws Exception {
 		try {
@@ -36,7 +36,6 @@ public abstract class AbstractHandler<T, S extends Context> implements Handler<S
 		} finally {
 			postWrite(context);
 		}
-
 	}
 	
 	protected String renderTemplate(String tmplName, Map<String, Object> model, S context) throws TemplateNotFoundException, MalformedTemplateNameException, ParseException, IOException, TemplateException {

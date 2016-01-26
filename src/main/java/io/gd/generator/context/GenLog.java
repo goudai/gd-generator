@@ -8,18 +8,18 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
-public class SqlLogger {
+public class GenLog {
 
 	public File file;
 	
 	public StringBuilder sb;
 
-	public SqlLogger(String sqlLogFile) throws IOException {
+	public GenLog(String genLog) throws IOException {
 		sb = new StringBuilder("\r\n").append("--" + LocalDateTime.now());
-		if(StringUtils.isBank(sqlLogFile)) {
-			sqlLogFile = System.getProperty("user.home") + File.separator + "gd-generator-" + LocalDateTime.now().toString().replace(":", "") + ".log";
+		if(StringUtils.isBank(genLog)) {
+			genLog = System.getProperty("user.home") + File.separator + "gd-generator-" + LocalDateTime.now().toString().replace(":", "") + ".log";
 		}
-		file = new File(sqlLogFile);
+		file = new File(genLog);
 		if(!file.exists()) {
 			file.createNewFile();
 		}
