@@ -18,13 +18,13 @@ import java.util.Map;
 public class MybatisMapperHandler extends AbstractHandler<MybatisMapperMeta, MybatisContext> {
 
 	@Override
-	void preRead(MybatisContext context) throws Exception {
+	protected void preRead(MybatisContext context) throws Exception {
 		File file = new File(context.getMapperPath() + File.separator + context.getEntityClass().getSimpleName() + "Mapper.java");
 		context.setMapperFile(file);
 	}
 
 	@Override
-	MybatisMapperMeta read(MybatisContext context) throws Exception {
+	protected MybatisMapperMeta read(MybatisContext context) throws Exception {
 		File file = context.getMapperFile();
 		String string = FileUtils.read(file);
 		MybatisMapperMeta meta = new MybatisMapperMeta();
@@ -36,10 +36,9 @@ public class MybatisMapperHandler extends AbstractHandler<MybatisMapperMeta, Myb
 					(m) -> {
 						if (!(m.contains("insert(") || m.contains("update(") || m.contains("findOne(") || m.contains("findAll(") || m.contains("merge(")
 								|| m.contains("count(") || m.contains("delete("))) {
-							if (StringUtils.isNotBank(m.trim())) {
-								if (!";".equals(m.trim()) && !"\\t".equals(m.trim())) {
-									otherMethods.add(m.trim());
-								}
+							String mTrim = m.trim();
+							if (StringUtils.isNotBank(mTrim) && !";".equals(mTrim)) {
+								otherMethods.add(m.trim());
 							}
 						}
 					});
@@ -49,7 +48,7 @@ public class MybatisMapperHandler extends AbstractHandler<MybatisMapperMeta, Myb
 	}
 
 	@Override
-	MybatisMapperMeta parse(MybatisContext context) throws Exception {
+	protected MybatisMapperMeta parse(MybatisContext context) throws Exception {
 		Class<?> entityClass = context.getEntityClass();
 		Class<?> queryModelClass = context.getQueryModelClass();
 		MybatisMapperMeta meta = new MybatisMapperMeta();
@@ -64,13 +63,13 @@ public class MybatisMapperHandler extends AbstractHandler<MybatisMapperMeta, Myb
 	}
 
 	@Override
-	MybatisMapperMeta merge(MybatisMapperMeta parsed, MybatisMapperMeta read, MybatisContext context) throws Exception {
+	protected MybatisMapperMeta merge(MybatisMapperMeta parsed, MybatisMapperMeta read, MybatisContext context) throws Exception {
 		parsed.setOtherMethods(read.getOtherMethods());
 		return parsed;
 	}
 
 	@Override
-	void write(MybatisMapperMeta merged, MybatisContext context) throws Exception {
+	protected void write(MybatisMapperMeta merged, MybatisContext context) throws Exception {
 		StringWriter out = new StringWriter();
 		Template template = context.getFreemarkerConfiguration().getTemplate("mybatisMapper.ftl");
 
@@ -91,7 +90,7 @@ public class MybatisMapperHandler extends AbstractHandler<MybatisMapperMeta, Myb
 	}
 
 	@Override
-	void postWrite(MybatisContext context) throws Exception {
+	protected void postWrite(MybatisContext context) throws Exception {
 
 	}
 

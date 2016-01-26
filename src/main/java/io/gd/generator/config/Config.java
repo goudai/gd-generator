@@ -7,11 +7,11 @@ public class Config {
 	private String entityPackage;
 	private String queryModelPackage;
 
-	/* 任选一组 */
-	private String mybatisMapperPath;
-	private String mybatisXmlPath;
 	private String mybatisMapperPackage;
 	private String mybatisXmlPackage;
+	
+	private String mybatisMapperPath;
+	private String mybatisXmlPath;
 
 	private String url = "jdbc:mysql://127.0.0.1/test";
 	private String username = "root";

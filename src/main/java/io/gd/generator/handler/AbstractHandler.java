@@ -1,20 +1,22 @@
 package io.gd.generator.handler;
 
+import java.lang.reflect.Field;
+
 import io.gd.generator.context.Context;
 
 public abstract class AbstractHandler<T, S extends Context> implements Handler<S> {
 
-	abstract void preRead(S context) throws Exception;
+	abstract protected void preRead(S context) throws Exception;
 
-	abstract T read(S context) throws Exception;
+	abstract protected T read(S context) throws Exception;
 
-	abstract T parse(S context) throws Exception;
+	abstract protected T parse(S context) throws Exception;
 
-	abstract T merge(T parsed, T read, S context) throws Exception;
+	abstract protected T merge(T parsed, T read, S context) throws Exception;
 
-	abstract void write(T merged, S context) throws Exception;
+	abstract protected void write(T merged, S context) throws Exception;
 
-	abstract void postWrite(S context) throws Exception;
+	abstract protected void postWrite(S context) throws Exception;
 
 	@Override
 	public void handle(S context) throws Exception {
@@ -29,5 +31,9 @@ public abstract class AbstractHandler<T, S extends Context> implements Handler<S
 		}
 
 	}
-	
+
+	protected boolean filterSerialVersionUID(Field field) {
+		return !(field.getName().equals("serialVersionUID"));
+	}
+
 }

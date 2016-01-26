@@ -61,11 +61,12 @@ public abstract class AbstractGenerator<T extends Context> implements Generator 
 					try {
 						/* 生成mapper */
 						generateOne(entityClass, queryModelClasses.get(entityClass.getSimpleName() + config.getQueryModelSuffix()));
+						logger.info("generate " + entityClass.getName() + " success");
 					} catch (Exception e) {
 						logger.error("generate " + entityClass.getName() + " error", e);
 					}
 				} else {
-					logger.info("skip " + entityClass.getName());
+					logger.info("generate " + entityClass.getName() + " skipped");
 				}
 			});
 		} catch (Exception e) {
