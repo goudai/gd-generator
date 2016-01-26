@@ -12,12 +12,12 @@ public class Config {
 	private String mybatisMapperPackage;
 	private String mybatisXmlPackage;
 
-	private String mybatisMapperPath;
-	private String mybatisXmlPath;
+	private String mybatisMapperPath; // 如不填则从运行项目目录中获取默认为maven javaSrc + mapperPackage
+	private String mybatisXmlPath; // 如不填则从运行项目目录中获取默认为maven resources + xmlPackage
 
 	private String url = "jdbc:mysql://127.0.0.1/test";
 	private String username = "root";
-	private String password;
+	private String password = "123456";
 
 	private String javaSrc = "/src/main/java";
 	private String resources = "/src/main/resources";
