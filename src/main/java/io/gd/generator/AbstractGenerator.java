@@ -77,6 +77,11 @@ public abstract class AbstractGenerator<T extends Context> implements Generator 
 			logger.error("generate error", e);
 		} finally {
 			try {
+				genLog.flush();
+			} catch (Exception e) {
+				logger.error("flush genLog error", e);
+			}
+			try {
 				destroy();
 			} catch (Exception e) {
 				logger.error("destroy error", e);

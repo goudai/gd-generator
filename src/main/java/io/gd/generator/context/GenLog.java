@@ -11,31 +11,30 @@ import java.time.LocalDateTime;
 public class GenLog {
 
 	public File file;
-	
-	public StringBuilder sb;
+
+	public StringBuffer sb;
 
 	public GenLog(String genLog) throws IOException {
-		sb = new StringBuilder("\r\n").append("--" + LocalDateTime.now());
-		if(StringUtils.isBank(genLog)) {
+		sb = new StringBuffer("\r\n" + "--" + LocalDateTime.now());
+		if (StringUtils.isBank(genLog)) {
 			genLog = System.getProperty("user.home") + File.separator + "gd-generator-" + LocalDateTime.now().toString().replace(":", "") + ".log";
 		}
 		file = new File(genLog);
-		if(!file.exists()) {
+		if (!file.exists()) {
 			file.createNewFile();
 		}
 	}
-	
+
 	public void info(String sql) {
 		if (sql.endsWith(";"))
-			sb.append("\r\n").append(sql);
+			sb.append("\r\n" + sql);
 		else
-			sb.append("\r\n").append(sql).append(";");
+			sb.append("\r\n" + sql + ";");
 	}
 
 	public void warn(String message) {
-		sb.append("\r\n").append("--" + message);
+		sb.append("\r\n" + "--" + message);
 	}
-	
 
 	public void flush() throws FileNotFoundException, IOException {
 		try (FileOutputStream fos = new FileOutputStream(file, true)) {
