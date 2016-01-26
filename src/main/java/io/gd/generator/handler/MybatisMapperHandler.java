@@ -58,7 +58,9 @@ public class MybatisMapperHandler extends AbstractHandler<MybatisMapperMeta, Myb
 
 	@Override
 	protected MybatisMapperMeta merge(MybatisMapperMeta parsed, MybatisMapperMeta read, MybatisContext context) throws Exception {
-		parsed.setOtherMethods(read.getOtherMethods());
+		if(read != null) {
+			parsed.setOtherMethods(read.getOtherMethods());
+		}
 		return parsed;
 	}
 
