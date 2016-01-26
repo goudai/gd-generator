@@ -56,7 +56,7 @@ public class ClassHelper {
 	}
 
 	public static String resolveTableName(Class<?> entityClass) {
-		Table table = entityClass.getAnnotation(Table.class);
+		Table table = entityClass.getDeclaredAnnotation(Table.class);
 		if (table == null) {
 			throw new IllegalArgumentException("@Table注解缺失");
 		}
@@ -67,7 +67,7 @@ public class ClassHelper {
 		}
 	}
 	
-	public static boolean isSerialVersionUID(Field field) {
+	public static boolean isNotSerialVersionUID(Field field) {
 		return !(field.getName().equals("serialVersionUID"));
 	}
 }

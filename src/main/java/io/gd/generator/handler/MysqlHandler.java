@@ -61,7 +61,7 @@ public class MysqlHandler extends AbstractHandler<MysqlTableMeta, MybatisContext
 				mtm.getUniques().add(string);
 			}
 		});
-		Arrays.asList(entityClass.getFields()).stream().filter(ClassHelper::isSerialVersionUID).forEach((field) -> {
+		Arrays.asList(entityClass.getDeclaredFields()).stream().filter(ClassHelper::isNotSerialVersionUID).forEach((field) -> {
 			mtm.getMysqlColumnMetas().add(parseColumn(field));
 			Column column = field.getDeclaredAnnotation(Column.class);
 			if (column != null)
@@ -116,7 +116,7 @@ public class MysqlHandler extends AbstractHandler<MysqlTableMeta, MybatisContext
 				String string = rs.getString(4);
 				String field = StringUtils.underlineToCamel(string);
 				try {
-					entityClass.getField(field);
+					entityClass.getDeclaredField(field);
 				} catch (NoSuchFieldException e) {
 					String message = "数据库中的列  [" + string + " --> " + field + " ]" + "在实体类 " + entityClass.getSimpleName() + " 不存在";
 					sqlLogger.warn(message);

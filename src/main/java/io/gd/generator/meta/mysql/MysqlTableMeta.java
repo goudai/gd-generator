@@ -42,5 +42,5 @@ public class MysqlTableMeta {
 	public void setUniques(List<String> uniques) {
 		this.uniques = uniques;
 	}
-
+	
 }
