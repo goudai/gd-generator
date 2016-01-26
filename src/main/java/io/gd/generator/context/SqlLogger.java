@@ -14,12 +14,15 @@ public class SqlLogger {
 	
 	public StringBuilder sb;
 
-	public SqlLogger(String sqlLogFile) {
+	public SqlLogger(String sqlLogFile) throws IOException {
 		sb = new StringBuilder("\r\n").append("--" + LocalDateTime.now());
 		if(StringUtils.isBank(sqlLogFile)) {
 			sqlLogFile = System.getProperty("user.home") + File.separator + "gd-generator-" + LocalDateTime.now().toString().replace(":", "") + ".log";
 		}
 		file = new File(sqlLogFile);
+		if(!file.exists()) {
+			file.createNewFile();
+		}
 	}
 	
 	public void info(String sql) {
@@ -35,10 +38,6 @@ public class SqlLogger {
 	
 
 	public void flush() throws FileNotFoundException, IOException {
-		if(!file.exists()) {
-			file.mkdirs();
-			file.createNewFile();
-		}
 		try (FileOutputStream fos = new FileOutputStream(file, true)) {
 			fos.write(sb.toString().getBytes());
 		}

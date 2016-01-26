@@ -7,8 +7,8 @@ import io.gd.generator.config.Config;
 public class Main {
 	public static void main(String[] S) {
 		Config config = new Config();
-		config.setSqlLogFile("D:\\sql.txt");
-		config.setUrl("jdbc:mysql://127.0.0.1/ke");
+		config.setSqlLogFile("C:/Users/Administrator/gd-test.log");
+		config.setUrl("jdbc:mysql://127.0.0.1/test");
 		config.setEntityPackage("test.com.entity");
 		config.setMybatisMapperPackage("test.com.mapper");
 		config.setQueryModelPackage("test.com.model.query");

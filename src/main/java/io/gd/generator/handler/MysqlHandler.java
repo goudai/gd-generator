@@ -83,12 +83,12 @@ public class MysqlHandler extends AbstractHandler<MysqlTableMeta, MybatisContext
 		Connection connection = context.getConnection();
 		String table = merged.getTable();
 		Class<?> entityClass = context.getEntityClass();
-		try (Statement st = connection.createStatement(); ResultSet executeQuery = st.executeQuery("show tables like '" + table + "'");) {
+		try (Statement st = connection.createStatement(); ResultSet executeQuery = st.executeQuery("show tables like '" + table + "'")) {
 			if (!executeQuery.next()) {
 				Map<String, Object> model = new HashMap<>();
 				model.put("mtm", merged);
 				String sql = renderTemplate("mysql", model, context);
-				// TODO Logger.info(sql);
+				sqlLogger.info(sql);
 				st.executeUpdate(sql);
 			} else {
 				DatabaseMetaData metaData = connection.getMetaData();
