@@ -1,16 +1,15 @@
 package io.gd.generator.handler;
 
-import freemarker.template.Template;
 import io.gd.generator.config.Config;
 import io.gd.generator.context.MybatisContext;
 import io.gd.generator.meta.mybatis.xml.MybatisMappingMeta;
 import io.gd.generator.meta.mybatis.xml.MybatisXmlMeta;
+import io.gd.generator.util.ClassHelper;
 import io.gd.generator.util.StringUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.StringReader;
-import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -19,7 +18,6 @@ import java.util.Map;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.Table;
 import javax.persistence.Version;
 
 import org.dom4j.Document;
@@ -64,13 +62,12 @@ public class MybatisXmlHandler extends AbstractHandler<MybatisXmlMeta, MybatisCo
 	protected MybatisXmlMeta parse(MybatisContext context) throws Exception {
 		Class<?> entityClass = context.getEntityClass();
 		Config config = context.getConfig();
-		Table table = entityClass.getAnnotation(Table.class);
 		String mapperName = context.getConfig().getMybatisMapperPackage() + "." + entityClass.getSimpleName() + "Mapper";
 		MybatisXmlMeta meta = new MybatisXmlMeta();
 		meta.setMapperName(mapperName);
 		meta.setModel(entityClass.getName());
 		@SuppressWarnings("unused")
-		String trableName = table.name(); // TODO 通过注解获取表名
+		String trableName = ClassHelper.resolveTableName(entityClass);
 		meta.setTable(StringUtils.camelToUnderline(entityClass.getSimpleName()).replaceFirst("\\_", " "));
 		meta.setSimpleName(entityClass.getSimpleName());
 		parseBasic(entityClass, meta);
@@ -78,7 +75,7 @@ public class MybatisXmlHandler extends AbstractHandler<MybatisXmlMeta, MybatisCo
 
 		if (queryModelClass != null) {
 			meta.setQuery(config.getQueryModelPackage() + "." + queryModelClass.getSimpleName());
-			Arrays.asList(queryModelClass.getDeclaredFields()).stream().filter(this::filterSerialVersionUID).forEach((field) -> {
+			Arrays.asList(queryModelClass.getFields()).stream().filter(ClassHelper::isSerialVersionUID).forEach((field) -> {
 				parseQueryModel(meta, field);
 			});
 		}
@@ -95,13 +92,9 @@ public class MybatisXmlHandler extends AbstractHandler<MybatisXmlMeta, MybatisCo
 
 	@Override
 	protected void write(MybatisXmlMeta merged, MybatisContext context) throws Exception {
-		StringWriter out = new StringWriter();
-		Template template = context.getFreemarkerConfiguration().getTemplate("mybatisXml.ftl");
-
 		Map<String, Object> model = new HashMap<>();
 		model.put("mxm", merged);
-		template.process(model, out);
-		String mapperString = out.toString();
+		String xml = renderTemplate("mybatisXml", model, context);
 
 		File file = context.getXmlFile();
 		if (file.exists()) {
@@ -109,7 +102,7 @@ public class MybatisXmlHandler extends AbstractHandler<MybatisXmlMeta, MybatisCo
 		}
 		file.createNewFile();
 		try (FileOutputStream os = new FileOutputStream(file)) {
-			os.write(mapperString.getBytes());
+			os.write(xml.getBytes());
 		}
 
 	}
@@ -186,7 +179,7 @@ public class MybatisXmlHandler extends AbstractHandler<MybatisXmlMeta, MybatisCo
 	}
 
 	private void parseBasic(Class<?> klass, MybatisXmlMeta meta) {
-		Arrays.asList(klass.getDeclaredFields()).stream().filter(this::filterSerialVersionUID).forEach((field) -> {
+		Arrays.asList(klass.getFields()).stream().filter(ClassHelper::isSerialVersionUID).forEach((field) -> {
 			String name = field.getName();
 			Version version = field.getDeclaredAnnotation(Version.class);
 			if (version != null) {

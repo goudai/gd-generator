@@ -10,40 +10,29 @@ public class MysqlTableMeta {
 
 	private List<MysqlColumnMeta> mysqlColumnMetas = new ArrayList<MysqlColumnMeta>();
 	private List<String> uniques = new ArrayList<String>();
+
 	public String getTable() {
 		return table;
 	}
 
-	public List<MysqlColumnMeta> getMysqlColumnMetas() {
-		return mysqlColumnMetas;
-	}
-
-	public MysqlTableMeta setTable(String table) {
+	public void setTable(String table) {
 		this.table = table;
-		return this;
-	}
-
-	public MysqlTableMeta setMysqlColumnMetas(List<MysqlColumnMeta> columnMetas) {
-		this.mysqlColumnMetas = columnMetas;
-		return this;
 	}
 
 	public Class<?> getKlass() {
 		return klass;
 	}
 
-	public MysqlTableMeta setKlass(Class<?> klass) {
+	public void setKlass(Class<?> klass) {
 		this.klass = klass;
-		return this;
 	}
 
-	public static MysqlTableMeta newMysqlTableMeta() {
-		return new MysqlTableMeta();
+	public List<MysqlColumnMeta> getMysqlColumnMetas() {
+		return mysqlColumnMetas;
 	}
 
-	@Override
-	public String toString() {
-		return mysqlColumnMetas.toString().replace("]", "").replace("[", "");
+	public void setMysqlColumnMetas(List<MysqlColumnMeta> mysqlColumnMetas) {
+		this.mysqlColumnMetas = mysqlColumnMetas;
 	}
 
 	public List<String> getUniques() {
@@ -53,7 +42,5 @@ public class MysqlTableMeta {
 	public void setUniques(List<String> uniques) {
 		this.uniques = uniques;
 	}
-	
-	
 
 }

@@ -15,6 +15,16 @@ public class MybatisContext extends Context {
 
 	private Connection connection;
 
+	private SqlLogger sqlLogger;
+
+	public SqlLogger getSqlLogger() {
+		return sqlLogger;
+	}
+
+	public void setSqlLogger(SqlLogger sqlLogger) {
+		this.sqlLogger = sqlLogger;
+	}
+
 	public String getXmlPath() {
 		return xmlPath;
 	}

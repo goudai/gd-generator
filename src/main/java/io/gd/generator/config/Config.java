@@ -4,12 +4,14 @@ public class Config {
 
 	private String queryModelSuffix = "QueryModel";
 
+	private String sqlLogFile;
+
 	private String entityPackage;
 	private String queryModelPackage;
 
 	private String mybatisMapperPackage;
 	private String mybatisXmlPackage;
-	
+
 	private String mybatisMapperPath;
 	private String mybatisXmlPath;
 
@@ -23,6 +25,14 @@ public class Config {
 	private String freemakerVersion = "2.3.0";
 	private String template = "io/gd/generator/template";
 	private String defaultEncoding = "UTF-8";
+
+	public String getSqlLogFile() {
+		return sqlLogFile;
+	}
+
+	public void setSqlLogFile(String sqlLogFile) {
+		this.sqlLogFile = sqlLogFile;
+	}
 
 	public String getFreemakerVersion() {
 		return freemakerVersion;

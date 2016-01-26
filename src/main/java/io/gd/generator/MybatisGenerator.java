@@ -23,7 +23,7 @@ public class MybatisGenerator extends AbstractGenerator<MybatisContext> {
 	private String xmlPath;
 
 	private String mapperPath;
-
+	
 	public MybatisGenerator(Config config) {
 		super(config);
 		handlers.add(new MybatisMapperHandler());

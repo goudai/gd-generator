@@ -1,8 +1,15 @@
 package io.gd.generator.handler;
 
-import java.lang.reflect.Field;
-
+import freemarker.core.ParseException;
+import freemarker.template.MalformedTemplateNameException;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateNotFoundException;
 import io.gd.generator.context.Context;
+
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.Map;
 
 public abstract class AbstractHandler<T, S extends Context> implements Handler<S> {
 
@@ -31,9 +38,12 @@ public abstract class AbstractHandler<T, S extends Context> implements Handler<S
 		}
 
 	}
-
-	protected boolean filterSerialVersionUID(Field field) {
-		return !(field.getName().equals("serialVersionUID"));
+	
+	protected String renderTemplate(String tmplName, Map<String, Object> model, S context) throws TemplateNotFoundException, MalformedTemplateNameException, ParseException, IOException, TemplateException {
+		StringWriter out = new StringWriter();
+		Template template = context.getFreemarkerConfiguration().getTemplate(tmplName + ".ftl");
+		template.process(model, out);
+		return out.toString();
 	}
 
 }

@@ -1,6 +1,5 @@
 package io.gd.generator.handler;
 
-import freemarker.template.Template;
 import io.gd.generator.context.MybatisContext;
 import io.gd.generator.meta.mybatis.mapper.MybatisMapperMeta;
 import io.gd.generator.util.FileUtils;
@@ -8,11 +7,8 @@ import io.gd.generator.util.StringUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class MybatisMapperHandler extends AbstractHandler<MybatisMapperMeta, MybatisContext> {
@@ -28,7 +24,6 @@ public class MybatisMapperHandler extends AbstractHandler<MybatisMapperMeta, Myb
 		File file = context.getMapperFile();
 		String string = FileUtils.read(file);
 		MybatisMapperMeta meta = new MybatisMapperMeta();
-		List<String> otherMethods = new ArrayList<>();
 		if (StringUtils.isNotBank(string)) {
 			String[] split2 = string.split("\\{");
 			String[] split = split2[1].split("\\}")[0].split(";");
@@ -38,12 +33,11 @@ public class MybatisMapperHandler extends AbstractHandler<MybatisMapperMeta, Myb
 								|| m.contains("count(") || m.contains("delete("))) {
 							String mTrim = m.trim();
 							if (StringUtils.isNotBank(mTrim) && !";".equals(mTrim)) {
-								otherMethods.add(m.trim());
+								meta.getOtherMethods().add(m.trim());
 							}
 						}
 					});
 		}
-		meta.setOtherMethods(otherMethods);
 		return meta;
 	}
 
@@ -70,14 +64,10 @@ public class MybatisMapperHandler extends AbstractHandler<MybatisMapperMeta, Myb
 
 	@Override
 	protected void write(MybatisMapperMeta merged, MybatisContext context) throws Exception {
-		StringWriter out = new StringWriter();
-		Template template = context.getFreemarkerConfiguration().getTemplate("mybatisMapper.ftl");
-
 		Map<String, Object> model = new HashMap<>();
 		model.put("basePackage", context.getConfig().getMybatisMapperPackage());
 		model.put("mmm", merged);
-		template.process(model, out);
-		String mapperString = out.toString();
+		String mapper = renderTemplate("mybatisMapper", model, context);
 
 		File file = context.getMapperFile();
 		if (file.exists()) {
@@ -85,7 +75,7 @@ public class MybatisMapperHandler extends AbstractHandler<MybatisMapperMeta, Myb
 		}
 		file.createNewFile();
 		try (FileOutputStream os = new FileOutputStream(file)) {
-			os.write(mapperString.getBytes());
+			os.write(mapper.getBytes());
 		}
 	}
 
