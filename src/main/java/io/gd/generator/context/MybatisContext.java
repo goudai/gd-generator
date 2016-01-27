@@ -1,9 +1,8 @@
 package io.gd.generator.context;
 
 import java.io.File;
-import java.sql.Connection;
 
-public class MybatisContext extends Context {
+public class MybatisContext extends JdbcContext {
 
 	private String xmlPath;
 
@@ -12,8 +11,6 @@ public class MybatisContext extends Context {
 	private File mapperFile;
 
 	private File xmlFile;
-
-	private Connection connection;
 
 	public String getXmlPath() {
 		return xmlPath;
@@ -45,14 +42,6 @@ public class MybatisContext extends Context {
 
 	public void setXmlFile(File xmlFile) {
 		this.xmlFile = xmlFile;
-	}
-
-	public Connection getConnection() {
-		return connection;
-	}
-
-	public void setConnection(Connection connection) {
-		this.connection = connection;
 	}
 
 }

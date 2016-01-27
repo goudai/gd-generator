@@ -1,6 +1,6 @@
 package io.gd.generator.handler;
 
-import io.gd.generator.context.MybatisContext;
+import io.gd.generator.context.JdbcContext;
 import io.gd.generator.context.GenLog;
 import io.gd.generator.meta.mysql.MysqlColumnMeta;
 import io.gd.generator.meta.mysql.MysqlTableMeta;
@@ -31,21 +31,21 @@ import javax.persistence.UniqueConstraint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class MysqlHandler extends AbstractHandler<MysqlTableMeta, MybatisContext> {
+public class MysqlHandler extends AbstractHandler<MysqlTableMeta, JdbcContext> {
 
 	static final Logger logger = LoggerFactory.getLogger(MysqlHandler.class);
 
 	@Override
-	protected void preRead(MybatisContext context) throws Exception {
+	protected void preRead(JdbcContext context) throws Exception {
 	}
 
 	@Override
-	protected MysqlTableMeta read(MybatisContext context) throws Exception {
+	protected MysqlTableMeta read(JdbcContext context) throws Exception {
 		return null;
 	}
 
 	@Override
-	protected MysqlTableMeta parse(MybatisContext context) throws Exception {
+	protected MysqlTableMeta parse(JdbcContext context) throws Exception {
 		Class<?> entityClass = context.getEntityClass();
 		Table table = entityClass.getDeclaredAnnotation(Table.class);
 		MysqlTableMeta mtm = new MysqlTableMeta();
@@ -71,12 +71,12 @@ public class MysqlHandler extends AbstractHandler<MysqlTableMeta, MybatisContext
 	}
 
 	@Override
-	protected MysqlTableMeta merge(MysqlTableMeta parsed, MysqlTableMeta read, MybatisContext context) throws Exception {
+	protected MysqlTableMeta merge(MysqlTableMeta parsed, MysqlTableMeta read, JdbcContext context) throws Exception {
 		return parsed;
 	}
 
 	@Override
-	protected void write(MysqlTableMeta merged, MybatisContext context) throws Exception {
+	protected void write(MysqlTableMeta merged, JdbcContext context) throws Exception {
 		GenLog genLog = context.getGenLog();
 		Connection connection = context.getConnection();
 		String table = merged.getTable();
@@ -156,7 +156,7 @@ public class MysqlHandler extends AbstractHandler<MysqlTableMeta, MybatisContext
 	}
 
 	@Override
-	protected void postWrite(MybatisContext context) throws Exception {
+	protected void postWrite(JdbcContext context) throws Exception {
 	}
 
 	private MysqlColumnMeta parseColumn(Field field) {

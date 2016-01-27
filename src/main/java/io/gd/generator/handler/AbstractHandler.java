@@ -31,8 +31,8 @@ public abstract class AbstractHandler<T, S extends Context> implements Handler<S
 			preRead(context);
 			T read = read(context);
 			T parsed = parse(context);
-			T meta = merge(parsed, read, context);
-			write(meta, context);
+			T merged = merge(parsed, read, context);
+			write(merged, context);
 		} finally {
 			postWrite(context);
 		}

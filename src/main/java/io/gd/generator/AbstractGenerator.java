@@ -1,5 +1,7 @@
 package io.gd.generator;
 
+import freemarker.template.Configuration;
+import freemarker.template.Version;
 import io.gd.generator.config.Config;
 import io.gd.generator.context.Context;
 import io.gd.generator.context.GenLog;
@@ -7,6 +9,7 @@ import io.gd.generator.handler.Handler;
 import io.gd.generator.util.ClassHelper;
 
 import java.io.File;
+import java.lang.reflect.ParameterizedType;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,9 +21,6 @@ import javax.persistence.Table;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import freemarker.template.Configuration;
-import freemarker.template.Version;
-
 public abstract class AbstractGenerator<T extends Context> implements Generator {
 
 	static final Logger logger = LoggerFactory.getLogger(AbstractGenerator.class);
@@ -29,13 +29,17 @@ public abstract class AbstractGenerator<T extends Context> implements Generator 
 
 	protected Config config;
 
-	protected List<Handler<T>> handlers;
+	protected List<Handler<?>> handlers;
 	
 	protected GenLog genLog;
 	
+	protected Class<T> contextClass;
+	
+	@SuppressWarnings("unchecked")
 	public AbstractGenerator(Config config) {
 		this.config = config;
 		this.handlers = new ArrayList<>();
+		contextClass = (Class<T>)(((ParameterizedType)(getClass().getGenericSuperclass())).getActualTypeArguments()[0]);
 	}
 
 	protected void init() throws Exception {
@@ -89,13 +93,21 @@ public abstract class AbstractGenerator<T extends Context> implements Generator 
 		}
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected void generateOne(Class<?> entityClass, Class<?> queryModelClass) throws Exception {
-		T context = createContext(entityClass, queryModelClass);
-		for (Handler<T> handler : handlers) {
+		T context = contextClass.newInstance();
+		initContext(context);
+		context.setEntityClass(entityClass);
+		context.setQueryModelClass(queryModelClass);
+		for (Handler handler : handlers) {
 			handler.handle(context);
 		}
 	}
 
-	abstract T createContext(Class<?> entityClass, Class<?> queryModelClass);
+	protected void initContext(T context) {
+		context.setGenLog(genLog);
+		context.setFreemarkerConfiguration(freemarkerConfiguration);
+		context.setConfig(config);
+	}
 
 }
