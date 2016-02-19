@@ -76,10 +76,10 @@ public class MybatisMapperHandler extends AbstractHandler<MybatisMapperMeta, Myb
 				if(otherImport.equals("org.apache.ibatis.annotations.Param")) {
 					continue;
 				}
-				if(otherImport.equals(read.getEntityName())) {
+				if(otherImport.equals(parsed.getEntityName())) {
 					continue;
 				}
-				if(hasQueryModel && otherImport.equals(read.getQueryModelName())) {
+				if(hasQueryModel && otherImport.equals(parsed.getQueryModelName())) {
 					continue;
 				}
 				if(otherImport.equals("java.util.List")) {
