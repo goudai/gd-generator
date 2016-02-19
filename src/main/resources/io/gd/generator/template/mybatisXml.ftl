@@ -85,7 +85,7 @@
 	</select>
 	<#if !mxm.hasQueryModel>
 
-	<select id="findAll" resultMap="baseResultMap" parameterType="${mxm.query}">
+	<select id="findAll" resultMap="baseResultMap">
 		select
 		id,${baseColumn}
 		from `${mxm.table?trim}`
