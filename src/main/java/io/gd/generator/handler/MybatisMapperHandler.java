@@ -71,7 +71,7 @@ public class MybatisMapperHandler extends AbstractHandler<MybatisMapperMeta, Myb
 	protected MybatisMapperMeta merge(MybatisMapperMeta parsed, MybatisMapperMeta read, MybatisContext context) throws Exception {
 		if(read != null) {
 			parsed.setOtherMethods(read.getOtherMethods());
-			boolean hasQueryModel = read.isHasQueryModel();
+			boolean hasQueryModel = parsed.isHasQueryModel();
 			for(String otherImport : read.getOtherImports()) {
 				if(otherImport.equals("org.apache.ibatis.annotations.Param")) {
 					continue;
