@@ -7,8 +7,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "chapter")
@@ -16,8 +14,6 @@ public class Chapter {
 
 	@Id
 	private Long id;
-	@NotNull
-	@Min(1)
 	private Integer index;
 	private Long lessonId;
 /*	@Column(length = 14)
