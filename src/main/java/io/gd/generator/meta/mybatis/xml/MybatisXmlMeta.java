@@ -14,10 +14,19 @@ public class MybatisXmlMeta {
 	private String query;
 	private String version;
 	private Map<String, String> querys = new HashMap<>();
+	private boolean hasQueryModel;
 
 	private List<MybatisMappingMeta> mappingMetas = new ArrayList<>();
 
 	private List<String> otherMappings = new ArrayList<>();
+
+	public boolean isHasQueryModel() {
+		return hasQueryModel;
+	}
+
+	public void setHasQueryModel(boolean hasQueryModel) {
+		this.hasQueryModel = hasQueryModel;
+	}
 
 	public List<String> getOtherMappings() {
 		return otherMappings;

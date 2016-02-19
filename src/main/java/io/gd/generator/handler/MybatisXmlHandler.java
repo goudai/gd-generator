@@ -74,6 +74,7 @@ public class MybatisXmlHandler extends AbstractHandler<MybatisXmlMeta, MybatisCo
 		Class<?> queryModelClass = context.getQueryModelClass();
 
 		if (queryModelClass != null) {
+			meta.setHasQueryModel(true);
 			meta.setQuery(config.getQueryModelPackage() + "." + queryModelClass.getSimpleName());
 			Arrays.asList(queryModelClass.getDeclaredFields()).stream().filter(ClassHelper::isNotSerialVersionUID).forEach((field) -> {
 				parseQueryModel(meta, field);

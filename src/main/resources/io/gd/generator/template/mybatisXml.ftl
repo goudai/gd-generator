@@ -83,7 +83,16 @@
 		from `${mxm.table?trim}`
 		where id = ${rep}{id}
 	</select>
-	<#if mxm.querys?size gt 0>
+	<#if !mxm.hasQueryModel>
+
+	<select id="findAll" resultMap="baseResultMap" parameterType="${mxm.query}">
+		select
+		id,${baseColumn}
+		from `${mxm.table?trim}`
+		order by id desc
+	</select>
+	</#if>
+	<#if mxm.hasQueryModel>
 
 	<select id="findAll" resultMap="baseResultMap" parameterType="${mxm.query}">
 		select

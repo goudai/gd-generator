@@ -10,6 +10,8 @@ import java.io.FileOutputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MybatisMapperHandler extends AbstractHandler<MybatisMapperMeta, MybatisContext> {
 
@@ -37,6 +39,15 @@ public class MybatisMapperHandler extends AbstractHandler<MybatisMapperMeta, Myb
 							}
 						}
 					});
+			String split3 = split2[0];
+			Pattern pattern = Pattern.compile("import[\\s]+([\\w\\.]+)[\\s]*;");
+			Matcher m = pattern.matcher(split3);
+			while(m.find()) {
+				String g1 = m.group(1);
+				if(StringUtils.isNotBank(g1)) {
+					meta.getOtherImports().add(g1);
+				}
+			}
 		}
 		return meta;
 	}
@@ -60,6 +71,23 @@ public class MybatisMapperHandler extends AbstractHandler<MybatisMapperMeta, Myb
 	protected MybatisMapperMeta merge(MybatisMapperMeta parsed, MybatisMapperMeta read, MybatisContext context) throws Exception {
 		if(read != null) {
 			parsed.setOtherMethods(read.getOtherMethods());
+			boolean hasQueryModel = read.isHasQueryModel();
+			for(String otherImport : read.getOtherImports()) {
+				if(otherImport.equals("org.apache.ibatis.annotations.Param")) {
+					continue;
+				}
+				if(otherImport.equals(read.getEntityName())) {
+					continue;
+				}
+				if(hasQueryModel && otherImport.equals(read.getQueryModelName())) {
+					continue;
+				}
+				if(otherImport.equals("java.util.List")) {
+					continue;
+				}
+				parsed.getOtherImports().add(otherImport);
+			}
+			
 		}
 		return parsed;
 	}

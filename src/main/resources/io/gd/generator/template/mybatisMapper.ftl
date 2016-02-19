@@ -1,12 +1,18 @@
 package ${basePackage};
 
 
+import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import ${mmm.entityName};
 <#if mmm.hasQueryModel>
-import java.util.List;
 import ${mmm.queryModelName};
+</#if>
+
+<#if mmm.otherImports??>
+<#list mmm.otherImports as otherImport>
+import ${otherImport};
+</#list>
 </#if>
 
 public interface ${mmm.entitySimpleName}Mapper {
@@ -20,6 +26,10 @@ public interface ${mmm.entitySimpleName}Mapper {
 	int delete(Long id);
 
 	${mmm.entitySimpleName} findOne(Long id);
+	<#if !mmm.hasQueryModel>
+
+	List<${mmm.entitySimpleName}> findAll();
+	</#if>
 	<#if mmm.hasQueryModel>
 
 	List<${mmm.entitySimpleName}> findAll(${mmm.queryModelSimpleName} ${mmm.queryModelSimpleName?uncap_first});
