@@ -68,7 +68,10 @@ public class MybatisXmlHandler extends AbstractHandler<MybatisXmlMeta, MybatisCo
 		meta.setModel(entityClass.getName());
 		@SuppressWarnings("unused")
 		String trableName = ClassHelper.resolveTableName(entityClass);
-		meta.setTable(StringUtils.camelToUnderline(entityClass.getSimpleName()).replaceFirst("\\_", " "));
+		//meta.setTable(StringUtils.camelToUnderline(entityClass.getSimpleName()).replaceFirst("\\_", " ")); bug fix
+		
+		meta.setTable(ClassHelper.resolveTableName(entityClass));
+		
 		meta.setSimpleName(entityClass.getSimpleName());
 		parseBasic(entityClass, meta);
 		Class<?> queryModelClass = context.getQueryModelClass();
