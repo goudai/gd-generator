@@ -174,8 +174,12 @@ public class MybatisXmlHandler extends AbstractHandler<MybatisXmlMeta, MybatisCo
 			value = bind + " and " + camelToUnderline + " like #{" + name + "}";
 		} else if (name.endsWith("IN")) {
 			String camelToUnderline = StringUtils.camelToUnderline(name.replace("IN", ""));
-			value = " and " + camelToUnderline + " in\r\n" + "\t\t\t\t<foreach collection=\"" + name
-					+ "\" item=\"item\" open=\"(\" separator=\",\" close=\")\">\r\n\t\t\t\t#{item}\r\n\t\t\t\t</foreach>";
+			if (field.getType().getComponentType().isEnum())
+				value = " and " + camelToUnderline + " in\r\n" + "\t\t\t\t<foreach collection=\"" + name
+				+ "\" item=\"item\" open=\"(\" separator=\",\" close=\")\">\r\n\t\t\t\t#{item"  + ",typeHandler=" + this.parseEnum(field) + "}\r\n\t\t\t\t</foreach>";
+			else
+				value = " and " + camelToUnderline + " in\r\n" + "\t\t\t\t<foreach collection=\"" + name
+				+ "\" item=\"item\" open=\"(\" separator=\",\" close=\")\">\r\n\t\t\t\t#{item}\r\n\t\t\t\t</foreach>";
 		} else
 			return;
 
