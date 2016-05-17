@@ -54,9 +54,6 @@
 	<update id="merge">
 		update `${mxm.table?trim}`
 			<set>
-				<#if mxm.version??>
-				<bind name="hasVersion" value="false" />
-				</#if>
 				<foreach collection="fields" item="field">
 				<choose>
 				<#list mxm.mappingMetas as br>
@@ -68,13 +65,10 @@
 					</#if>
 				</#if>
 				</#list>
-				<#if mxm.version??>
-					<when test="field == '${mxm.version}'"><bind name="hasVersion" value="true" />${mxm.version} = ${mxm.version}+1,</when>
-				</#if>
 				</choose>
 				</foreach>
 			</set>
-		where id = ${rep}{${mxm.simpleName?uncap_first}.id}<#if mxm.version??> <if test="hasVersion"> and ${mxm.version}=${rep}{${mxm.simpleName?uncap_first}.${mxm.version}}</if></#if>
+		where id = ${rep}{${mxm.simpleName?uncap_first}.id}
 	</update>
 
 	<select id="findOne" resultMap="baseResultMap" parameterType="long">

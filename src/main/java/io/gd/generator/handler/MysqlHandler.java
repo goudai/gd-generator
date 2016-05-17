@@ -234,10 +234,24 @@ public class MysqlHandler extends AbstractHandler<MysqlTableMeta, JdbcContext> {
 			return "int(2)";
 		}
 		if (field.getType().isAssignableFrom(BigDecimal.class)) {
-			return "decimal(19,2)";
+			Column column = field.getAnnotation(Column.class);
+			if(column == null) {
+				return "decimal(19,2)";
+			} else {
+				int precision = column.precision() == 0 ? 19 : column.precision();
+				int scale = column.scale() == 0 ? 19 : column.scale();
+				return "decimal(" + precision + "," + scale + ")";
+			}
 		}
 		if (field.getType().isAssignableFrom(Double.class)) {
-			return "double(19,2)";
+			Column column = field.getAnnotation(Column.class);
+			if(column == null) {
+				return "double(19,2)";
+			} else {
+				int precision = column.precision() == 0 ? 19 : column.precision();
+				int scale = column.scale() == 0 ? 19 : column.scale();
+				return "double(" + precision + "," + scale + ")";
+			}
 		}
 
 		throw new RuntimeException(typeName + " 无法解析。请检查getMysqlType解析方法");
