@@ -22,7 +22,7 @@ public class GenLog {
 
 	public GenLog(String genLog) throws IOException {
 		sb = new StringBuffer();
-		if (StringUtils.isBank(genLog)) {
+		if (StringUtils.isBlank(genLog)) {
 			genLog = System.getProperty("user.home") + File.separator + "gd-generator-" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".log";
 		}
 		file = new File(genLog);

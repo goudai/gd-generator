@@ -28,14 +28,14 @@ public class MybatisGenerator extends MysqlGenerator<MybatisContext> {
 	@Override
 	protected void init() throws Exception {
 		super.init();
-		if(StringUtils.isBank(config.getMybatisMapperPackage()) || StringUtils.isBank(config.getMybatisXmlPackage())) {
+		if(StringUtils.isBlank(config.getMybatisMapperPackage()) || StringUtils.isBlank(config.getMybatisXmlPackage())) {
 			throw new IllegalArgumentException("mybatisMapperPackage or mybatisXmlPackage config error");
 		}
-		if (StringUtils.isNotBank(config.getMybatisMapperPath()) && StringUtils.isNotBank(config.getMybatisXmlPath())) {
+		if (StringUtils.isNotBlank(config.getMybatisMapperPath()) && StringUtils.isNotBlank(config.getMybatisXmlPath())) {
 			xmlPath = config.getMybatisXmlPath();
 			mapperPath = config.getMybatisMapperPath();
-		} else if (StringUtils.isNotBank(config.getJavaSrc()) && StringUtils.isNotBank(config.getResources())) {
-			String projectPath = Thread.currentThread().getContextClassLoader().getResource("").getPath().replace("/target/classes/", "");
+		} else if (StringUtils.isNotBlank(config.getJavaSrc()) && StringUtils.isNotBlank(config.getResources())) {
+			String projectPath = Thread.currentThread().getContextClassLoader().getResource("").getPath().replace("/target/classes/", "").replace("/target/test-classes/", "");
 			xmlPath = (projectPath + config.getResources() + File.separator + (config.getMybatisXmlPackage().replace(".", File.separator))).replace("/",
 					File.separator).replace("\\", File.separator);
 			mapperPath = (projectPath + config.getJavaSrc() + File.separator + (config.getMybatisMapperPackage().replace(".", File.separator))).replace("/",

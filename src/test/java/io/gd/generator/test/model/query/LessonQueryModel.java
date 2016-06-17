@@ -1,10 +1,11 @@
-package test.com.model.query;
+package io.gd.generator.test.model.query;
+
+import io.gd.generator.model.QueryModel;
+import io.gd.generator.test.entity.Lesson.LessonStatus;
 
 import java.util.Date;
 
-import test.com.entity.Lesson.LessonStatus;
-
-public class LessonQueryModel{
+public class LessonQueryModel extends QueryModel {
 	private static final long serialVersionUID = 9041135804381319534L;
 
 	private Long userIdEQ;

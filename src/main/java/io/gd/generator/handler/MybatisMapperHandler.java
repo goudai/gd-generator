@@ -26,7 +26,7 @@ public class MybatisMapperHandler extends AbstractHandler<MybatisMapperMeta, Myb
 		File file = context.getMapperFile();
 		String string = FileUtils.read(file);
 		MybatisMapperMeta meta = new MybatisMapperMeta();
-		if (StringUtils.isNotBank(string)) {
+		if (StringUtils.isNotBlank(string)) {
 			String[] split2 = string.split("\\{");
 			String[] split = split2[1].split("\\}")[0].split(";");
 			Arrays.asList(split).forEach(
@@ -34,7 +34,7 @@ public class MybatisMapperHandler extends AbstractHandler<MybatisMapperMeta, Myb
 						if (!(m.contains("insert(") || m.contains("update(") || m.contains("findOne(") || m.contains("findAll(") || m.contains("merge(")
 								|| m.contains("count(") || m.contains("delete("))) {
 							String mTrim = m.trim();
-							if (StringUtils.isNotBank(mTrim) && !";".equals(mTrim)) {
+							if (StringUtils.isNotBlank(mTrim) && !";".equals(mTrim)) {
 								meta.getOtherMethods().add(m.trim());
 							}
 						}
@@ -44,7 +44,7 @@ public class MybatisMapperHandler extends AbstractHandler<MybatisMapperMeta, Myb
 			Matcher m = pattern.matcher(split3);
 			while(m.find()) {
 				String g1 = m.group(1);
-				if(StringUtils.isNotBank(g1)) {
+				if(StringUtils.isNotBlank(g1)) {
 					meta.getOtherImports().add(g1);
 				}
 			}

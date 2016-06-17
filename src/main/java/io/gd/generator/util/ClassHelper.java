@@ -60,7 +60,7 @@ public class ClassHelper {
 		if (table == null) {
 			throw new IllegalArgumentException("@Table注解缺失");
 		}
-		if (StringUtils.isNotBank(table.name())) {
+		if (StringUtils.isNotBlank(table.name())) {
 			return table.name();
 		} else {
 			return StringUtils.camelToUnderline(entityClass.getSimpleName());

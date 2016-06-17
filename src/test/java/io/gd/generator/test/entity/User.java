@@ -1,4 +1,4 @@
-package test.com.entity;
+package io.gd.generator.test.entity;
 
 import java.util.Date;
 

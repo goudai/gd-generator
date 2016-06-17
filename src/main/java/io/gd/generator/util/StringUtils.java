@@ -2,11 +2,11 @@ package io.gd.generator.util;
 
 public class StringUtils {
 
-	public static boolean isBank(String string) {
+	public static boolean isBlank(String string) {
 		return string == null || "".equals(string);
 	}
 	
-	public static boolean isNotBank(String string) {
+	public static boolean isNotBlank(String string) {
 		return string != null && !"".equals(string);
 	}
 
@@ -50,7 +50,7 @@ public class StringUtils {
 	}
 	
 	public static void main(String[] args) {
-		System.out.println(StringUtils.isNotBank(null));
+		System.out.println(StringUtils.isNotBlank(null));
 	}
 
 }

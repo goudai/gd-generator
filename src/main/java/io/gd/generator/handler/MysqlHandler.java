@@ -167,7 +167,7 @@ public class MysqlHandler extends AbstractHandler<MysqlTableMeta, JdbcContext> {
 			name = column.name();
 		else
 			name = field.getName();
-		if (!StringUtils.isNotBank(name))
+		if (!StringUtils.isNotBlank(name))
 			name = field.getName();
 		MysqlColumnMeta mysqlColumnMeta = new MysqlColumnMeta();
 		mysqlColumnMeta.setName(StringUtils.camelToUnderline(name));
