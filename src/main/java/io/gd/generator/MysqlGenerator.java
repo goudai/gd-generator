@@ -3,12 +3,11 @@ package io.gd.generator;
 import io.gd.generator.config.Config;
 import io.gd.generator.context.JdbcContext;
 import io.gd.generator.handler.MysqlHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class MysqlGenerator<T extends JdbcContext> extends AbstractGenerator<T> {
 
@@ -22,7 +21,7 @@ public class MysqlGenerator<T extends JdbcContext> extends AbstractGenerator<T> 
 	}
 
 	@Override
-	protected void init() throws Exception {
+	public void init() throws Exception {
 		super.init();
 		connection = DriverManager.getConnection(config.getUrl(), config.getUsername(), config.getPassword());
 	}

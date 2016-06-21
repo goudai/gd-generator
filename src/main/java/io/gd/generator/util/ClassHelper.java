@@ -1,29 +1,27 @@
 package io.gd.generator.util;
 
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
-
-import javax.persistence.Table;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.common.collect.ImmutableSet;
 import com.google.common.reflect.ClassPath;
 import com.google.common.reflect.ClassPath.ClassInfo;
+import org.omg.CORBA.Object;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.persistence.Table;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.*;
 
 public class ClassHelper {
 
 	static final Logger logger = LoggerFactory.getLogger(ClassHelper.class);
 
 	static ClassPath classpath;
+
 	static {
 		try {
 			classpath = ClassPath.from(ClassHelper.class.getClassLoader());
+
 		} catch (IOException e) {
 			logger.error("create classpath error", e);
 		}
@@ -66,8 +64,22 @@ public class ClassHelper {
 			return StringUtils.camelToUnderline(entityClass.getSimpleName());
 		}
 	}
-	
+
 	public static boolean isNotSerialVersionUID(Field field) {
 		return !(field.getName().equals("serialVersionUID"));
+	}
+
+	public static java.util.List<Field> getFields(Class<?> clazz) {
+		List<Field> fields = new ArrayList<>();
+		for (; clazz!=null && clazz != Object.class; clazz = clazz.getSuperclass()) {
+			try {
+				Field[] declaredFields = clazz.getDeclaredFields();
+				if(declaredFields != null)
+				fields.addAll(Arrays.asList(declaredFields));
+			} catch (Exception e) {
+				//ig
+			}
+		}
+		return fields;
 	}
 }

@@ -7,7 +7,10 @@ import io.gd.generator.context.Context;
 import io.gd.generator.context.GenLog;
 import io.gd.generator.handler.Handler;
 import io.gd.generator.util.ClassHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.persistence.Table;
 import java.io.File;
 import java.lang.reflect.ParameterizedType;
 import java.net.URL;
@@ -15,11 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import javax.persistence.Table;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public abstract class AbstractGenerator<T extends Context> implements Generator {
 
@@ -42,7 +40,7 @@ public abstract class AbstractGenerator<T extends Context> implements Generator 
 		contextClass = (Class<T>)(((ParameterizedType)(getClass().getGenericSuperclass())).getActualTypeArguments()[0]);
 	}
 
-	protected void init() throws Exception {
+	public void init() throws Exception {
 		freemarkerConfiguration = new Configuration(new Version(config.getFreemakerVersion()));
 		freemarkerConfiguration.setDefaultEncoding(config.getDefaultEncoding());
 		URL url = getClass().getClassLoader().getResource(config.getTemplate());

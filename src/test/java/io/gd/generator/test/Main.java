@@ -1,10 +1,12 @@
 package io.gd.generator.test;
 
-import java.io.File;
-
-import io.gd.generator.Generator;
+import io.gd.generator.AbstractGenerator;
 import io.gd.generator.MybatisGenerator;
+import io.gd.generator.NodeGenerator;
 import io.gd.generator.config.Config;
+import io.gd.generator.config.NodeConfig;
+
+import java.io.File;
 
 public class Main {
 	public static void main(String[] S) {
@@ -19,7 +21,12 @@ public class Main {
 		config.setResources("/src/test/resources");
 		config.setUsername("root");
 		config.setPassword("123456");
-		Generator generator = new MybatisGenerator(config);
+		AbstractGenerator generator = new MybatisGenerator(config);
+		NodeConfig nodeConfig = new NodeConfig();
+		nodeConfig.setDistFile(new File("./dubbo.js"));
+		nodeConfig.setDocFile(new File("./doc.js"));
+		nodeConfig.setServicePackage("io.gd.generator.test.service");
+		generator = new NodeGenerator(nodeConfig);
 		generator.generate();
 	}
 

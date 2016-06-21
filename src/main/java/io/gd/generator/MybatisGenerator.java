@@ -5,11 +5,10 @@ import io.gd.generator.context.MybatisContext;
 import io.gd.generator.handler.MybatisMapperHandler;
 import io.gd.generator.handler.MybatisXmlHandler;
 import io.gd.generator.util.StringUtils;
-
-import java.io.File;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
 
 public class MybatisGenerator extends MysqlGenerator<MybatisContext> {
 
@@ -26,7 +25,7 @@ public class MybatisGenerator extends MysqlGenerator<MybatisContext> {
 	}
 
 	@Override
-	protected void init() throws Exception {
+	public void init() throws Exception {
 		super.init();
 		if(StringUtils.isBlank(config.getMybatisMapperPackage()) || StringUtils.isBlank(config.getMybatisXmlPackage())) {
 			throw new IllegalArgumentException("mybatisMapperPackage or mybatisXmlPackage config error");

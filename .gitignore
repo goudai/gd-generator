@@ -5,3 +5,4 @@ target/
 .settings/
 .classpath
 web.xml
+.idea
