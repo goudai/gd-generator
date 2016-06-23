@@ -64,7 +64,7 @@ public class NodeGenerator extends AbstractGenerator<Context> {
 			this.init();
 			StringWriter out = new StringWriter();
 			Template template = null;
-			template = freemarkerConfiguration.getTemplate("node.ftl");
+			template = freemarkerConfiguration.getTemplate("node-yield.ftl");
 			template.process(new HashMap<String,Object>(){{put("node",nodeMeta);}}, out);
 
 			String doc = "";
