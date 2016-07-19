@@ -79,7 +79,7 @@ public class MybatisXmlHandler extends AbstractHandler<MybatisXmlMeta, MybatisCo
 		if (queryModelClass != null) {
 			meta.setHasQueryModel(true);
 			meta.setQuery(config.getQueryModelPackage() + "." + queryModelClass.getSimpleName());
-			Arrays.asList(queryModelClass.getDeclaredFields()).stream().filter(ClassHelper::isNotSerialVersionUID).forEach((field) -> {
+			Arrays.asList(queryModelClass.getDeclaredFields()).stream().filter(ClassHelper::withoutField).forEach((field) -> {
 				parseQueryModel(meta, field);
 			});
 		}
@@ -187,7 +187,7 @@ public class MybatisXmlHandler extends AbstractHandler<MybatisXmlMeta, MybatisCo
 	}
 
 	private void parseBasic(Class<?> klass, MybatisXmlMeta meta) {
-		Arrays.asList(klass.getDeclaredFields()).stream().filter(ClassHelper::isNotSerialVersionUID).forEach((field) -> {
+		Arrays.asList(klass.getDeclaredFields()).stream().filter(ClassHelper::withoutField).forEach((field) -> {
 			String name = field.getName();
 			Version version = field.getDeclaredAnnotation(Version.class);
 			if (version != null) {
