@@ -3,13 +3,16 @@ package io.gd.generator.util;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.reflect.ClassPath;
 import com.google.common.reflect.ClassPath.ClassInfo;
+
 import org.omg.CORBA.Object;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.Table;
+
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.*;
 
 public class ClassHelper {
@@ -65,8 +68,8 @@ public class ClassHelper {
 		}
 	}
 
-	public static boolean isNotSerialVersionUID(Field field) {
-		return !(field.getName().equals("serialVersionUID"));
+	public static boolean withoutField(Field field) {
+		return !(field.getName().equals("serialVersionUID")) && !Modifier.isStatic(field.getModifiers());
 	}
 
 	public static java.util.List<Field> getFields(Class<?> clazz) {

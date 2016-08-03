@@ -59,7 +59,7 @@ public class MysqlHandler extends AbstractHandler<MysqlTableMeta, JdbcContext> {
 				mtm.getUniques().add(string);
 			}
 		});
-		Arrays.asList(entityClass.getDeclaredFields()).stream().filter(ClassHelper::isNotSerialVersionUID).forEach((field) -> {
+		Arrays.asList(entityClass.getDeclaredFields()).stream().filter(ClassHelper::withoutField).forEach((field) -> {
 			mtm.getMysqlColumnMetas().add(parseColumn(field));
 			Column column = field.getDeclaredAnnotation(Column.class);
 			if (column != null)
