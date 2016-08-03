@@ -7,13 +7,20 @@ return yield client.execute('${service.name}', method, body);
 }
 </#list>
 <#list node.exports as export>
-exports.${export.serviceName?uncap_first} = {}
+exports.${export.serviceName?uncap_first} = {
 	<#list export.methods as method>
 	/*
-		body : ${method.json}
+	body : ${method.json}
 	*/
-exports.${export.serviceName?uncap_first}.${method.name} = function *(body) {
-		return yield execute${export.serviceName}('${method.name}', body)
-}
+		<#if method_has_next>
+		${method.name}: function *(body){
+			execute${export.serviceName}('${method.name}',body)
+		},
+		<#else>
+		${method.name}: function *(body){
+			execute${export.serviceName}('${method.name}',body)
+		}
+		</#if>
 	</#list>
+}
 </#list>

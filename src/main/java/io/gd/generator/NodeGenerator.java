@@ -122,5 +122,6 @@ public class NodeGenerator extends AbstractGenerator<Context> {
 			return type.getName();
 		}
 	}
+
 }
 

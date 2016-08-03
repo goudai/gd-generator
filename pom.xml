@@ -74,6 +74,14 @@
 	</dependencies>
 
 	<build>
+		 <resources>
+			 <resource>
+				 <directory>src/main/resources</directory>
+				 <includes>
+					 <include>io/gd/generator/template/*.ftl</include>
+				 </includes>
+			 </resource>
+		 </resources>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
