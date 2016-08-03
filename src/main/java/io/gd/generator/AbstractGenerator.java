@@ -41,7 +41,7 @@ public abstract class AbstractGenerator<T extends Context> implements Generator 
 	public void init() throws Exception {
 		freemarkerConfiguration = new Configuration(new Version(config.getFreemakerVersion()));
 		freemarkerConfiguration.setDefaultEncoding(config.getDefaultEncoding());
-		freemarkerConfiguration.setClassForTemplateLoading(getClass(),config.getTemplate());
+		freemarkerConfiguration.setClassForTemplateLoading(getClass(),"/"+config.getTemplate());
 		genLog = new GenLog(config.getGenLogFile());
 	}
 
