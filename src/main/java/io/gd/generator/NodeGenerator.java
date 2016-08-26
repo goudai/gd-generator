@@ -88,8 +88,6 @@ public class NodeGenerator extends AbstractGenerator<Context> {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-
 	}
 
 	public  boolean isWrapClass(Class clz) {
