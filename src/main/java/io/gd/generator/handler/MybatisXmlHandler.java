@@ -1,9 +1,12 @@
 package io.gd.generator.handler;
 
+import io.gd.generator.api.Predicate;
+import io.gd.generator.api.Query;
+import io.gd.generator.api.QueryModel;
 import io.gd.generator.config.Config;
 import io.gd.generator.context.MybatisContext;
-import io.gd.generator.meta.mybatis.xml.MybatisMappingMeta;
-import io.gd.generator.meta.mybatis.xml.MybatisXmlMeta;
+import io.gd.generator.meta.mybatis.MybatisXmlMeta;
+import io.gd.generator.meta.mybatis.MybatisXmlMeta.MybatisMappingMeta;
 import io.gd.generator.util.ClassHelper;
 import io.gd.generator.util.StringUtils;
 
@@ -74,13 +77,13 @@ public class MybatisXmlHandler extends AbstractHandler<MybatisXmlMeta, MybatisCo
 		
 		meta.setSimpleName(entityClass.getSimpleName());
 		parseBasic(entityClass, meta);
-		Class<?> queryModelClass = context.getQueryModelClass();
+		QueryModel queryModel = entityClass.getAnnotation(QueryModel.class);
 
-		if (queryModelClass != null) {
+		if (queryModel != null) {
 			meta.setHasQueryModel(true);
-			meta.setQuery(config.getQueryModelPackage() + "." + queryModelClass.getSimpleName());
-			Arrays.asList(queryModelClass.getDeclaredFields()).stream().filter(ClassHelper::withoutField).forEach((field) -> {
-				parseQueryModel(meta, field);
+			meta.setQuery(config.getQueryModelPackage() + "." + entityClass.getSimpleName() + config.getQueryModelSuffix());
+			ClassHelper.getFields(entityClass).stream().filter(ClassHelper::isNotStaticField).forEach(v -> {
+				parseQueryModel(meta, v);
 			});
 		}
 		return meta;
@@ -97,7 +100,7 @@ public class MybatisXmlHandler extends AbstractHandler<MybatisXmlMeta, MybatisCo
 	@Override
 	protected void write(MybatisXmlMeta merged, MybatisContext context) throws Exception {
 		Map<String, Object> model = new HashMap<>();
-		model.put("mxm", merged);
+		model.put("meta", merged);
 		String xml = renderTemplate("mybatisXml", model, context);
 
 		File file = context.getXmlFile();
@@ -129,65 +132,74 @@ public class MybatisXmlHandler extends AbstractHandler<MybatisXmlMeta, MybatisCo
 	 */
 	private void parseQueryModel(MybatisXmlMeta meta, Field field) {
 		String name = field.getName();
+		String camelToUnderlineName = StringUtils.camelToUnderline(name);
+		Query query = field.getAnnotation(Query.class);
 		String value = null;
-		if (name.endsWith("NEQ")) {
-			String camelToUnderline = StringUtils.camelToUnderline(name.replace("NEQ", ""));
-			if (field.getType().isEnum())
-				value = " and " + camelToUnderline + " != #{" + name + ",typeHandler=" + this.parseEnum(field) + "}";
-			else
-				value = " and " + camelToUnderline + " != #{" + name + "}";
-		} else if (name.endsWith("EQ")) {
-			String camelToUnderline = StringUtils.camelToUnderline(name.replace("EQ", ""));
-			if (field.getType().isEnum())
-				value = " and " + camelToUnderline + " = #{" + name + ",typeHandler=" + this.parseEnum(field) + "}";
-			else
-				value = " and " + camelToUnderline + " = #{" + name + "}";
-		} else if (name.endsWith("GT")) {
-			String camelToUnderline = StringUtils.camelToUnderline(name.replace("GT", ""));
-			value = " and " + camelToUnderline + " &gt; #{" + name + "}";
-		} else if (name.endsWith("GTE")) {
-			String camelToUnderline = StringUtils.camelToUnderline(name.replace("GTE", ""));
-			value = " and " + camelToUnderline + " &gt;= #{" + name + "}";
-		} else if (name.endsWith("LT")) {
-			String camelToUnderline = StringUtils.camelToUnderline(name.replace("LT", ""));
-			value = " and " + camelToUnderline + " &lt; #{" + name + "}";
-		} else if (name.endsWith("LTE")) {
-			String camelToUnderline = StringUtils.camelToUnderline(name.replace("LTE", ""));
-			value = " and " + camelToUnderline + " &lt;= #{" + name + "}";
-		} else if (name.endsWith("NL")) {
-			String camelToUnderline = StringUtils.camelToUnderline(name.replace("NL", ""));
-			value = " and " + camelToUnderline + " is null #{" + name + "}";
-		} else if (name.endsWith("NN")) {
-			String camelToUnderline = StringUtils.camelToUnderline(name.replace("NN", ""));
-			value = " and " + camelToUnderline + " is not null #{" + name + "}";
-		} else if (name.endsWith("LK")) {
-			String camelToUnderline = StringUtils.camelToUnderline(name.replace("LK", ""));
-			String bind = "<bind name=\"" + name + "\" value=\"'%' + " + name + " + '%'\"/>";
-			value = bind + " and " + camelToUnderline + " like #{" + name + "}";
-		} else if (name.endsWith("SW")) {
-			String camelToUnderline = StringUtils.camelToUnderline(name.replace("SW", ""));
-			String bind = "<bind name=\"" + name + "\" value=\"" + name + " + '%'\"/>";
-			value = bind + " and " + camelToUnderline + " like #{" + name + "}";
-		} else if (name.endsWith("EW")) {
-			String camelToUnderline = StringUtils.camelToUnderline(name.replace("EW", ""));
-			String bind = "<bind name=\"" + name + "\" value=\"'%' + " + name + "\"/>";
-			value = bind + " and " + camelToUnderline + " like #{" + name + "}";
-		} else if (name.endsWith("IN")) {
-			String camelToUnderline = StringUtils.camelToUnderline(name.replace("IN", ""));
-			if (field.getType().getComponentType().isEnum())
-				value = " and " + camelToUnderline + " in\r\n" + "\t\t\t\t<foreach collection=\"" + name
-				+ "\" item=\"item\" open=\"(\" separator=\",\" close=\")\">\r\n\t\t\t\t#{item"  + ",typeHandler=" + this.parseEnum(field) + "}\r\n\t\t\t\t</foreach>";
-			else
-				value = " and " + camelToUnderline + " in\r\n" + "\t\t\t\t<foreach collection=\"" + name
-				+ "\" item=\"item\" open=\"(\" separator=\",\" close=\")\">\r\n\t\t\t\t#{item}\r\n\t\t\t\t</foreach>";
-		} else
-			return;
-
-		meta.getQuerys().put(name, value);
+		Predicate[] predicates = null;
+		if (query != null && (predicates = query.predicate()) != null) {
+			for (Predicate predicate : predicates) {
+				String bind = null;
+				switch (predicate) {
+				case EQ:
+					if (field.getType().isEnum())
+						value = " and " + camelToUnderlineName + " = #{" + name + ",typeHandler=" + this.parseEnum(field) + "}";
+					else
+						value = " and " + camelToUnderlineName + " = #{" + name + "}";
+					break;
+				case NEQ:
+					if (field.getType().isEnum())
+						value = " and " + camelToUnderlineName + " != #{" + name + ",typeHandler=" + this.parseEnum(field) + "}";
+					else
+						value = " and " + camelToUnderlineName + " != #{" + name + "}";
+					break;
+				case GT:
+					value = " and " + camelToUnderlineName + " &gt; #{" + name + "}";
+					break;
+				case GTE:
+					value = " and " + camelToUnderlineName + " &gt;= #{" + name + "}";
+					break;
+				case LT:
+					value = " and " + camelToUnderlineName + " &lt; #{" + name + "}";
+					break;
+				case LTE:
+					value = " and " + camelToUnderlineName + " &lt;= #{" + name + "}";
+					break;
+				case EW:
+					bind = "<bind name=\"" + name + "\" value=\"'%' + " + name + "\"/>";
+					value = bind + " and " + camelToUnderlineName + " like #{" + name + "}";
+					break;
+				case SW:
+					bind = "<bind name=\"" + name + "\" value=\"" + name + " + '%'\"/>";
+					value = bind + " and " + camelToUnderlineName + " like #{" + name + "}";
+					break;
+				case LK:
+					bind = "<bind name=\"" + name + "\" value=\"'%' + " + name + "\"/>";
+					value = bind + " and " + camelToUnderlineName + " like #{" + name + "}";
+					break;
+				case NL:
+					value = " and " + camelToUnderlineName + " is null #{" + name + "}";
+					break;
+				case NN:
+					value = " and " + camelToUnderlineName + " is not null #{" + name + "}";
+					break;
+				case IN:
+					if (field.getType().getComponentType().isEnum())
+						value = " and " + camelToUnderlineName + " in\r\n" + "\t\t\t\t<foreach collection=\"" + name
+						+ "\" item=\"item\" open=\"(\" separator=\",\" close=\")\">\r\n\t\t\t\t#{item"  + ",typeHandler=" + this.parseEnum(field) + "}\r\n\t\t\t\t</foreach>";
+					else
+						value = " and " + camelToUnderlineName + " in\r\n" + "\t\t\t\t<foreach collection=\"" + name
+						+ "\" item=\"item\" open=\"(\" separator=\",\" close=\")\">\r\n\t\t\t\t#{item}\r\n\t\t\t\t</foreach>";
+					break;
+				default:
+					break;
+				}
+				meta.getQuerys().put(name + predicate, value);
+			}
+		}
 	}
 
 	private void parseBasic(Class<?> klass, MybatisXmlMeta meta) {
-		Arrays.asList(klass.getDeclaredFields()).stream().filter(ClassHelper::withoutField).forEach((field) -> {
+		Arrays.asList(klass.getDeclaredFields()).stream().filter(ClassHelper::isNotStaticField).forEach((field) -> {
 			String name = field.getName();
 			Version version = field.getDeclaredAnnotation(Version.class);
 			if (version != null) {

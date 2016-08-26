@@ -1,7 +1,9 @@
 package io.gd.generator.handler;
 
+import io.gd.generator.api.QueryModel;
+import io.gd.generator.config.Config;
 import io.gd.generator.context.MybatisContext;
-import io.gd.generator.meta.mybatis.mapper.MybatisMapperMeta;
+import io.gd.generator.meta.mybatis.MybatisMapperMeta;
 import io.gd.generator.util.FileUtils;
 import io.gd.generator.util.StringUtils;
 
@@ -54,13 +56,16 @@ public class MybatisMapperHandler extends AbstractHandler<MybatisMapperMeta, Myb
 
 	@Override
 	protected MybatisMapperMeta parse(MybatisContext context) throws Exception {
+		Config config = context.getConfig();
 		Class<?> entityClass = context.getEntityClass();
-		Class<?> queryModelClass = context.getQueryModelClass();
+		QueryModel queryModel = entityClass.getAnnotation(QueryModel.class);
+		
+		String entityClassSimpleName = entityClass.getSimpleName();
 		MybatisMapperMeta meta = new MybatisMapperMeta();
-		if (queryModelClass != null) {
+		if (queryModel != null) {
 			meta.setHasQueryModel(true);
-			meta.setQueryModelName(queryModelClass.getName());
-			meta.setQueryModelSimpleName(queryModelClass.getSimpleName());
+			meta.setQueryModelName(config.getQueryModelPackage() + "." + entityClassSimpleName + config.getQueryModelSuffix());
+			meta.setQueryModelSimpleName(entityClassSimpleName + config.getQueryModelSuffix());
 		}
 		meta.setEntityName(entityClass.getName());
 		meta.setEntitySimpleName(entityClass.getSimpleName());
@@ -89,14 +94,14 @@ public class MybatisMapperHandler extends AbstractHandler<MybatisMapperMeta, Myb
 			}
 			
 		}
+		parsed.setMapperPackage(context.getConfig().getMybatisMapperPackage());
 		return parsed;
 	}
 
 	@Override
 	protected void write(MybatisMapperMeta merged, MybatisContext context) throws Exception {
 		Map<String, Object> model = new HashMap<>();
-		model.put("basePackage", context.getConfig().getMybatisMapperPackage());
-		model.put("mmm", merged);
+		model.put("meta", merged);
 		String mapper = renderTemplate("mybatisMapper", model, context);
 
 		File file = context.getMapperFile();

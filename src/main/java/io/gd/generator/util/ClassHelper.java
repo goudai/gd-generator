@@ -68,8 +68,8 @@ public class ClassHelper {
 		}
 	}
 
-	public static boolean withoutField(Field field) {
-		return !(field.getName().equals("serialVersionUID")) && !Modifier.isStatic(field.getModifiers());
+	public static boolean isNotStaticField(Field field) {
+		return !Modifier.isStatic(field.getModifiers());
 	}
 
 	public static java.util.List<Field> getFields(Class<?> clazz) {

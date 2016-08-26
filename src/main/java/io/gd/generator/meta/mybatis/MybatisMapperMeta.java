@@ -1,9 +1,11 @@
-package io.gd.generator.meta.mybatis.mapper;
+package io.gd.generator.meta.mybatis;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MybatisMapperMeta {
+
+	private String mapperPackage;
 
 	private String entityName;
 	private String entitySimpleName;
@@ -12,6 +14,14 @@ public class MybatisMapperMeta {
 	private boolean hasQueryModel;
 	private List<String> otherMethods = new ArrayList<>(); // 其他方法
 	private List<String> otherImports = new ArrayList<>(); // 其他引包
+
+	public String getMapperPackage() {
+		return mapperPackage;
+	}
+
+	public void setMapperPackage(String mapperPackage) {
+		this.mapperPackage = mapperPackage;
+	}
 
 	public String getEntityName() {
 		return entityName;

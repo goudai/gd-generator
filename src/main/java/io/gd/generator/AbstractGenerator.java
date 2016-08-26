@@ -7,15 +7,16 @@ import io.gd.generator.context.Context;
 import io.gd.generator.context.GenLog;
 import io.gd.generator.handler.Handler;
 import io.gd.generator.util.ClassHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import javax.persistence.Table;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
+
+import javax.persistence.Table;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class AbstractGenerator<T extends Context> implements Generator {
 
@@ -55,15 +56,13 @@ public abstract class AbstractGenerator<T extends Context> implements Generator 
 			init();
 			/* 获取所有 entity */
 			Set<Class<?>> entityClasses = ClassHelper.getClasses(config.getEntityPackage());
-			/* 获取所有 query model */
-			Map<String, Class<?>> queryModelClasses = ClassHelper.getQuerysClasses(config.getQueryModelPackage());
 			/* 遍历生成 */
 			// entityClasses.parallelStream().forEach(entityClass -> {
 			entityClasses.stream().forEach(entityClass -> {
 				if (entityClass.getDeclaredAnnotation(Table.class) != null) {
 					try {
 						/* 生成mapper */
-						generateOne(entityClass, queryModelClasses.get(entityClass.getSimpleName() + config.getQueryModelSuffix()));
+						generateOne(entityClass);
 						logger.info("generate " + entityClass.getName() + " success");
 					} catch (Exception e) {
 						logger.error("generate " + entityClass.getName() + " error", e);
@@ -89,11 +88,10 @@ public abstract class AbstractGenerator<T extends Context> implements Generator 
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected void generateOne(Class<?> entityClass, Class<?> queryModelClass) throws Exception {
+	protected void generateOne(Class<?> entityClass) throws Exception {
 		T context = contextClass.newInstance();
 		initContext(context);
 		context.setEntityClass(entityClass);
-		context.setQueryModelClass(queryModelClass);
 		for (Handler handler : handlers) {
 			handler.handle(context);
 		}

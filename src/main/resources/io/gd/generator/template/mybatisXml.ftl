@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="${mxm.mapperName}" >
+<mapper namespace="${meta.mapperName}" >
 <#assign rep="#">
 <#assign rep$="$">
-<#assign baseColumn><#list mxm.mappingMetas as br><#if br.column != 'id'><#if br_has_next>${br.column},<#else>${br.column}</#if></#if></#list><#if mxm.version??>,version</#if></#assign>
-<#assign baseProperty><#list mxm.mappingMetas as br><#if br.property != 'id'><#if br_has_next><#if br.enumHander??>${rep}{${br.property},typeHandler=${br.enumHander}},<#else>${rep}{${br.property}},</#if><#else><#if br.enumHander??>${rep}{${br.property},typeHandler=${br.enumHander}}<#else>${rep}{${br.property}}</#if></#if></#if></#list></#assign>
+<#assign baseColumn><#list meta.mappingMetas as br><#if br.column != 'id'><#if br_has_next>${br.column},<#else>${br.column}</#if></#if></#list><#if meta.version??>,version</#if></#assign>
+<#assign baseProperty><#list meta.mappingMetas as br><#if br.property != 'id'><#if br_has_next><#if br.enumHander??>${rep}{${br.property},typeHandler=${br.enumHander}},<#else>${rep}{${br.property}},</#if><#else><#if br.enumHander??>${rep}{${br.property},typeHandler=${br.enumHander}}<#else>${rep}{${br.property}}</#if></#if></#if></#list></#assign>
 
-	<resultMap id="baseResultMap" type="${mxm.model}">
-		<#list mxm.mappingMetas as br>
+	<resultMap id="baseResultMap" type="${meta.model}">
+		<#list meta.mappingMetas as br>
 		<#if br.column == 'id'>
 		<id column="${br.column}" property="${br.property}" />
 		<#else>
@@ -18,24 +18,24 @@
 		</#if>
 		</#if>
 		</#list>
-		<#if mxm.version??>
+		<#if meta.version??>
 		<result column="version" property="version" />
 		</#if>
 	</resultMap>
 
-	<insert id="insert" parameterType="${mxm.model}" useGeneratedKeys="true" keyProperty="id">
-	  insert into `${mxm.table?trim}` (${baseColumn})
-	  values (${baseProperty}<#if mxm.version??>,${rep}{${mxm.version}}</#if>)
+	<insert id="insert" parameterType="${meta.model}" useGeneratedKeys="true" keyProperty="id">
+	  insert into `${meta.table?trim}` (${baseColumn})
+	  values (${baseProperty}<#if meta.version??>,${rep}{${meta.version}}</#if>)
 	</insert>
 
 	<delete id="delete">
-		delete from `${mxm.table?trim}` where id = ${rep}{id}
+		delete from `${meta.table?trim}` where id = ${rep}{id}
 	</delete>
 
-	<update id="update" parameterType="${mxm.model}">
-		update `${mxm.table?trim}`
+	<update id="update" parameterType="${meta.model}">
+		update `${meta.table?trim}`
 		<set>
-		<#list mxm.mappingMetas as br>
+		<#list meta.mappingMetas as br>
 		<#if br.property != 'id'>
 		<#if br.enumHander??>
 			${br.column} = ${rep}{${br.property},typeHandler=${br.enumHander}},
@@ -44,58 +44,58 @@
 		</#if>
 		</#if>
 		</#list>
-		<#if mxm.version??>
-			${mxm.version} = ${mxm.version} + 1,
+		<#if meta.version??>
+			${meta.version} = ${meta.version} + 1,
 		</#if>
 		</set>
-		where id = ${rep}{id}<#if mxm.version??> and ${mxm.version}=${rep}{${mxm.version}}</#if>
+		where id = ${rep}{id}<#if meta.version??> and ${meta.version}=${rep}{${meta.version}}</#if>
 	</update>
 
 	<update id="merge">
-		update `${mxm.table?trim}`
+		update `${meta.table?trim}`
 			<set>
 				<foreach collection="fields" item="field">
 				<choose>
-				<#list mxm.mappingMetas as br>
+				<#list meta.mappingMetas as br>
 				<#if br.property != 'id'>
 					<#if br.enumHander??>
-					<when test="field == '${br.property}'">${br.column} = ${rep}{${mxm.simpleName?uncap_first}.${br.property},typeHandler=${br.enumHander},javaType=${br.javaType}},</when>
+					<when test="field == '${br.property}'">${br.column} = ${rep}{${meta.simpleName?uncap_first}.${br.property},typeHandler=${br.enumHander},javaType=${br.javaType}},</when>
 					<#else>
-					<when test="field == '${br.property}'">${br.column} = ${rep}{${mxm.simpleName?uncap_first}.${br.property}},</when>
+					<when test="field == '${br.property}'">${br.column} = ${rep}{${meta.simpleName?uncap_first}.${br.property}},</when>
 					</#if>
 				</#if>
 				</#list>
 				</choose>
 				</foreach>
 			</set>
-		where id = ${rep}{${mxm.simpleName?uncap_first}.id}
+		where id = ${rep}{${meta.simpleName?uncap_first}.id}
 	</update>
 
 	<select id="findOne" resultMap="baseResultMap" parameterType="long">
 		select
 		id,${baseColumn}
-		from `${mxm.table?trim}`
+		from `${meta.table?trim}`
 		where id = ${rep}{id}
 	</select>
-	<#if !mxm.hasQueryModel>
+	<#if !meta.hasQueryModel>
 
 	<select id="findAll" resultMap="baseResultMap">
 		select
 		id,${baseColumn}
-		from `${mxm.table?trim}`
+		from `${meta.table?trim}`
 		order by id desc
 	</select>
 	</#if>
-	<#if mxm.hasQueryModel>
+	<#if meta.hasQueryModel>
 
-	<select id="findAll" resultMap="baseResultMap" parameterType="${mxm.query}">
+	<select id="findAll" resultMap="baseResultMap" parameterType="${meta.query}">
 		select
 		id,${baseColumn}
-		from `${mxm.table?trim}`
+		from `${meta.table?trim}`
 		<where>
-			<#list mxm.querys?keys as key>
+			<#list meta.querys?keys as key>
 			<if test="${key} != null">
-				${mxm.querys[key]}
+				${meta.querys[key]}
 			</if>
 			</#list>
 		</where>
@@ -112,19 +112,19 @@
 		</if>
 	</select>
 
-	<select id="count" resultType="_long" parameterType="${mxm.query}">
-		select count(*) from `${mxm.table?trim}`
+	<select id="count" resultType="_long" parameterType="${meta.query}">
+		select count(*) from `${meta.table?trim}`
 		<where>
-			<#list mxm.querys?keys as key>
+			<#list meta.querys?keys as key>
 			<if test="${key} != null">
-				${mxm.querys[key]}
+				${meta.querys[key]}
 			</if>
 			</#list>
 		</where>
 	</select>
 	</#if>
-	<#if mxm.otherMappings??>
-	<#list mxm.otherMappings as otherMapping>
+	<#if meta.otherMappings??>
+	<#list meta.otherMappings as otherMapping>
 
 	${otherMapping}
 	</#list>

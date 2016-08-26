@@ -1,43 +1,43 @@
-package ${basePackage};
+package ${meta.mapperPackage};
 
 
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
-import ${mmm.entityName};
-<#if mmm.hasQueryModel>
-import ${mmm.queryModelName};
+import ${meta.entityName};
+<#if meta.hasQueryModel>
+import ${meta.queryModelName};
 </#if>
 
-<#if mmm.otherImports??>
-<#list mmm.otherImports as otherImport>
+<#if meta.otherImports??>
+<#list meta.otherImports as otherImport>
 import ${otherImport};
 </#list>
 </#if>
 
-public interface ${mmm.entitySimpleName}Mapper {
+public interface ${meta.entitySimpleName}Mapper {
 
-	int insert(${mmm.entitySimpleName} ${mmm.entitySimpleName?uncap_first});
+	int insert(${meta.entitySimpleName} ${meta.entitySimpleName?uncap_first});
 
-	int update(${mmm.entitySimpleName} ${mmm.entitySimpleName?uncap_first});
+	int update(${meta.entitySimpleName} ${meta.entitySimpleName?uncap_first});
 
-	int merge(@Param("${mmm.entitySimpleName?uncap_first}") ${mmm.entitySimpleName} ${mmm.entitySimpleName?uncap_first}, @Param("fields")String... fields);
+	int merge(@Param("${meta.entitySimpleName?uncap_first}") ${meta.entitySimpleName} ${meta.entitySimpleName?uncap_first}, @Param("fields")String... fields);
 
 	int delete(Long id);
 
-	${mmm.entitySimpleName} findOne(Long id);
-	<#if !mmm.hasQueryModel>
+	${meta.entitySimpleName} findOne(Long id);
+	<#if !meta.hasQueryModel>
 
-	List<${mmm.entitySimpleName}> findAll();
+	List<${meta.entitySimpleName}> findAll();
 	</#if>
-	<#if mmm.hasQueryModel>
+	<#if meta.hasQueryModel>
 
-	List<${mmm.entitySimpleName}> findAll(${mmm.queryModelSimpleName} ${mmm.queryModelSimpleName?uncap_first});
+	List<${meta.entitySimpleName}> findAll(${meta.queryModelSimpleName} ${meta.queryModelSimpleName?uncap_first});
 
-	long count(${mmm.queryModelSimpleName} ${mmm.queryModelSimpleName?uncap_first});
+	long count(${meta.queryModelSimpleName} ${meta.queryModelSimpleName?uncap_first});
 	</#if>
-	<#if mmm.otherMethods??>
-	<#list mmm.otherMethods as otherMethod>
+	<#if meta.otherMethods??>
+	<#list meta.otherMethods as otherMethod>
 
 	${otherMethod};
 	</#list>

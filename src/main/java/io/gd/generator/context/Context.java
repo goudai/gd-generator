@@ -9,8 +9,6 @@ public abstract class Context {
 
 	protected Class<?> entityClass;
 
-	protected Class<?> queryModelClass;
-
 	protected Configuration freemarkerConfiguration;
 
 	protected GenLog genLog;
@@ -37,14 +35,6 @@ public abstract class Context {
 
 	public void setEntityClass(Class<?> entityClass) {
 		this.entityClass = entityClass;
-	}
-
-	public Class<?> getQueryModelClass() {
-		return queryModelClass;
-	}
-
-	public void setQueryModelClass(Class<?> queryModelClass) {
-		this.queryModelClass = queryModelClass;
 	}
 
 	public Configuration getFreemarkerConfiguration() {

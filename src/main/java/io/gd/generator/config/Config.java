@@ -2,18 +2,23 @@ package io.gd.generator.config;
 
 public class Config {
 
-	private String queryModelSuffix = "QueryModel";
+	private boolean useLombok = true;
 
 	private String genLogFile;
 
 	private String entityPackage;
+
 	private String queryModelPackage;
+	private String queryModelPath;
+	private String queryModelSuffix = "QueryModel";
 
 	private String mybatisMapperPackage;
+	private String mybatisMapperPath; // 如不填则从运行项目目录中获取默认为maven javaSrc +
+	// mapperPackage
+	
 	private String mybatisXmlPackage;
-
-	private String mybatisMapperPath; // 如不填则从运行项目目录中获取默认为maven javaSrc + mapperPackage
-	private String mybatisXmlPath; // 如不填则从运行项目目录中获取默认为maven resources + xmlPackage
+	private String mybatisXmlPath; // 如不填则从运行项目目录中获取默认为maven resources +
+									// xmlPackage
 
 	private String url = "jdbc:mysql://127.0.0.1/test";
 	private String username = "root";
@@ -25,6 +30,22 @@ public class Config {
 	private String freemakerVersion = "2.3.0";
 	private String template = "io/gd/generator/template";
 	private String defaultEncoding = "UTF-8";
+
+	public boolean isUseLombok() {
+		return useLombok;
+	}
+
+	public void setUseLombok(boolean useLombok) {
+		this.useLombok = useLombok;
+	}
+
+	public String getQueryModelPath() {
+		return queryModelPath;
+	}
+
+	public void setQueryModelPath(String queryModelPath) {
+		this.queryModelPath = queryModelPath;
+	}
 
 	public String getGenLogFile() {
 		return genLogFile;
