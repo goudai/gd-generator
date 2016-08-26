@@ -46,24 +46,24 @@ public class AdminQueryModel  {
 
 ```java
 public static void main(String[] S) {
-	//全局配置对象
-    Config config = new Config();
-    //配置需要进行扫面的包
-    config.setEntityPackage("test.com.entity");
-    //配置需要扫描的queryModel包
-    config.setQueryModelPackage("test.com.model.query");
-    
-    //配置mysql
-    config.setUrl("jdbc:mysql://192.168.1.66/test");
-    config.setUsername("root");
-    config.setPassword("123456");
-    
-    //配置生成的xml的路径 默认生成在resource包下
-    onfig.setXMLPackage("test.com.mapping");
-    //配置生成mapper的包
-    config.setMapperPackage("test.com.mapper");
-    //配置log的存储路径 此log很重要。将会保存每次数据库和实体的检测结果以及修复的sql建议
-    Generater.run(config,new File("D:/LOGS3.LOG"));
+        Config config = new Config();
+        config.setGenLogFile(System.getProperty("user.home") + File.pathSeparator + "/gd-test.log");
+        config.setUrl("jdbc:mysql://192.168.10.240/sk");
+        config.setEntityPackage("com.sk.entity");
+        config.setMybatisMapperPackage("com.sk.mapper");
+        config.setQueryModelPackage("com.sk.model.query");
+        config.setMybatisXmlPackage("com.sk.mapping");
+        config.setJavaSrc("/Users/freeman/IdeaProjects/miziProjects/sk/sk-service/src/main/java");
+        config.setResources("/Users/freeman/IdeaProjects/miziProjects/sk/sk-service-impl/src/main/resources");
+        config.setUsername("root");
+        config.setPassword("123456");
+        AbstractGenerator generator = new MybatisGenerator(config);
+        //		NodeConfig nodeConfig = new NodeConfig();
+        //		nodeConfig.setDistFile(new File("./dubbo.js"));
+        //		nodeConfig.setDocFile(new File("./doc.js"));
+        //		nodeConfig.setServicePackage("com.sk.service");
+        //		generator = new NodeGenerator(nodeConfig);
+generator.generate();
 }
 ```
 ### 生成的结果   
