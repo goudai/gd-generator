@@ -25,7 +25,7 @@ public class User {
 	}
 
 	@Id
-	@Query(predicate = {Predicate.EQ})
+	@Query(predicate = {Predicate.EQ, Predicate.NEQ, Predicate.IN})
 	private Long id;
 	
 	@Query(predicate = {Predicate.LK})

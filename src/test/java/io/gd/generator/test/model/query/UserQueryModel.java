@@ -31,6 +31,10 @@ public class UserQueryModel {
 
 	private Long idEQ;
 
+	private Long idNEQ;
+
+	private Long[] idIN;
+
 	private String phoneLK;
 
 	private String[] jobIN;
@@ -49,6 +53,22 @@ public class UserQueryModel {
 
 	public void setIdEQ(Long idEQ) {
 		this.idEQ = idEQ;
+	}
+
+	public Long getIdNEQ() {
+		return idNEQ;
+	}
+
+	public void setIdNEQ(Long idNEQ) {
+		this.idNEQ = idNEQ;
+	}
+
+	public Long[] getIdIN() {
+		return idIN;
+	}
+
+	public void setIdIN(Long[] idIN) {
+		this.idIN = idIN;
 	}
 
 	public String getPhoneLK() {
