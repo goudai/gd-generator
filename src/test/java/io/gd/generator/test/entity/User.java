@@ -52,6 +52,7 @@ public class User {
 	private Long province;
 	private Long city;
 	private Long district;
+	@Query(predicate = {Predicate.IN})
 	private String job;
 
 	public String getJob() {

@@ -33,6 +33,8 @@ public class UserQueryModel {
 
 	private String phoneLK;
 
+	private String[] jobIN;
+
 	private Integer pageNumber;
 
 	private Integer pageSize;
@@ -55,6 +57,14 @@ public class UserQueryModel {
 
 	public void setPhoneLK(String phoneLK) {
 		this.phoneLK = phoneLK;
+	}
+
+	public String[] getJobIN() {
+		return jobIN;
+	}
+
+	public void setJobIN(String[] jobIN) {
+		this.jobIN = jobIN;
 	}
 
 	public Integer getPageNumber() {

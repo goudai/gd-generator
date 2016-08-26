@@ -36,7 +36,7 @@ public class ${meta.type} {
 	<#if meta.queryModelFields??>
 	<#list meta.queryModelFields as queryModelField>
 
-	private ${queryModelField.type} ${queryModelField.name};
+	private ${queryModelField.type}<#if queryModelField.array>[]</#if> ${queryModelField.name};
 	</#list>
 	</#if>
 
@@ -51,11 +51,11 @@ public class ${meta.type} {
 	<#if meta.queryModelFields??>
 	<#list meta.queryModelFields as queryModelField>
 
-	public ${queryModelField.type} get${queryModelField.name?cap_first}() {
+	public ${queryModelField.type}<#if queryModelField.array>[]</#if> get${queryModelField.name?cap_first}() {
 		return ${queryModelField.name};
 	}
 
-	public void set${queryModelField.name?cap_first}(${queryModelField.type} ${queryModelField.name}) {
+	public void set${queryModelField.name?cap_first}(${queryModelField.type}<#if queryModelField.array>[]</#if> ${queryModelField.name}) {
 		this.${queryModelField.name} = ${queryModelField.name};
 	}
 	</#list>
@@ -87,7 +87,7 @@ public class ${meta.type} {
 
 	public void setDirection(Direction direction) {
 		this.direction = direction;
-	}	
+	}
 	</#if>
 
 	public void setOrderBy(String orderBy) {

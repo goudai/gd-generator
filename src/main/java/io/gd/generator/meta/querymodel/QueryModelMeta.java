@@ -25,6 +25,16 @@ public class QueryModelMeta {
 
 		private String type;
 
+		private boolean array;
+
+		public boolean isArray() {
+			return array;
+		}
+
+		public void setArray(boolean array) {
+			this.array = array;
+		}
+
 		public String getName() {
 			return name;
 		}
