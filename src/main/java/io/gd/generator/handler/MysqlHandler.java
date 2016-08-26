@@ -1,7 +1,5 @@
 package io.gd.generator.handler;
 
-import io.gd.generator.context.GenLog;
-import io.gd.generator.context.JdbcContext;
 import io.gd.generator.meta.mysql.MysqlTableMeta;
 import io.gd.generator.meta.mysql.MysqlTableMeta.MysqlColumnMeta;
 import io.gd.generator.util.ClassHelper;
@@ -12,6 +10,7 @@ import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Arrays;
@@ -31,22 +30,37 @@ import javax.persistence.UniqueConstraint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class MysqlHandler extends AbstractHandler<MysqlTableMeta, JdbcContext> {
+public class MysqlHandler extends ScopedHandler<MysqlTableMeta> {
 
 	static final Logger logger = LoggerFactory.getLogger(MysqlHandler.class);
-
+	
+	protected Connection connection;
+	
 	@Override
-	protected void preRead(JdbcContext context) throws Exception {
+	protected void init() throws Exception {
+		super.init();
+		connection = DriverManager.getConnection(config.getUrl(), config.getUsername(), config.getPassword());
 	}
 
 	@Override
-	protected MysqlTableMeta read(JdbcContext context) throws Exception {
+	protected void destroy() throws Exception {
+		super.destroy();
+		if (connection != null) {
+			connection.close();
+		}
+	}
+
+	@Override
+	protected void preRead(Class<?> entityClass) throws Exception {
+	}
+
+	@Override
+	protected MysqlTableMeta read(Class<?> entityClass) throws Exception {
 		return null;
 	}
 
 	@Override
-	protected MysqlTableMeta parse(JdbcContext context) throws Exception {
-		Class<?> entityClass = context.getEntityClass();
+	protected MysqlTableMeta parse(Class<?> entityClass) throws Exception {
 		Table table = entityClass.getDeclaredAnnotation(Table.class);
 		MysqlTableMeta mtm = new MysqlTableMeta();
 		mtm.setTable(ClassHelper.resolveTableName(entityClass));
@@ -71,21 +85,18 @@ public class MysqlHandler extends AbstractHandler<MysqlTableMeta, JdbcContext> {
 	}
 
 	@Override
-	protected MysqlTableMeta merge(MysqlTableMeta parsed, MysqlTableMeta read, JdbcContext context) throws Exception {
+	protected MysqlTableMeta merge(MysqlTableMeta parsed, MysqlTableMeta read, Class<?> entityClass) throws Exception {
 		return parsed;
 	}
 
 	@Override
-	protected void write(MysqlTableMeta merged, JdbcContext context) throws Exception {
-		GenLog genLog = context.getGenLog();
-		Connection connection = context.getConnection();
+	protected void write(MysqlTableMeta merged, Class<?> entityClass) throws Exception {
 		String table = merged.getTable();
-		Class<?> entityClass = context.getEntityClass();
 		try (Statement st = connection.createStatement(); ResultSet executeQuery = st.executeQuery("show tables like '" + table + "'")) {
 			if (!executeQuery.next()) {
 				Map<String, Object> model = new HashMap<>();
 				model.put("meta", merged);
-				String sql = renderTemplate("mysql", model, context);
+				String sql = renderTemplate("mysql", model);
 				st.executeUpdate(sql);
 				genLog.info(sql);
 				logger.info(sql);
@@ -156,7 +167,7 @@ public class MysqlHandler extends AbstractHandler<MysqlTableMeta, JdbcContext> {
 	}
 
 	@Override
-	protected void postWrite(JdbcContext context) throws Exception {
+	protected void postWrite(Class<?> entityClass) throws Exception {
 	}
 
 	private MysqlColumnMeta parseColumn(Field field) {

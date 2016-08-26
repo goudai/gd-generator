@@ -1,4 +1,4 @@
-package io.gd.generator.context;
+package io.gd.generator;
 
 import io.gd.generator.util.StringUtils;
 

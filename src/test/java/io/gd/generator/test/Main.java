@@ -1,8 +1,8 @@
 package com.sk;
 
 import io.gd.generator.AbstractGenerator;
+import io.gd.generator.Config;
 import io.gd.generator.MybatisGenerator;
-import io.gd.generator.config.Config;
 
 import java.io.File;
 

@@ -1,9 +1,10 @@
 package io.gd.generator.handler;
 
-import io.gd.generator.context.Context;
+import io.gd.generator.Config;
 
-public interface Handler<T extends Context> {
 
-	void handle(T context) throws Exception;
+public interface Handler {
+
+	void handle(Config config) throws Exception;
 
 }

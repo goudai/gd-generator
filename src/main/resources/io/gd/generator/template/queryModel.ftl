@@ -15,32 +15,59 @@ import ${otherImport};
 </#list>
 </#if>
 
-public class ${mmm.entitySimpleName}Mapper {
+public class ${meta.simpleName} {
 
-	int insert(${mmm.entitySimpleName} ${mmm.entitySimpleName?uncap_first});
-
-	int update(${mmm.entitySimpleName} ${mmm.entitySimpleName?uncap_first});
-
-	int merge(@Param("${mmm.entitySimpleName?uncap_first}") ${mmm.entitySimpleName} ${mmm.entitySimpleName?uncap_first}, @Param("fields")String... fields);
-
-	int delete(Long id);
-
-	${mmm.entitySimpleName} findOne(Long id);
-	<#if !mmm.hasQueryModel>
-
-	List<${mmm.entitySimpleName}> findAll();
 	</#if>
-	<#if mmm.hasQueryModel>
-
-	List<${mmm.entitySimpleName}> findAll(${mmm.queryModelSimpleName} ${mmm.queryModelSimpleName?uncap_first});
-
-	long count(${mmm.queryModelSimpleName} ${mmm.queryModelSimpleName?uncap_first});
-	</#if>
-	<#if mmm.otherMethods??>
-	<#list mmm.otherMethods as otherMethod>
+	<#if meta.otherMethods??>
+	<#list meta.otherMethods as otherMethod>
 
 	${otherMethod};
 	</#list>
 	</#if>
+
+	private Integer pageNumber;
+
+	private Integer pageSize;
+
+	private String orderBy;
+
+	private Direction direction;
+	
+	public Long getOffset() {
+		if (pageNumber == null || pageSize == null) {
+			return null;
+		}
+		return ((long) pageNumber) * pageSize;
+	}
+
+	public String getOrderByAndDirection() {
+		if (StringUtils.isBlank(orderBy)) {
+			return null;
+		}
+		if (StringUtils.containsAny(orderBy, ';', ',', '\'', '"')) {
+			return null;
+		}
+		String orderByStr = camelToUnderline(orderBy);
+		String directionStr = direction == null ? "desc" : direction.toString().toLowerCase();
+		return orderByStr + " " + directionStr;
+	}
+
+	private String camelToUnderline(String param) {
+		if (param == null || "".equals(param.trim())) {
+			return "";
+		}
+		int len = param.length();
+		StringBuilder sb = new StringBuilder(len);
+		for (int i = 0; i < len; i++) {
+			char c = param.charAt(i);
+			if (Character.isUpperCase(c)) {
+				sb.append("_");
+				sb.append(Character.toLowerCase(c));
+			} else {
+				sb.append(c);
+			}
+		}
+		return sb.toString();
+	}
 
 }

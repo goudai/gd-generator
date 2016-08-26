@@ -1,9 +1,8 @@
 package io.gd.generator.handler;
 
 import io.gd.generator.api.QueryModel;
-import io.gd.generator.config.Config;
-import io.gd.generator.context.MybatisContext;
 import io.gd.generator.meta.mybatis.MybatisMapperMeta;
+import io.gd.generator.util.ConfigChecker;
 import io.gd.generator.util.FileUtils;
 import io.gd.generator.util.StringUtils;
 
@@ -15,18 +14,38 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class MybatisMapperHandler extends AbstractHandler<MybatisMapperMeta, MybatisContext> {
-
+public class MybatisMapperHandler extends ScopedHandler<MybatisMapperMeta> {
+	
+	private String getMapperFilePath(Class<?> entityClass) {
+		return config.getMybatisMapperPath() + File.separator + entityClass.getSimpleName() + "Mapper.java";
+	}
+	
 	@Override
-	protected void preRead(MybatisContext context) throws Exception {
-		File file = new File(context.getMapperPath() + File.separator + context.getEntityClass().getSimpleName() + "Mapper.java");
-		context.setMapperFile(file);
+	protected void init() throws Exception {
+		super.init();
+		ConfigChecker.notBlank(config.getMybatisMapperPackage(), "config mybatisMapperPackage is miss");
+		ConfigChecker.notBlank(config.getMybatisMapperPath(), "config mybatisMapperPath is miss");
+		
+		String mapperPath = config.getMybatisMapperPath();
+	
+		/* 初始化文件夹 */
+		File mapperPathDir = new File(mapperPath);
+		if (!mapperPathDir.exists()) {
+			mapperPathDir.mkdirs();
+		} else if (!mapperPathDir.isDirectory()) {
+			throw new IllegalArgumentException("mapperPath is not a directory");
+		}
+		
+	}
+	
+	@Override
+	protected void preRead(Class<?> entityClass) throws Exception {
+		
 	}
 
 	@Override
-	protected MybatisMapperMeta read(MybatisContext context) throws Exception {
-		File file = context.getMapperFile();
-		String string = FileUtils.read(file);
+	protected MybatisMapperMeta read(Class<?> entityClass) throws Exception {
+		String string = FileUtils.read(getMapperFilePath(entityClass));
 		MybatisMapperMeta meta = new MybatisMapperMeta();
 		if (StringUtils.isNotBlank(string)) {
 			String[] split2 = string.split("\\{");
@@ -55,9 +74,7 @@ public class MybatisMapperHandler extends AbstractHandler<MybatisMapperMeta, Myb
 	}
 
 	@Override
-	protected MybatisMapperMeta parse(MybatisContext context) throws Exception {
-		Config config = context.getConfig();
-		Class<?> entityClass = context.getEntityClass();
+	protected MybatisMapperMeta parse(Class<?> entityClass) throws Exception {
 		QueryModel queryModel = entityClass.getAnnotation(QueryModel.class);
 		
 		String entityClassSimpleName = entityClass.getSimpleName();
@@ -73,7 +90,7 @@ public class MybatisMapperHandler extends AbstractHandler<MybatisMapperMeta, Myb
 	}
 
 	@Override
-	protected MybatisMapperMeta merge(MybatisMapperMeta parsed, MybatisMapperMeta read, MybatisContext context) throws Exception {
+	protected MybatisMapperMeta merge(MybatisMapperMeta parsed, MybatisMapperMeta read, Class<?> entityClass) throws Exception {
 		if(read != null) {
 			parsed.setOtherMethods(read.getOtherMethods());
 			boolean hasQueryModel = parsed.isHasQueryModel();
@@ -94,17 +111,17 @@ public class MybatisMapperHandler extends AbstractHandler<MybatisMapperMeta, Myb
 			}
 			
 		}
-		parsed.setMapperPackage(context.getConfig().getMybatisMapperPackage());
+		parsed.setMapperPackage(config.getMybatisMapperPackage());
 		return parsed;
 	}
 
 	@Override
-	protected void write(MybatisMapperMeta merged, MybatisContext context) throws Exception {
+	protected void write(MybatisMapperMeta merged, Class<?> entityClass) throws Exception {
 		Map<String, Object> model = new HashMap<>();
 		model.put("meta", merged);
-		String mapper = renderTemplate("mybatisMapper", model, context);
+		String mapper = renderTemplate("mybatisMapper", model);
+		File file = new File(getMapperFilePath(entityClass));
 
-		File file = context.getMapperFile();
 		if (file.exists()) {
 			file.delete();
 		}
@@ -115,7 +132,7 @@ public class MybatisMapperHandler extends AbstractHandler<MybatisMapperMeta, Myb
 	}
 
 	@Override
-	protected void postWrite(MybatisContext context) throws Exception {
+	protected void postWrite(Class<?> entityClass) throws Exception {
 
 	}
 

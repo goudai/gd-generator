@@ -3,11 +3,10 @@ package io.gd.generator.handler;
 import io.gd.generator.api.Predicate;
 import io.gd.generator.api.Query;
 import io.gd.generator.api.QueryModel;
-import io.gd.generator.config.Config;
-import io.gd.generator.context.MybatisContext;
 import io.gd.generator.meta.mybatis.MybatisXmlMeta;
 import io.gd.generator.meta.mybatis.MybatisXmlMeta.MybatisMappingMeta;
 import io.gd.generator.util.ClassHelper;
+import io.gd.generator.util.ConfigChecker;
 import io.gd.generator.util.StringUtils;
 
 import java.io.File;
@@ -29,18 +28,39 @@ import org.dom4j.io.SAXReader;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 
-public class MybatisXmlHandler extends AbstractHandler<MybatisXmlMeta, MybatisContext> {
+public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
 
+	
 	@Override
-	protected void preRead(MybatisContext context) throws Exception {
-		File file = new File(context.getXmlPath() + File.separator + context.getEntityClass().getSimpleName() + "Mapper.xml");
-		context.setXmlFile(file);
+	protected void init() throws Exception {
+		super.init();
+		ConfigChecker.notBlank(config.getMybatisXmlPath(), "config mybatisXmlPath is miss");
+		
+		String xmlPath = config.getMybatisXmlPath();
+	
+		/* 初始化文件夹 */
+		File xmlPathDir = new File(xmlPath);
+		if (!xmlPathDir.exists()) {
+			xmlPathDir.mkdirs();
+		} else if (!xmlPathDir.isDirectory()) {
+			throw new IllegalArgumentException("xmlPath is not a directory");
+		}
+
+	}
+	
+	private String getXmlFilePath(Class<?> entityClass) {
+		return config.getMybatisXmlPath() + File.separator + entityClass.getSimpleName() + "Mapper.xml";
+	}
+	
+	@Override
+	protected void preRead(Class<?> entityClass) throws Exception {
+		
 	}
 
 	@Override
-	protected MybatisXmlMeta read(MybatisContext context) throws Exception {
-		File file = context.getXmlFile();
+	protected MybatisXmlMeta read(Class<?> entityClass) throws Exception {
 		MybatisXmlMeta meta = new MybatisXmlMeta();
+		File file = new File(getXmlFilePath(entityClass));
 		if(file.exists()) {
 			SAXReader reader = new SAXReader();
 			reader.setEntityResolver(new MyEntityResolver());
@@ -62,10 +82,8 @@ public class MybatisXmlHandler extends AbstractHandler<MybatisXmlMeta, MybatisCo
 	}
 
 	@Override
-	protected MybatisXmlMeta parse(MybatisContext context) throws Exception {
-		Class<?> entityClass = context.getEntityClass();
-		Config config = context.getConfig();
-		String mapperName = context.getConfig().getMybatisMapperPackage() + "." + entityClass.getSimpleName() + "Mapper";
+	protected MybatisXmlMeta parse(Class<?> entityClass) throws Exception {
+		String mapperName = config.getMybatisMapperPackage() + "." + entityClass.getSimpleName() + "Mapper";
 		MybatisXmlMeta meta = new MybatisXmlMeta();
 		meta.setMapperName(mapperName);
 		meta.setModel(entityClass.getName());
@@ -90,7 +108,7 @@ public class MybatisXmlHandler extends AbstractHandler<MybatisXmlMeta, MybatisCo
 	}
 
 	@Override
-	protected MybatisXmlMeta merge(MybatisXmlMeta parsed, MybatisXmlMeta read, MybatisContext context) throws Exception {
+	protected MybatisXmlMeta merge(MybatisXmlMeta parsed, MybatisXmlMeta read, Class<?> entityClass) throws Exception {
 		if(read != null) {
 			parsed.setOtherMappings(read.getOtherMappings());
 		}
@@ -98,12 +116,12 @@ public class MybatisXmlHandler extends AbstractHandler<MybatisXmlMeta, MybatisCo
 	}
 
 	@Override
-	protected void write(MybatisXmlMeta merged, MybatisContext context) throws Exception {
+	protected void write(MybatisXmlMeta merged, Class<?> entityClass) throws Exception {
 		Map<String, Object> model = new HashMap<>();
 		model.put("meta", merged);
-		String xml = renderTemplate("mybatisXml", model, context);
+		String xml = renderTemplate("mybatisXml", model);
+		File file = new File(getXmlFilePath(entityClass));
 
-		File file = context.getXmlFile();
 		if (file.exists()) {
 			file.delete();
 		}
@@ -115,7 +133,7 @@ public class MybatisXmlHandler extends AbstractHandler<MybatisXmlMeta, MybatisCo
 	}
 
 	@Override
-	protected void postWrite(MybatisContext context) throws Exception {
+	protected void postWrite(Class<?> entityClass) throws Exception {
 		// DO NOTING
 	}
 

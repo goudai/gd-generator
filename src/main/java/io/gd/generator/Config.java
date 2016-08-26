@@ -1,4 +1,4 @@
-package io.gd.generator.config;
+package io.gd.generator;
 
 public class Config {
 
@@ -8,28 +8,53 @@ public class Config {
 
 	private String entityPackage;
 
+	/* java query model */
 	private String queryModelPackage;
 	private String queryModelPath;
 	private String queryModelSuffix = "QueryModel";
 
+	/* mybatis */
 	private String mybatisMapperPackage;
-	private String mybatisMapperPath; // 如不填则从运行项目目录中获取默认为maven javaSrc +
-	// mapperPackage
-	
-	private String mybatisXmlPackage;
-	private String mybatisXmlPath; // 如不填则从运行项目目录中获取默认为maven resources +
-									// xmlPackage
+	private String mybatisMapperPath;
+	private String mybatisXmlPath;
 
+	/* mysql */
 	private String url = "jdbc:mysql://127.0.0.1/test";
 	private String username = "root";
 	private String password = "123456";
 
-	private String javaSrc = "/src/main/java";
-	private String resources = "/src/main/resources";
-
 	private String freemakerVersion = "2.3.0";
 	private String template = "io/gd/generator/template";
 	private String defaultEncoding = "UTF-8";
+
+	/* nodejs */
+	private String nodeDestFile;
+	private String nodeDocFile;
+	private String nodeServicePackage;
+
+	public String getNodeDestFile() {
+		return nodeDestFile;
+	}
+
+	public void setNodeDestFile(String nodeDestFile) {
+		this.nodeDestFile = nodeDestFile;
+	}
+
+	public String getNodeDocFile() {
+		return nodeDocFile;
+	}
+
+	public void setNodeDocFile(String nodeDocFile) {
+		this.nodeDocFile = nodeDocFile;
+	}
+
+	public String getNodeServicePackage() {
+		return nodeServicePackage;
+	}
+
+	public void setNodeServicePackage(String nodeServicePackage) {
+		this.nodeServicePackage = nodeServicePackage;
+	}
 
 	public boolean isUseLombok() {
 		return useLombok;
@@ -77,14 +102,6 @@ public class Config {
 
 	public void setMybatisMapperPackage(String mybatisMapperPackage) {
 		this.mybatisMapperPackage = mybatisMapperPackage;
-	}
-
-	public String getMybatisXmlPackage() {
-		return mybatisXmlPackage;
-	}
-
-	public void setMybatisXmlPackage(String mybatisXmlPackage) {
-		this.mybatisXmlPackage = mybatisXmlPackage;
 	}
 
 	public String getEntityPackage() {
@@ -141,22 +158,6 @@ public class Config {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public String getJavaSrc() {
-		return javaSrc;
-	}
-
-	public void setJavaSrc(String javaSrc) {
-		this.javaSrc = javaSrc;
-	}
-
-	public String getResources() {
-		return resources;
-	}
-
-	public void setResources(String resources) {
-		this.resources = resources;
 	}
 
 	public String getQueryModelSuffix() {

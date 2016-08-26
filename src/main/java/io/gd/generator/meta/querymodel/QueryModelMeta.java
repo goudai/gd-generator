@@ -7,7 +7,7 @@ import java.util.Set;
 
 public class QueryModelMeta {
 
-	private String name;
+	private String simpleName;
 
 	private List<QueryModelField> queryModelFields = new ArrayList<>();
 
@@ -43,12 +43,12 @@ public class QueryModelMeta {
 		this.queryModelFields = queryModelFields;
 	}
 
-	public String getName() {
-		return name;
+	public String getSimpleName() {
+		return simpleName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setSimpleName(String simpleName) {
+		this.simpleName = simpleName;
 	}
 
 }
