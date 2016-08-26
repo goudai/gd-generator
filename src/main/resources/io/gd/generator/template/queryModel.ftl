@@ -5,11 +5,11 @@ import java.util.HashSet;
 
 import io.gd.generator.api.Direction;
 <#if meta.useLombok>
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.Builder;
 </#if>
-
 <#if meta.importFullTypes??>
 <#list meta.importFullTypes as importFullType>
 import ${importFullType};
@@ -32,7 +32,6 @@ public class ${meta.type} {
 		</#list>
 		</#if>
 	}
-
 	<#if meta.queryModelFields??>
 	<#list meta.queryModelFields as queryModelField>
 
