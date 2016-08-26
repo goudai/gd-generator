@@ -13,6 +13,8 @@ public class QueryModelMeta {
 
 	private String type;
 
+	private Set<String> fieldNames = new HashSet<>();
+
 	private List<QueryModelField> queryModelFields = new ArrayList<>();
 
 	private Set<String> importFullTypes = new HashSet<>(); // import全名
@@ -39,6 +41,14 @@ public class QueryModelMeta {
 			this.type = type;
 		}
 
+	}
+
+	public Set<String> getFieldNames() {
+		return fieldNames;
+	}
+
+	public void setFieldNames(Set<String> fieldNames) {
+		this.fieldNames = fieldNames;
 	}
 
 	public boolean isUseLombok() {

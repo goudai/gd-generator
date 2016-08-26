@@ -6,6 +6,7 @@ import io.gd.generator.api.QueryModel;
 import io.gd.generator.meta.querymodel.QueryModelMeta;
 import io.gd.generator.meta.querymodel.QueryModelMeta.QueryModelField;
 import io.gd.generator.util.ClassHelper;
+import io.gd.generator.util.ConfigChecker;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -15,8 +16,25 @@ import java.util.stream.Collectors;
 
 public class QueryModelHandler extends ScopedHandler<QueryModelMeta> {
 
+	@Override
+	protected void init() throws Exception {
+		super.init();
+		ConfigChecker.notBlank(config.getQueryModelPackage(), "config queryModelPackage is miss");
+		ConfigChecker.notBlank(config.getQueryModelPath(), "config queryModelPath is miss");
+		ConfigChecker.notBlank(config.getQueryModelSuffix(), "config queryModelSuffix is miss");
+		
+		/* 初始化文件夹 */
+		File path = new File(config.getQueryModelPath());
+		if (!path.exists()) {
+			path.mkdirs();
+		} else if (!path.isDirectory()) {
+			throw new IllegalArgumentException("queryModelPath is not a directory");
+		}
+
+	}
+	
 	private String getQueryModelFilePath(Class<?> entityClass) {
-		return config.getQueryModelPackage() + File.separator + entityClass.getSimpleName() + "Mapper.java";
+		return config.getQueryModelPath() + File.separator + entityClass.getSimpleName() + config.getQueryModelSuffix() + ".java";
 	}
 	
 	@Override
@@ -41,6 +59,7 @@ public class QueryModelHandler extends ScopedHandler<QueryModelMeta> {
 			
 			ClassHelper.getFields(entityClass).stream().filter(ClassHelper::isNotStaticField)
 				.forEach(v -> {
+					meta.getFieldNames().add(v.getName());
 					Query query = v.getAnnotation(Query.class);
 					if (query != null) {
 						for (Predicate predicate : query.predicate()) {

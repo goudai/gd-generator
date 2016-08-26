@@ -1,44 +1,37 @@
-package ${meta.queryModelPackage};
+package io.gd.generator.test.model.query;
 
 import java.util.Set;
 import java.util.HashSet;
 
 import io.gd.generator.api.Direction;
-<#if meta.useLombok>
-import lombok.Getter;
-import lombok.Setter;
-import lombok.Builder;
-</#if>
 
-<#if meta.importFullTypes??>
-<#list meta.importFullTypes as importFullType>
-import ${importFullType};
-</#list>
-</#if>
-
-<#if meta.useLombok>
-@Getter
-@Setter
-@Builder
-</#if>
-public class ${meta.type} {
+public class UserQueryModel {
 
 	private static Set<String> filedNames = new HashSet<>();
 
 	static {
-		<#if meta.fieldNames??>
-		<#list meta.fieldNames as fieldName>
-		filedNames.add("${fieldName}");
-		</#list>
-		</#if>
+		filedNames.add("registerIp");
+		filedNames.add("gender");
+		filedNames.add("registerTime");
+		filedNames.add("city");
+		filedNames.add("sign");
+		filedNames.add("avatar");
+		filedNames.add("lastLoginIp");
+		filedNames.add("lastLoginTime");
+		filedNames.add("password");
+		filedNames.add("province");
+		filedNames.add("phone");
+		filedNames.add("district");
+		filedNames.add("nickname");
+		filedNames.add("id");
+		filedNames.add("isTeacher");
+		filedNames.add("isFrozen");
+		filedNames.add("job");
 	}
 
-	<#if meta.queryModelFields??>
-	<#list meta.queryModelFields as queryModelField>
+	private Long idEQ;
 
-	private ${queryModelField.type} ${queryModelField.name};
-	</#list>
-	</#if>
+	private String phoneLK;
 
 	private Integer pageNumber;
 
@@ -47,19 +40,22 @@ public class ${meta.type} {
 	private String orderBy;
 
 	private Direction direction;
-	<#if !meta.useLombok>
-	<#if meta.queryModelFields??>
-	<#list meta.queryModelFields as queryModelField>
 
-	public ${queryModelField.type} get${queryModelField.name?cap_first}() {
-		return ${queryModelField.name};
+	public Long getIdEQ() {
+		return idEQ;
 	}
 
-	public void set${queryModelField.name?cap_first}(${queryModelField.type} ${queryModelField.name}) {
-		this.${queryModelField.name} = ${queryModelField.name};
+	public void setIdEQ(Long idEQ) {
+		this.idEQ = idEQ;
 	}
-	</#list>
-	</#if>
+
+	public String getPhoneLK() {
+		return phoneLK;
+	}
+
+	public void setPhoneLK(String phoneLK) {
+		this.phoneLK = phoneLK;
+	}
 
 	public Integer getPageNumber() {
 		return pageNumber;
@@ -87,8 +83,7 @@ public class ${meta.type} {
 
 	public void setDirection(Direction direction) {
 		this.direction = direction;
-	}	
-	</#if>
+	}
 
 	public void setOrderBy(String orderBy) {
 		if (orderBy == null) {
