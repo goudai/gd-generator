@@ -63,7 +63,7 @@ public static void main(String[] S) {
         //		nodeConfig.setDocFile(new File("./doc.js"));
         //		nodeConfig.setServicePackage("com.sk.service");
         //		generator = new NodeGenerator(nodeConfig);
-generator.generate();
+        generator.generate();
 }
 ```
 ### 生成的结果   
