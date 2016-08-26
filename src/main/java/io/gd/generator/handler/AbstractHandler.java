@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import org.slf4j.Logger;
@@ -66,7 +67,7 @@ public abstract class AbstractHandler implements Handler {
 		Set<Class<?>> entityClasses = ClassHelper.getClasses(config.getEntityPackage());
 		/* 遍历生成 */
 		entityClasses.stream().forEach(entityClass -> {
-			if (entityClass.getDeclaredAnnotation(Table.class) != null) {
+			if (entityClass.getDeclaredAnnotation(Entity.class) != null) {
 				try {
 					/* 顺次生成每一个 */
 					doHandleOne(entityClass);

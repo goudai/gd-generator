@@ -7,15 +7,21 @@ import java.util.Set;
 
 public class QueryModelMeta {
 
-	private String simpleName;
+	private boolean useLombok;
+
+	private String queryModelPackage;
+
+	private String type;
 
 	private List<QueryModelField> queryModelFields = new ArrayList<>();
+
+	private Set<String> importFullTypes = new HashSet<>(); // import全名
 
 	public static class QueryModelField {
 
 		private String name;
 
-		private Set<String> suffixs = new HashSet<>();
+		private String type;
 
 		public String getName() {
 			return name;
@@ -25,14 +31,30 @@ public class QueryModelMeta {
 			this.name = name;
 		}
 
-		public Set<String> getSuffixs() {
-			return suffixs;
+		public String getType() {
+			return type;
 		}
 
-		public void setSuffixs(Set<String> suffixs) {
-			this.suffixs = suffixs;
+		public void setType(String type) {
+			this.type = type;
 		}
 
+	}
+
+	public boolean isUseLombok() {
+		return useLombok;
+	}
+
+	public void setUseLombok(boolean useLombok) {
+		this.useLombok = useLombok;
+	}
+
+	public Set<String> getImportFullTypes() {
+		return importFullTypes;
+	}
+
+	public void setImportFullTypes(Set<String> importFullTypes) {
+		this.importFullTypes = importFullTypes;
 	}
 
 	public List<QueryModelField> getQueryModelFields() {
@@ -43,12 +65,20 @@ public class QueryModelMeta {
 		this.queryModelFields = queryModelFields;
 	}
 
-	public String getSimpleName() {
-		return simpleName;
+	public String getQueryModelPackage() {
+		return queryModelPackage;
 	}
 
-	public void setSimpleName(String simpleName) {
-		this.simpleName = simpleName;
+	public void setQueryModelPackage(String queryModelPackage) {
+		this.queryModelPackage = queryModelPackage;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 }

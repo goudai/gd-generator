@@ -1,27 +1,28 @@
-package ${queryModelPackage};
+package ${meta.queryModelPackage};
 
-
-import java.util.List;
-import org.apache.ibatis.annotations.Param;
-
-import ${mmm.entityName};
-<#if mmm.hasQueryModel>
-import ${mmm.queryModelName};
+import io.gd.generator.api.Direction;
+<#if meta.useLombok>
+import lombok.Getter;
+import lombok.Setter;
+import lombok.Builder;
 </#if>
 
-<#if mmm.otherImports??>
-<#list mmm.otherImports as otherImport>
-import ${otherImport};
+<#if meta.importFullTypes??>
+<#list meta.importFullTypes as importFullType>
+import ${importFullType};
 </#list>
 </#if>
 
-public class ${meta.simpleName} {
+<#if meta.useLombok>
+@Getter
+@Setter
+@Builder
+</#if>
+public class ${meta.type} {
+	<#if meta.queryModelFields??>
+	<#list meta.queryModelFields as queryModelField>
 
-	</#if>
-	<#if meta.otherMethods??>
-	<#list meta.otherMethods as otherMethod>
-
-	${otherMethod};
+	private ${queryModelField.type} ${queryModelField.name};
 	</#list>
 	</#if>
 
@@ -32,7 +33,7 @@ public class ${meta.simpleName} {
 	private String orderBy;
 
 	private Direction direction;
-	
+
 	public Long getOffset() {
 		if (pageNumber == null || pageSize == null) {
 			return null;

@@ -1,5 +1,9 @@
 package io.gd.generator.test.entity;
 
+import io.gd.generator.api.Predicate;
+import io.gd.generator.api.Query;
+import io.gd.generator.api.QueryModel;
+
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -13,6 +17,7 @@ import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "user")
+@QueryModel
 public class User {
 
 	private enum Gender {
@@ -20,7 +25,10 @@ public class User {
 	}
 
 	@Id
+	@Query(predicate = {Predicate.EQ})
 	private Long id;
+	
+	@Query(predicate = {Predicate.LK})
 	@Column(length = 11, unique = true)
 	private String phone;
 	@Column(length = 20)
