@@ -17,7 +17,7 @@ public @interface View {
 	
 	Class<?> type();
 	
-	String[] group();
+	String[] group() default ""; // 如果留空 则默认全
 	
 	String elementGroup() default ""; // 若为collection则是collection元素 若为map则对应value
 	
