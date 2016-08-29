@@ -13,4 +13,6 @@ public @interface Type {
 	
 	String name();
 	
+	String description() default "";
+	
 }
