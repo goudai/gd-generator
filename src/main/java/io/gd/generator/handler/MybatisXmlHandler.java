@@ -154,7 +154,7 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
 		Query query = field.getAnnotation(Query.class);
 		String value = null;
 		Predicate[] predicates = null;
-		if (query != null && (predicates = query.predicate()) != null) {
+		if (query != null && (predicates = query.value()) != null) {
 			for (Predicate predicate : predicates) {
 				String bind = null;
 				switch (predicate) {

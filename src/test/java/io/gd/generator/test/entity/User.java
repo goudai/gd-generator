@@ -33,10 +33,10 @@ public class User {
 	}
 	
 	@Id
-	@Query(predicate = {Predicate.EQ, Predicate.NEQ, Predicate.IN})
+	@Query(value = {Predicate.EQ, Predicate.NEQ, Predicate.IN})
 	private Long id;
 	
-	@Query(predicate = {Predicate.LK})
+	@Query(value = {Predicate.LK})
 	@Column(length = 11, unique = true)
 	@View(name = "phone", type = String.class, group = { "UserSimpleVo" })
 	private String phone;
@@ -81,7 +81,7 @@ public class User {
 	
 	private Long district;
 	
-	@Query(predicate = {Predicate.IN})
+	@Query(value = {Predicate.IN})
 	private String job;
 
 	public String getJob() {
