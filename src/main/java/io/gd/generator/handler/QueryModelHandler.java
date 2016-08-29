@@ -62,7 +62,7 @@ public class QueryModelHandler extends ScopedHandler<QueryModelMeta> {
 					meta.getFieldNames().add(v.getName());
 					Query query = v.getAnnotation(Query.class);
 					if (query != null) {
-						for (Predicate predicate : query.predicate()) {
+						for (Predicate predicate : query.value()) {
 							QueryModelField queryModelField = new QueryModelField();
 							queryModelField.setType(v.getType().getSimpleName());
 							queryModelField.setName(v.getName() + predicate);

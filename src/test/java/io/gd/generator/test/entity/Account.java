@@ -10,7 +10,7 @@ import io.gd.generator.api.query.QueryModel;
 @QueryModel
 public class Account{
 
-	@Query(predicate = {Predicate.EQ})
+	@Query(value = {Predicate.EQ})
 	private String name;
 
 	public String getName() {

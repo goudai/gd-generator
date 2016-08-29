@@ -13,7 +13,7 @@ import io.gd.generator.api.vo.ViewObject;
 @Type(name = "博客")
 public class Blog {
 
-	@Query(predicate = { Predicate.EQ })
+	@Query(value = { Predicate.EQ })
 	@View(group = {"UserBlogVo"}, name = "titleLabel", type = String.class)
 	@Field(name = "标题")
 	private String title;

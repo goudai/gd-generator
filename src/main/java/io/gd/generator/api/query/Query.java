@@ -11,6 +11,6 @@ import java.lang.annotation.Target;
 @Documented
 public @interface Query {
 	
-	Predicate[] predicate();
+	Predicate[] value();
 	
 }
