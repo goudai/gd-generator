@@ -4,16 +4,15 @@ import freemarker.template.TemplateException;
 import io.gd.generator.api.vo.View;
 import io.gd.generator.api.vo.ViewIgnore;
 import io.gd.generator.api.vo.ViewObject;
+import io.gd.generator.api.vo.Views;
 import io.gd.generator.util.ClassHelper;
 import io.gd.generator.util.ConfigChecker;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.lang.reflect.Field;
+import java.util.*;
 
 import static io.gd.generator.util.ClassHelper.getFields;
 import static java.io.File.separator;
@@ -29,12 +28,12 @@ public class VoHandler extends AbstractHandler {
 	private String dir;
 	private boolean useLombok;
 
-	public VoHandler(String voPackage,String dir,boolean useLombok) {
-		this.voPackage= voPackage;
-		if(voPackage == null || "".equals(voPackage))
+	public VoHandler(String voPackage, String dir, boolean useLombok) {
+		this.voPackage = voPackage;
+		if (voPackage == null || "".equals(voPackage))
 			throw new NullPointerException("voPackage  does nou be null");
 		this.dir = dir;
-		if(dir == null || "".equals(dir))
+		if (dir == null || "".equals(dir))
 			throw new NullPointerException("VO dir does nou be null");
 		this.useLombok = useLombok;
 	}
@@ -55,26 +54,24 @@ public class VoHandler extends AbstractHandler {
 	@Override
 	protected void doHandle(Set<Class<?>> entityClasses) {
 		Map<String, Meta> groupClassMap = init(entityClasses, initGroups(entityClasses));
-			groupClassMap.forEach((k,v)->{
-				try {
-					final HashMap<String, Object> meta = new HashMap<String, Object>() {{
-						put("meta", v);
-					}};
-					final String vo = renderTemplate("vo", meta);
-					File file = new File(dir+separator+v.className+".java");
-					if(file.exists()) file.delete();
-					file.createNewFile();
-					try (FileOutputStream os = new FileOutputStream(file)) {
-						os.write(vo.getBytes());
-					}
-				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (TemplateException e) {
-					e.printStackTrace();
+		groupClassMap.forEach((k, v) -> {
+			try {
+				final HashMap<String, Object> meta = new HashMap<String, Object>() {{
+					put("meta", v);
+				}};
+				final String vo = renderTemplate("vo", meta);
+				File file = new File(dir + separator + v.className + ".java");
+				if (file.exists()) file.delete();
+				file.createNewFile();
+				try (FileOutputStream os = new FileOutputStream(file)) {
+					os.write(vo.getBytes());
 				}
-			});
-
-
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (TemplateException e) {
+				e.printStackTrace();
+			}
+		});
 
 
 	}
@@ -85,7 +82,7 @@ public class VoHandler extends AbstractHandler {
 				final ViewObject viewObject = entityClass.getDeclaredAnnotation(ViewObject.class);
 				//handle class
 				stream(viewObject.views()).forEach(view -> {
-					stream(view.group()).forEach(group -> {
+					stream(view.groups()).forEach(group -> {
 						final Meta meta = groupClassMap.get(group);
 						meta.imports.add(view.type().getName());
 						final Meta.Field field = new Meta.Field();
@@ -107,31 +104,26 @@ public class VoHandler extends AbstractHandler {
 									final Meta.Field f = new Meta.Field();
 									f.type = field.getType().getSimpleName();
 									f.name = field.getName();
-									if(!field.getType().getName().startsWith("java.lang")){
-										if(field.getType().getName().contains("$")){
-											meta.imports.add("static "+field.getType().getName().replace("$","."));
-										}else{
+									if (!field.getType().getName().startsWith("java.lang")) {
+										if (field.getType().getName().contains("$")) {
+											meta.imports.add("static " + field.getType().getName().replace("$", "."));
+										} else {
 											meta.imports.add(field.getType().getName());
 										}
 									}
 									meta.getFields().add(f);
 								});
-							}else{
-								stream(viewObject.groups()).forEach(group -> {
-									final Meta meta = groupClassMap.get(group);
-									final Meta.Field f = new Meta.Field();
-									f.name = (view.name()!=null && !view.name().equals(""))?view.name():field.getName();
-									f.type = field.getType().getSimpleName();
-									f.paradigm = view.elementGroup();
-									if(!field.getType().getName().startsWith("java.lang")){
-										if(field.getType().getName().contains("$")){
-											meta.imports.add("static "+field.getType().getName().replace("$","."));
-										}else{
-											meta.imports.add(field.getType().getName());
-										}
-									}
-									meta.getFields().add(f);
-								});
+							} else {
+
+								final Views views = field.getDeclaredAnnotation(Views.class);
+
+								if (views == null && views.value().length == 0) {
+									doHandleView(groupClassMap, viewObject, field, view);
+								} else {
+									Arrays.stream(views.value()).forEach(view1 -> {
+										doHandleView(groupClassMap, viewObject, field, view1);
+									});
+								}
 							}
 						});
 			}
@@ -139,6 +131,28 @@ public class VoHandler extends AbstractHandler {
 		});
 
 		return groupClassMap;
+	}
+
+	private void doHandleView(Map<String, Meta> groupClassMap, ViewObject viewObject, Field field, View view) {
+		String[] groups = view.groups();
+		if (groups.length == 0) {
+			groups = viewObject.groups();
+		}
+		stream(groups).forEach(group -> {
+			final Meta meta = groupClassMap.get(group);
+			final Meta.Field f = new Meta.Field();
+			f.name = (view.name() != null && !view.name().equals("")) ? view.name() : field.getName();
+			f.type = field.getType().getSimpleName();
+			f.paradigm = view.elementGroup();
+			if (!field.getType().getName().startsWith("java.lang")) {
+				if (field.getType().getName().contains("$")) {
+					meta.imports.add("static " + field.getType().getName().replace("$", "."));
+				} else {
+					meta.imports.add(field.getType().getName());
+				}
+			}
+			meta.getFields().add(f);
+		});
 	}
 
 	private Map<String, Meta> initGroups(Set<Class<?>> entityClasses) {
@@ -166,7 +180,7 @@ public class VoHandler extends AbstractHandler {
 		private boolean useLombok;
 
 
-		public static class Field{
+		public static class Field {
 			private String name;
 			private String paradigm = "";
 			private String type;
@@ -180,8 +194,8 @@ public class VoHandler extends AbstractHandler {
 			}
 
 			public String getParadigm() {
-				if(paradigm == null || "".equals(paradigm)) return "";
-				return "<"+paradigm+">";
+				if (paradigm == null || "".equals(paradigm)) return "";
+				return "<" + paradigm + ">";
 			}
 
 			public void setParadigm(String paradigm) {
