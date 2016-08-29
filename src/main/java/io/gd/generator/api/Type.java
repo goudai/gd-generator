@@ -11,8 +11,6 @@ import java.lang.annotation.Target;
 @Documented
 public @interface Type {
 	
-	boolean queryModel() default false;
-
-	String[] viewObject() default {};
+	String name();
 	
 }

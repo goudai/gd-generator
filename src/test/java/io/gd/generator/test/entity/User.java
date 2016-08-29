@@ -1,5 +1,6 @@
 package io.gd.generator.test.entity;
 
+import io.gd.generator.api.Field;
 import io.gd.generator.api.query.Predicate;
 import io.gd.generator.api.query.Query;
 import io.gd.generator.api.query.QueryModel;
@@ -46,9 +47,10 @@ public class User {
 	@Column(length = 6, unique = true)
 	private String nickname;
 	
-	private Boolean isTeacher;
+	private Boolean isTeacher; 
 	
-	private String avatar;
+	@Field(name = "头像")
+	private String avatar; // 头像
 	
 	private Boolean isFrozen;
 	

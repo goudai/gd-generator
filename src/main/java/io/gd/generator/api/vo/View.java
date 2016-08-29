@@ -19,6 +19,8 @@ public @interface View {
 	
 	String[] group();
 	
-	String elementGroup() default "";
+	String elementGroup() default ""; // 若为collection则是collection元素 若为map则对应value
+	
+	Class<?> keyType() default Object.class; // 若为map则是key的class
 	
 }
