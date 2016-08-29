@@ -1,8 +1,9 @@
 *.idea
 *.class
-target/
+/*/target/
 .project
 .settings/
 .classpath
 web.xml
 .idea
+/*/*.iml

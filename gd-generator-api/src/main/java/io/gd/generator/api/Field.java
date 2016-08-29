@@ -7,7 +7,7 @@ import java.lang.annotation.*;
 @Documented
 public @interface Field {
 	
-	String name();
+	String label();
 	
 	String description() default "";
 	

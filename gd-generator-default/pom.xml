@@ -7,10 +7,10 @@
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>default-generator</artifactId>
+	<artifactId>gd-generator-default</artifactId>
 	<packaging>jar</packaging>
 
-	<name>default-generator</name>
+
 	<url>http://maven.apache.org</url>
 
 	<properties>
@@ -19,8 +19,63 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>18.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate.javax.persistence</groupId>
+			<artifactId>hibernate-jpa-2.1-api</artifactId>
+			<version>1.0.0.Final</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.freemarker</groupId>
+			<artifactId>freemarker</artifactId>
+			<version>2.3.22</version>
+		</dependency>
+
+		<dependency>
+			<groupId>dom4j</groupId>
+			<artifactId>dom4j</artifactId>
+			<version>1.6.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.12</version>
+		</dependency>
+
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.0.13</version>
+			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.35</version>
+			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis</artifactId>
+			<version>3.2.8</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.1.4</version>
+		</dependency>
+		<dependency>
 			<groupId>io.goudai</groupId>
-			<artifactId>generator-api</artifactId>
+			<artifactId>gd-generator-api</artifactId>
 			<version>0.0.2-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
