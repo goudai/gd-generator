@@ -109,7 +109,7 @@ public class VoHandler extends AbstractHandler {
 									f.name = field.getName();
 									if(!field.getType().getName().startsWith("java.lang")){
 										if(field.getType().getName().contains("$")){
-											meta.imports.add(" static "+field.getType().getName().replace("$","."));
+											meta.imports.add("static "+field.getType().getName().replace("$","."));
 										}else{
 											meta.imports.add(field.getType().getName());
 										}
@@ -125,7 +125,7 @@ public class VoHandler extends AbstractHandler {
 									f.paradigm = view.elementGroup();
 									if(!field.getType().getName().startsWith("java.lang")){
 										if(field.getType().getName().contains("$")){
-											meta.imports.add(" static "+field.getType().getName().replace("$","."));
+											meta.imports.add("static "+field.getType().getName().replace("$","."));
 										}else{
 											meta.imports.add(field.getType().getName());
 										}
