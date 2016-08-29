@@ -1,4 +1,4 @@
-package io.gd.generator.api;
+package io.gd.generator.api.query;
 
 public enum Predicate {
 	

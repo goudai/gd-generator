@@ -3,7 +3,7 @@ package io.gd.generator.test.model.query;
 import java.util.Set;
 import java.util.HashSet;
 
-import io.gd.generator.api.Direction;
+import io.gd.generator.api.query.Direction;
 
 public class UserQueryModel {
 

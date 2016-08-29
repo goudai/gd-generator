@@ -1,8 +1,8 @@
 package io.gd.generator.handler;
 
-import io.gd.generator.api.Predicate;
-import io.gd.generator.api.Query;
-import io.gd.generator.api.QueryModel;
+import io.gd.generator.api.query.Predicate;
+import io.gd.generator.api.query.Query;
+import io.gd.generator.api.query.QueryModel;
 import io.gd.generator.meta.querymodel.QueryModelMeta;
 import io.gd.generator.meta.querymodel.QueryModelMeta.QueryModelField;
 import io.gd.generator.util.ClassHelper;

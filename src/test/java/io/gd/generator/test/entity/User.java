@@ -1,8 +1,9 @@
 package io.gd.generator.test.entity;
 
-import io.gd.generator.api.Predicate;
-import io.gd.generator.api.Query;
-import io.gd.generator.api.QueryModel;
+import io.gd.generator.api.query.Predicate;
+import io.gd.generator.api.query.Query;
+import io.gd.generator.api.query.QueryModel;
+import io.gd.generator.api.vo.View;
 
 import java.util.Date;
 
@@ -30,6 +31,8 @@ public class User {
 	
 	@Query(predicate = {Predicate.LK})
 	@Column(length = 11, unique = true)
+	@View(name = "phone", type = String.class, viewObject = { "detail", "list", "simple" })
+	@View(name)
 	private String phone;
 	@Column(length = 20)
 	private String password;
