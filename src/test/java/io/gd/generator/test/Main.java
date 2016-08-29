@@ -2,7 +2,7 @@ package io.gd.generator.test;
 
 import io.gd.generator.Config;
 import io.gd.generator.Generator;
-import io.gd.generator.handler.QueryModelHandler;
+import io.gd.generator.handler.VoHandler;
 
 public class Main {
 	public static void main(String[] S) throws Exception {
@@ -24,7 +24,7 @@ public class Main {
 		config.setQueryModelPath("D:\\Work\\Workspace2016\\gd-generator\\src\\test\\java\\io\\gd\\generator\\test\\model\\query\\");
 
 		
-		Generator.generate(config, QueryModelHandler.class);
+		Generator.generate(config, new VoHandler("io.gd.generator.test.vo","/Users/freeman/IdeaProjects/gd-generator/src/test/java/io/gd/generator/test/vo",true));
 	}
 
 }

@@ -5,6 +5,6 @@ import io.gd.generator.Config;
 
 public interface Handler {
 
-	void handle(Config config) throws Exception;
+	void start(Config config) throws Exception;
 
 }

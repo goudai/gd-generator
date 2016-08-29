@@ -7,17 +7,9 @@ import io.gd.generator.api.query.QueryModel;
 import io.gd.generator.api.vo.View;
 import io.gd.generator.api.vo.ViewObject;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "user")
@@ -28,7 +20,7 @@ import javax.persistence.TemporalType;
 
 public class User {
 
-	private enum Gender {
+	public enum Gender {
 		男, 女;
 	}
 	

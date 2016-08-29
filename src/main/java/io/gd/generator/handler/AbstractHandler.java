@@ -1,26 +1,19 @@
 package io.gd.generator.handler;
 
 import freemarker.core.ParseException;
-import freemarker.template.Configuration;
-import freemarker.template.MalformedTemplateNameException;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateNotFoundException;
-import freemarker.template.Version;
+import freemarker.template.*;
 import io.gd.generator.Config;
 import io.gd.generator.GenLog;
 import io.gd.generator.util.ClassHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.persistence.Entity;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-
-import javax.persistence.Entity;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public abstract class AbstractHandler implements Handler {
 
@@ -33,12 +26,13 @@ public abstract class AbstractHandler implements Handler {
 	protected GenLog genLog;
 
 	@Override
-	public void handle(Config config) throws Exception {
+	public void start(Config config) throws Exception {
 		Objects.requireNonNull(config, " config cat not be null");
 		this.config = config;
 		try {
+			Set<Class<?>> classes = ClassHelper.getClasses(config.getEntityPackage());
 			init();
-			doHandle();
+			doHandle(classes);
 		} catch (Exception e) {
 			logger.error("generate error", e);
 		} finally {
@@ -61,9 +55,8 @@ public abstract class AbstractHandler implements Handler {
 		genLog.flush();
 	}
 
-	protected void doHandle() {
+	protected void doHandle(Set<Class<?>> entityClasses) {
 		/* 获取所有 entity */
-		Set<Class<?>> entityClasses = ClassHelper.getClasses(config.getEntityPackage());
 		/* 遍历生成 */
 		entityClasses.stream().forEach(entityClass -> {
 			if (entityClass.getDeclaredAnnotation(Entity.class) != null) {
@@ -83,8 +76,10 @@ public abstract class AbstractHandler implements Handler {
 
 	protected void doHandleOne(Class<?> entityClass) throws Exception {
 
-	};
-	
+	}
+
+	;
+
 	protected String renderTemplate(String tmplName, Map<String, Object> model) throws TemplateNotFoundException, MalformedTemplateNameException, ParseException, IOException, TemplateException {
 		StringWriter out = new StringWriter();
 		Template template = freemarkerConfiguration.getTemplate(tmplName + ".ftl");

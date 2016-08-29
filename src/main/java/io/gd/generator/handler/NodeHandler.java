@@ -11,11 +11,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Parameter;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
 
 public class NodeHandler extends AbstractHandler {
@@ -25,10 +21,8 @@ public class NodeHandler extends AbstractHandler {
 	Set<Class<?>> beans = new LinkedHashSet<>();
 
 	@Override
-	public void init() throws Exception {
-		super.init();
-		Set<Class<?>> serviceClasses = ClassHelper.getClasses(config.getNodeServicePackage());
-		serviceClasses.stream().filter(service ->!(service.getName().endsWith("Impl"))).forEach(service ->{
+	public void doHandle(Set<Class<?>> classes) {
+		classes.stream().filter(service ->!(service.getName().endsWith("Impl"))).forEach(service ->{
 			nodeMeta.getServices().add(new Service(service.getName(),service.getSimpleName()));
 			Exports exports = new Exports(service.getSimpleName());
 			nodeMeta.getExports().add(exports);
@@ -52,12 +46,8 @@ public class NodeHandler extends AbstractHandler {
 
 			});
 		});
-	}
 
-	@Override
-	public void doHandle() {
 		try {
-			this.init();
 			StringWriter out = new StringWriter();
 			Template template = null;
 			template = freemarkerConfiguration.getTemplate("node-yield.ftl");
