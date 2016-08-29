@@ -15,7 +15,7 @@ import java.util.Date;
 @Table(name = "user")
 @QueryModel
 @ViewObject(groups = { "UserSimpleVo", "UserListVo", "UserDetailVo" },
-	views = {@View(group = { "UserDetailVo", "UserSimpleVo" }, name = "blogs", type = ArrayList.class, elementGroup ="UserBlogVo")}
+	views = {@View(groups = { "UserDetailVo", "UserSimpleVo" }, name = "blogs", type = ArrayList.class, elementGroup ="UserBlogVo")}
 )
 
 public class User {
@@ -30,7 +30,7 @@ public class User {
 	
 	@Query(value = {Predicate.LK})
 	@Column(length = 11, unique = true)
-	@View(name = "phone", type = String.class, group = { "UserSimpleVo" })
+	@View(name = "phone", type = String.class, groups = { "UserSimpleVo" })
 	private String phone;
 	
 	@Column(length = 20)
@@ -49,7 +49,7 @@ public class User {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date registerTime;
 	
-	@View(group = "Detail", name = "lastLoginTimeLabel", type = String.class)
+	@View(groups = "Detail", name = "lastLoginTimeLabel", type = String.class)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastLoginTime;
 	
