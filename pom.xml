@@ -5,10 +5,15 @@
 	<groupId>io.goudai</groupId>
 	<artifactId>gd-generator</artifactId>
 	<version>0.0.2-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<modules>
+		<module>generator-api</module>
+		<module>default-generator</module>
+	</modules>
+	<packaging>pom</packaging>
 
 	<name>gd-generator</name>
 	<url>http://maven.apache.org</url>
+
 
 
 	<properties>
