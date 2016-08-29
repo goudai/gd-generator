@@ -13,4 +13,6 @@ public @interface Field {
 	
 	String name();
 	
+	String description() default "";
+	
 }
