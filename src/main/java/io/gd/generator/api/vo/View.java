@@ -17,6 +17,8 @@ public @interface View {
 	
 	Class<?> type();
 	
-	String[] viewObject();
+	String[] group();
+	
+	String elementGroup() default "";
 	
 }

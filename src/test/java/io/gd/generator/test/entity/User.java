@@ -4,7 +4,9 @@ import io.gd.generator.api.query.Predicate;
 import io.gd.generator.api.query.Query;
 import io.gd.generator.api.query.QueryModel;
 import io.gd.generator.api.vo.View;
+import io.gd.generator.api.vo.ViewObject;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -19,42 +21,64 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "user")
 @QueryModel
+@ViewObject(groups = { "UserSimpleVo", "UserListVo", "UserDetailVo" },
+	views = {@View(group = { "UserDetailVo", "UserSimpleVo" }, name = "blogs", type = ArrayList.class, elementGroup ="UserBlogVo")}
+)
+
 public class User {
 
 	private enum Gender {
 		男, 女;
 	}
-
+	
 	@Id
 	@Query(predicate = {Predicate.EQ, Predicate.NEQ, Predicate.IN})
 	private Long id;
 	
 	@Query(predicate = {Predicate.LK})
 	@Column(length = 11, unique = true)
-	@View(name = "phone", type = String.class, viewObject = { "detail", "list", "simple" })
-	@View(name)
+	@View(name = "phone", type = String.class, group = { "UserSimpleVo" })
 	private String phone;
+	
 	@Column(length = 20)
 	private String password;
+	
 	@Column(length = 6, unique = true)
 	private String nickname;
+	
 	private Boolean isTeacher;
+	
 	private String avatar;
+	
 	private Boolean isFrozen;
+	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date registerTime;
+	
+	@View(group = "Detail", name = "lastLoginTimeLabel", type = String.class)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastLoginTime;
+	
 	private String lastLoginIp;
+	
 	private String registerIp;
 
 	@Column(length = 100)
 	private String sign;
+	
 	@Enumerated(EnumType.ORDINAL)
 	private Gender gender;
+	
+
+	
+	
+	
 	private Long province;
+	
 	private Long city;
+	
 	private Long district;
+	
 	@Query(predicate = {Predicate.IN})
 	private String job;
 
