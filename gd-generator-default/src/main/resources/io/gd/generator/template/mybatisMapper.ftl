@@ -10,37 +10,37 @@ import ${meta.queryModelName};
 </#if>
 
 <#if meta.otherImports??>
-	<#list meta.otherImports as otherImport>
-	import ${otherImport};
-	</#list>
+<#list meta.otherImports as otherImport>
+import ${otherImport};
+</#list>
 </#if>
 
 public interface ${meta.entitySimpleName}Mapper {
 
-int insert(${meta.entitySimpleName} ${meta.entitySimpleName?uncap_first});
+	int insert(${meta.entitySimpleName} ${meta.entitySimpleName?uncap_first});
 
-int update(${meta.entitySimpleName} ${meta.entitySimpleName?uncap_first});
+	int update(${meta.entitySimpleName} ${meta.entitySimpleName?uncap_first});
 
-int merge(@Param("${meta.entitySimpleName?uncap_first}") ${meta.entitySimpleName} ${meta.entitySimpleName?uncap_first}, @Param("fields")String... fields);
+	int merge(@Param("${meta.entitySimpleName?uncap_first}") ${meta.entitySimpleName} ${meta.entitySimpleName?uncap_first}, @Param("fields")String... fields);
 
-int delete(Long id);
+	int delete(Long id);
 
-${meta.entitySimpleName} findOne(Long id);
-<#if !meta.hasQueryModel>
+	${meta.entitySimpleName} findOne(Long id);
+	<#if !meta.hasQueryModel>
 
-List<${meta.entitySimpleName}> findAll();
-</#if>
-<#if meta.hasQueryModel>
+	List<${meta.entitySimpleName}> findAll();
+	</#if>
+	<#if meta.hasQueryModel>
 
-List<${meta.entitySimpleName}> findAll(${meta.queryModelSimpleName} ${meta.queryModelSimpleName?uncap_first});
+	List<${meta.entitySimpleName}> findAll(${meta.queryModelSimpleName} ${meta.queryModelSimpleName?uncap_first});
 
-long count(${meta.queryModelSimpleName} ${meta.queryModelSimpleName?uncap_first});
-</#if>
-<#if meta.otherMethods??>
+	long count(${meta.queryModelSimpleName} ${meta.queryModelSimpleName?uncap_first});
+	</#if>
+	<#if meta.otherMethods??>
 	<#list meta.otherMethods as otherMethod>
 
 	${otherMethod};
 	</#list>
-</#if>
+	</#if>
 
 }

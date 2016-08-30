@@ -4,7 +4,7 @@ let {Client} = require('dubbo-node')
 
 <#list node.services as service>
 let execute${service.simpleName} = (method, body) => {
-return client.execute('${service.name}',method,body)
+		return client.execute('${service.name}',method,body)
 }
 </#list>
 
@@ -12,13 +12,13 @@ return client.execute('${service.name}',method,body)
 exports.${export.serviceName?uncap_first} = {
 	<#list export.methods as method>
 	/*
-	body : ${method.json}
+		body : ${method.json}
 	*/
-		<#if method_has_next>
-		${method.name}: body => execute${export.serviceName}('${method.name}',body),
-		<#else>
-		${method.name}: body => execute${export.serviceName}('${method.name}',body)
-		</#if>
+	<#if method_has_next>
+	${method.name}: body => execute${export.serviceName}('${method.name}',body),
+	<#else>
+	${method.name}: body => execute${export.serviceName}('${method.name}',body)
+	</#if>
 	</#list>
 }
 </#list>

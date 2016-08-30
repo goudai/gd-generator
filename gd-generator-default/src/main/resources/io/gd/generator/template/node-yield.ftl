@@ -14,11 +14,11 @@ exports.${export.serviceName?uncap_first} = {
 	*/
 		<#if method_has_next>
 		${method.name}: function *(body){
-		execute${export.serviceName}('${method.name}',body)
+			execute${export.serviceName}('${method.name}',body)
 		},
 		<#else>
 		${method.name}: function *(body){
-		execute${export.serviceName}('${method.name}',body)
+			execute${export.serviceName}('${method.name}',body)
 		}
 		</#if>
 	</#list>

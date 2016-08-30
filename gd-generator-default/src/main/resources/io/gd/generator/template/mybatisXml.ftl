@@ -7,25 +7,25 @@
 <#assign baseProperty><#list meta.mappingMetas as br><#if br.property != 'id'><#if br_has_next><#if br.enumHander??>${rep}{${br.property},typeHandler=${br.enumHander}},<#else>${rep}{${br.property}},</#if><#else><#if br.enumHander??>${rep}{${br.property},typeHandler=${br.enumHander}}<#else>${rep}{${br.property}}</#if></#if></#if></#list></#assign>
 
 	<resultMap id="baseResultMap" type="${meta.model}">
-	<#list meta.mappingMetas as br>
+		<#list meta.mappingMetas as br>
 		<#if br.column == 'id'>
-			<id column="${br.column}" property="${br.property}" />
+		<id column="${br.column}" property="${br.property}" />
 		<#else>
-			<#if br.enumHander??>
-				<result column="${br.column}" property="${br.property}" typeHandler="${br.enumHander}" />
-			<#else>
-				<result column="${br.column}" property="${br.property}" />
-			</#if>
+		<#if br.enumHander??>
+		<result column="${br.column}" property="${br.property}" typeHandler="${br.enumHander}" />
+		<#else>
+		<result column="${br.column}" property="${br.property}" />
 		</#if>
-	</#list>
-	<#if meta.version??>
+		</#if>
+		</#list>
+		<#if meta.version??>
 		<result column="version" property="version" />
-	</#if>
+		</#if>
 	</resultMap>
 
 	<insert id="insert" parameterType="${meta.model}" useGeneratedKeys="true" keyProperty="id">
-		insert into `${meta.table?trim}` (${baseColumn})
-		values (${baseProperty}<#if meta.version??>,${rep}{${meta.version}}</#if>)
+	  insert into `${meta.table?trim}` (${baseColumn})
+	  values (${baseProperty}<#if meta.version??>,${rep}{${meta.version}}</#if>)
 	</insert>
 
 	<delete id="delete">
@@ -36,16 +36,16 @@
 		update `${meta.table?trim}`
 		<set>
 		<#list meta.mappingMetas as br>
-			<#if br.property != 'id'>
-				<#if br.enumHander??>
-				${br.column} = ${rep}{${br.property},typeHandler=${br.enumHander}},
-				<#else>
-				${br.column} = ${rep}{${br.property}},
-				</#if>
-			</#if>
+		<#if br.property != 'id'>
+		<#if br.enumHander??>
+			${br.column} = ${rep}{${br.property},typeHandler=${br.enumHander}},
+		<#else>
+			${br.column} = ${rep}{${br.property}},
+		</#if>
+		</#if>
 		</#list>
 		<#if meta.version??>
-		${meta.version} = ${meta.version} + 1,
+			${meta.version} = ${meta.version} + 1,
 		</#if>
 		</set>
 		where id = ${rep}{id}<#if meta.version??> and ${meta.version}=${rep}{${meta.version}}</#if>
@@ -53,21 +53,21 @@
 
 	<update id="merge">
 		update `${meta.table?trim}`
-		<set>
-			<foreach collection="fields" item="field">
+			<set>
+				<foreach collection="fields" item="field">
 				<choose>
 				<#list meta.mappingMetas as br>
-					<#if br.property != 'id'>
-						<#if br.enumHander??>
-							<when test="field == '${br.property}'">${br.column} = ${rep}{${meta.simpleName?uncap_first}.${br.property},typeHandler=${br.enumHander},javaType=${br.javaType}},</when>
-						<#else>
-							<when test="field == '${br.property}'">${br.column} = ${rep}{${meta.simpleName?uncap_first}.${br.property}},</when>
-						</#if>
+				<#if br.property != 'id'>
+					<#if br.enumHander??>
+					<when test="field == '${br.property}'">${br.column} = ${rep}{${meta.simpleName?uncap_first}.${br.property},typeHandler=${br.enumHander},javaType=${br.javaType}},</when>
+					<#else>
+					<when test="field == '${br.property}'">${br.column} = ${rep}{${meta.simpleName?uncap_first}.${br.property}},</when>
 					</#if>
+				</#if>
 				</#list>
 				</choose>
-			</foreach>
-		</set>
+				</foreach>
+			</set>
 		where id = ${rep}{${meta.simpleName?uncap_first}.id}
 	</update>
 
@@ -77,7 +77,7 @@
 		from `${meta.table?trim}`
 		where id = ${rep}{id}
 	</select>
-<#if !meta.hasQueryModel>
+	<#if !meta.hasQueryModel>
 
 	<select id="findAll" resultMap="baseResultMap">
 		select
@@ -85,8 +85,8 @@
 		from `${meta.table?trim}`
 		order by id desc
 	</select>
-</#if>
-<#if meta.hasQueryModel>
+	</#if>
+	<#if meta.hasQueryModel>
 
 	<select id="findAll" resultMap="baseResultMap" parameterType="${meta.query}">
 		select
@@ -94,9 +94,9 @@
 		from `${meta.table?trim}`
 		<where>
 			<#list meta.querys?keys as key>
-				<if test="${key} != null">
+			<if test="${key} != null">
 				${meta.querys[key]}
-				</if>
+			</if>
 			</#list>
 		</where>
 		<choose>
@@ -116,18 +116,18 @@
 		select count(*) from `${meta.table?trim}`
 		<where>
 			<#list meta.querys?keys as key>
-				<if test="${key} != null">
+			<if test="${key} != null">
 				${meta.querys[key]}
-				</if>
+			</if>
 			</#list>
 		</where>
 	</select>
-</#if>
-<#if meta.otherMappings??>
+	</#if>
+	<#if meta.otherMappings??>
 	<#list meta.otherMappings as otherMapping>
 
 	${otherMapping}
 	</#list>
-</#if>
+	</#if>
 
 </mapper>
