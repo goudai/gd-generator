@@ -154,56 +154,57 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
 		Predicate[] predicates = null;
 		if (query != null && (predicates = query.value()) != null) {
 			for (Predicate predicate : predicates) {
+				String nameWithPredicate = name + predicate.toString();
 				String bind = null;
 				switch (predicate) {
 				case EQ:
 					if (field.getType().isEnum())
-						value = " and " + camelToUnderlineName + " = #{" + name + ",typeHandler=" + this.parseEnum(field) + "}";
+						value = " and " + camelToUnderlineName + " = #{" + nameWithPredicate + ",typeHandler=" + this.parseEnum(field) + "}";
 					else
-						value = " and " + camelToUnderlineName + " = #{" + name + "}";
+						value = " and " + camelToUnderlineName + " = #{" + nameWithPredicate + "}";
 					break;
 				case NEQ:
 					if (field.getType().isEnum())
-						value = " and " + camelToUnderlineName + " != #{" + name + ",typeHandler=" + this.parseEnum(field) + "}";
+						value = " and " + camelToUnderlineName + " != #{" + nameWithPredicate + ",typeHandler=" + this.parseEnum(field) + "}";
 					else
-						value = " and " + camelToUnderlineName + " != #{" + name + "}";
+						value = " and " + camelToUnderlineName + " != #{" + nameWithPredicate + "}";
 					break;
 				case GT:
-					value = " and " + camelToUnderlineName + " &gt; #{" + name + "}";
+					value = " and " + camelToUnderlineName + " &gt; #{" + nameWithPredicate + "}";
 					break;
 				case GTE:
-					value = " and " + camelToUnderlineName + " &gt;= #{" + name + "}";
+					value = " and " + camelToUnderlineName + " &gt;= #{" + nameWithPredicate + "}";
 					break;
 				case LT:
-					value = " and " + camelToUnderlineName + " &lt; #{" + name + "}";
+					value = " and " + camelToUnderlineName + " &lt; #{" + nameWithPredicate + "}";
 					break;
 				case LTE:
-					value = " and " + camelToUnderlineName + " &lt;= #{" + name + "}";
+					value = " and " + camelToUnderlineName + " &lt;= #{" + nameWithPredicate + "}";
 					break;
 				case EW:
-					bind = "<bind name=\"" + name + "\" value=\"'%' + " + name + "\"/>";
-					value = bind + " and " + camelToUnderlineName + " like #{" + name + "}";
+					bind = "<bind name=\"" + nameWithPredicate + "\" value=\"'%' + " + nameWithPredicate + "\"/>";
+					value = bind + " and " + camelToUnderlineName + " like #{" + nameWithPredicate + "}";
 					break;
 				case SW:
-					bind = "<bind name=\"" + name + "\" value=\"" + name + " + '%'\"/>";
-					value = bind + " and " + camelToUnderlineName + " like #{" + name + "}";
+					bind = "<bind name=\"" + nameWithPredicate + "\" value=\"" + nameWithPredicate + " + '%'\"/>";
+					value = bind + " and " + camelToUnderlineName + " like #{" + nameWithPredicate + "}";
 					break;
 				case LK:
-					bind = "<bind name=\"" + name + "\" value=\"'%' + " + name + "\"/>";
-					value = bind + " and " + camelToUnderlineName + " like #{" + name + "}";
+					bind = "<bind name=\"" + nameWithPredicate + "\" value=\"'%' + " + nameWithPredicate + " + '%'\"/>";
+					value = bind + " and " + camelToUnderlineName + " like #{" + nameWithPredicate + "}";
 					break;
 				case NL:
-					value = " and " + camelToUnderlineName + " is null #{" + name + "}";
+					value = " and " + camelToUnderlineName + " is null";
 					break;
 				case NN:
-					value = " and " + camelToUnderlineName + " is not null #{" + name + "}";
+					value = " and " + camelToUnderlineName + " is not null";
 					break;
 				case IN:
-					if (field.getType().getComponentType().isEnum())
-						value = " and " + camelToUnderlineName + " in\r\n" + "\t\t\t\t<foreach collection=\"" + name
+					if (field.getType().isEnum())
+						value = " and " + camelToUnderlineName + " in\r\n" + "\t\t\t\t<foreach collection=\"" + nameWithPredicate
 						+ "\" item=\"item\" open=\"(\" separator=\",\" close=\")\">\r\n\t\t\t\t#{item"  + ",typeHandler=" + this.parseEnum(field) + "}\r\n\t\t\t\t</foreach>";
 					else
-						value = " and " + camelToUnderlineName + " in\r\n" + "\t\t\t\t<foreach collection=\"" + name
+						value = " and " + camelToUnderlineName + " in\r\n" + "\t\t\t\t<foreach collection=\"" + nameWithPredicate
 						+ "\" item=\"item\" open=\"(\" separator=\",\" close=\")\">\r\n\t\t\t\t#{item}\r\n\t\t\t\t</foreach>";
 					break;
 				default:
