@@ -5,6 +5,7 @@ package ${meta.voPackage};
 import lombok.Getter;
 import lombok.Setter;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 </#if>
 
 <#if meta.imports??>
@@ -18,6 +19,7 @@ import ${import};
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
 </#if>
 public class ${meta.className} {
 
