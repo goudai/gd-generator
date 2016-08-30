@@ -2,6 +2,7 @@ package ${meta.queryModelPackage};
 
 import java.util.Set;
 import java.util.HashSet;
+import java.io.Serializable;
 
 import io.gd.generator.api.query.Direction;
 <#if meta.useLombok>
@@ -25,7 +26,7 @@ import ${importFullType};
 @NoArgsConstructor
 @AllArgsConstructor
 </#if>
-public class ${meta.type} {
+public class ${meta.type} implements Serializable {
 	<#if meta.queryModelFields??>
 	<#list meta.queryModelFields as queryModelField>
 
