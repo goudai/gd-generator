@@ -14,6 +14,8 @@ import java.lang.reflect.Field;
 import java.util.*;
 
 import static io.gd.generator.util.ClassHelper.getFields;
+import static io.gd.generator.util.StringUtils.isNotBlank;
+import static io.gd.generator.util.StringUtils.replaceFirstToLower;
 import static java.io.File.separator;
 import static java.util.Arrays.stream;
 
@@ -47,6 +49,96 @@ public class VoHandler extends AbstractHandler {
 			path.mkdirs();
 		} else if (!path.isDirectory()) {
 			throw new IllegalArgumentException("queryModelPath is not a directory");
+		}
+	}
+
+
+	@Override
+	protected void doHandleOne(Class<?> entityClass) throws Exception {
+		if (entityClass.isAnnotationPresent(ViewObject.class)) {
+			final ViewObject viewObject = entityClass.getDeclaredAnnotation(ViewObject.class);
+			Map<String, Meta> result = new HashMap<>();
+			//生成类元数据
+			Arrays.stream(viewObject.groups()).forEach(voName -> {
+				final Meta meta = new Meta();
+				meta.className = voName;
+				meta.voPackage = voPackage;
+				meta.useLombok = useLombok;
+				result.put(voName, meta);
+			});
+			for (View view : viewObject.views()) {
+				for (String group : view.groups()) {
+					final Meta meta = result.get(group);
+					if (meta == null)
+						throw new NullPointerException("group " + group + "未在类 " + entityClass.getName() + "上声明");
+					final Meta.Field field = new Meta.Field();
+					switch (view.elementGroupType()) {
+						case ASSOCIATION:
+							field.type = view.elementGroup();
+							field.name = isNotBlank(view.name()) ? replaceFirstToLower(view.elementGroup()) : view.name();
+							meta.imports.add(voPackage + "." + view.elementGroup());
+							break;
+						case COLLECTION:
+							if (!Collection.class.isAssignableFrom(view.type()))
+								throw new IllegalArgumentException("view type is " + view.type().getName() + " must be collection subclasses");
+							final String name = view.name();
+							if (isNotBlank(name))
+								throw new NullPointerException("type is collection ,view name must be not null");
+							field.name = name;
+							field.paradigm = view.elementGroup();
+							field.type = view.type().getSimpleName();
+							meta.imports.add(view.type().getName());
+							meta.imports.add(voPackage + "." + view.elementGroup());
+							break;
+						case SIMPLE:
+							throw new UnsupportedOperationException("view class not support SIMPLE");
+						case MAP:
+							//TODO
+							throw new UnsupportedOperationException("elementGroup type map");
+					}
+					meta.fields.add(field);
+				}
+			}
+
+			for (Field f : getFields(entityClass)) {
+				if(f.isAnnotationPresent(View.class)){
+					final View view = f.getDeclaredAnnotation(View.class);
+					for (String group : view.groups()) {
+						final Meta meta = result.get(group);
+						if (meta == null)
+							throw new NullPointerException("group " + group + "未在类 " + entityClass.getName() + "上声明");
+						final Meta.Field field = new Meta.Field();
+						switch (view.elementGroupType()) {
+							case ASSOCIATION:
+								field.type = view.elementGroup();
+								field.name = isNotBlank(view.name()) ? replaceFirstToLower(view.elementGroup()) : view.name();
+								meta.imports.add(voPackage + "." + view.elementGroup());
+								break;
+							case COLLECTION:
+								if (!Collection.class.isAssignableFrom(view.type()))
+									throw new IllegalArgumentException("view type is " + view.type().getName() + " must be collection subclasses");
+								final String name = view.name();
+								if (isNotBlank(name))
+									throw new NullPointerException("type is collection ,view name must be not null");
+								field.name = name;
+								field.paradigm = view.elementGroup();
+								field.type = view.type().getSimpleName();
+								meta.imports.add(view.type().getName());
+								meta.imports.add(voPackage + "." + view.elementGroup());
+								break;
+							case SIMPLE:
+//								field.name =
+								break;
+							case MAP:
+								//TODO
+								throw new UnsupportedOperationException("elementGroup type map");
+						}
+						meta.fields.add(field);
+					}
+				}
+
+			}
+
 		}
 	}
 
@@ -113,7 +205,6 @@ public class VoHandler extends AbstractHandler {
 									meta.getFields().add(f);
 								});
 							} else {
-								System.out.println(views.length);
 								stream(views).forEach(view1 -> {
 									doHandleView(groupClassMap, viewObject, field, view1);
 								});
@@ -143,7 +234,11 @@ public class VoHandler extends AbstractHandler {
 			}
 			final Meta.Field f = new Meta.Field();
 			f.name = (view.name() != null && !view.name().equals("")) ? view.name() : field.getName();
-			f.type = field.getType().getSimpleName();
+			if (view.name() == null || "".equals(view.name())) {
+				f.type = field.getType().getSimpleName();
+			} else {
+				f.type = view.type().getSimpleName();
+			}
 			f.paradigm = view.elementGroup();
 			if (!field.getType().getName().startsWith("java.lang")) {
 				if (field.getType().getName().contains("$")) {

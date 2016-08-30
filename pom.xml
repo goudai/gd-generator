@@ -14,9 +14,8 @@
 	<packaging>pom</packaging>
 
 	<name>gd-generator</name>
+
 	<url>http://maven.apache.org</url>
-
-
 
 
 	<properties>

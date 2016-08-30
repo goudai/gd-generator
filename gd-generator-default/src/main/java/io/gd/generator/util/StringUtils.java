@@ -5,7 +5,7 @@ public class StringUtils {
 	public static boolean isBlank(String string) {
 		return string == null || "".equals(string);
 	}
-	
+
 	public static boolean isNotBlank(String string) {
 		return string != null && !"".equals(string);
 	}
@@ -48,9 +48,13 @@ public class StringUtils {
 		}
 		return sb.toString();
 	}
-	
-	public static void main(String[] args) {
-		System.out.println(StringUtils.isNotBlank(null));
+
+	public static String replaceFirstToLower(String str) {
+		char[] chars = new char[1];
+		chars[0] = str.charAt(0);
+		String temp = new String(chars);
+		return str.replaceFirst(temp, temp.toLowerCase());
 	}
+
 
 }
