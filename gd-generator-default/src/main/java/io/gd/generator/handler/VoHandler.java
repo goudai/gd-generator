@@ -14,7 +14,6 @@ import java.util.*;
 import static io.gd.generator.util.ClassHelper.getFields;
 import static io.gd.generator.util.StringUtils.*;
 import static java.io.File.separator;
-import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 
 /**
@@ -95,9 +94,6 @@ public class VoHandler extends AbstractHandler {
 							meta.imports.add(voPackage + "." + view.elementGroup());
 							break;
 						case SIMPLE:
-							if (entityClass.getSimpleName().equals("Account")) {
-								System.out.println(asList());
-							}
 							if (isBlank(view.name()))
 								throw new NullPointerException("type is SIMPLE ,view name must be not null");
 							if (view.type() == Object.class)
@@ -137,7 +133,6 @@ public class VoHandler extends AbstractHandler {
 							case ASSOCIATION:
 								field.type = view.elementGroup();
 								field.name = isBlank(view.name()) ? replaceFirstToLower(view.elementGroup()) : view.name();
-								meta.imports.add(voPackage + "." + view.elementGroup());
 								meta.fields2.add(field);
 								isAdd = false;
 								break;
@@ -151,7 +146,6 @@ public class VoHandler extends AbstractHandler {
 								field.paradigm = view.elementGroup();
 								field.type = view.type().getSimpleName();
 								meta.imports.add(view.type().getName());
-								meta.imports.add(voPackage + "." + view.elementGroup());
 								meta.fields2.add(field);
 								isAdd = false;
 								break;
@@ -262,7 +256,7 @@ public class VoHandler extends AbstractHandler {
 	}
 
 	public static class Meta {
-		private List<String> imports = new ArrayList<>();
+		private Set<String> imports = new HashSet<>();
 		private List<Field> fields = new ArrayList<>();
 		private List<Field> fields2 = new ArrayList<>();
 		private String voPackage;
@@ -310,16 +304,15 @@ public class VoHandler extends AbstractHandler {
 			}
 		}
 
-		public List<String> getImports() {
+		public Set<String> getImports() {
 			return imports;
 		}
 
-		public void setImports(List<String> imports) {
+		public void setImports(Set<String> imports) {
 			this.imports = imports;
 		}
 
 		public List<Field> getFields() {
-			fields.addAll(fields2);
 			return fields;
 		}
 
@@ -349,6 +342,14 @@ public class VoHandler extends AbstractHandler {
 
 		public void setUseLombok(boolean useLombok) {
 			this.useLombok = useLombok;
+		}
+
+		public List<Field> getFields2() {
+			return fields2;
+		}
+
+		public void setFields2(List<Field> fields2) {
+			this.fields2 = fields2;
 		}
 
 		@Override
