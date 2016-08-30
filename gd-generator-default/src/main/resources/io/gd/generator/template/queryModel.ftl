@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 </#if>
 <#if meta.importFullTypes??>
 <#list meta.importFullTypes as importFullType>
@@ -22,18 +23,9 @@ import ${importFullType};
 @Setter
 @Builder
 @NoArgsConstructor
+@AllArgsConstructor
 </#if>
 public class ${meta.type} {
-
-	private static Set<String> filedNames = new HashSet<>();
-
-	static {
-		<#if meta.fieldNames??>
-		<#list meta.fieldNames as fieldName>
-		filedNames.add("${fieldName}");
-		</#list>
-		</#if>
-	}
 	<#if meta.queryModelFields??>
 	<#list meta.queryModelFields as queryModelField>
 
@@ -61,6 +53,16 @@ public class ${meta.type} {
 	}
 	</#list>
 	</#if>
+
+	private static Set<String> fieldNames = new HashSet<>();
+
+	static {
+		<#if meta.fieldNames??>
+		<#list meta.fieldNames as fieldName>
+		fieldNames.add("${fieldName}");
+		</#list>
+		</#if>
+	}
 
 	public Integer getPageNumber() {
 		return pageNumber;
