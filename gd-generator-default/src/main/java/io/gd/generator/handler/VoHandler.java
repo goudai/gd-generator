@@ -54,7 +54,6 @@ public class VoHandler extends AbstractHandler {
 
 	@Override
 	protected void doHandleOne(Class<?> entityClass) throws Exception {
-		System.out.println(entityClass.getDeclaredAnnotation(ViewObject.class));
 		if (entityClass.isAnnotationPresent(ViewObject.class)) {
 			final ViewObject viewObject = entityClass.getDeclaredAnnotation(ViewObject.class);
 			Map<String, Meta> result = new HashMap<>();
@@ -113,7 +112,12 @@ public class VoHandler extends AbstractHandler {
 			for (Field f : getFields(entityClass)) {
 				if (f.isAnnotationPresent(View.class)) {
 					final View view = f.getDeclaredAnnotation(View.class);
-					for (String group : view.groups()) {
+					String[] groups = view.groups();
+					if(groups.length <=0){
+						groups = viewObject.groups();
+					}
+
+					for (String group : groups) {
 						final Meta meta = result.get(group);
 						if (meta == null)
 							throw new NullPointerException("group " + group + "未在类 " + entityClass.getName() + "上声明");
