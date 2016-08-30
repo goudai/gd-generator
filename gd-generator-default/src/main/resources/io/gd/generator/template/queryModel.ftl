@@ -9,6 +9,7 @@ import io.gd.generator.api.query.Direction;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 </#if>
 <#if meta.importFullTypes??>
 <#list meta.importFullTypes as importFullType>
@@ -20,6 +21,7 @@ import ${importFullType};
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
 </#if>
 public class ${meta.type} {
 
