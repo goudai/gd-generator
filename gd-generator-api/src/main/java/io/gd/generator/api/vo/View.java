@@ -8,7 +8,7 @@ import java.lang.annotation.*;
 @Repeatable(Views.class)
 public @interface View {
 
-	String name();
+	String name() default "";
 
 	Class<?> type() default Object.class;
 

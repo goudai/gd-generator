@@ -8,9 +8,12 @@ import io.gd.generator.api.query.QueryModel;
 import io.gd.generator.api.vo.View;
 import io.gd.generator.api.vo.ViewObject;
 
+import javax.persistence.Entity;
+
 @QueryModel
 @ViewObject(groups = {"BlogVo", "UserBlogVo"})
 @Type(label = "博客")
+@Entity
 public class Blog {
 
 	@Query(value = { Predicate.EQ })

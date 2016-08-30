@@ -14,8 +14,7 @@ import java.lang.reflect.Field;
 import java.util.*;
 
 import static io.gd.generator.util.ClassHelper.getFields;
-import static io.gd.generator.util.StringUtils.isNotBlank;
-import static io.gd.generator.util.StringUtils.replaceFirstToLower;
+import static io.gd.generator.util.StringUtils.*;
 import static java.io.File.separator;
 import static java.util.Arrays.stream;
 
@@ -55,6 +54,7 @@ public class VoHandler extends AbstractHandler {
 
 	@Override
 	protected void doHandleOne(Class<?> entityClass) throws Exception {
+		System.out.println(entityClass.getDeclaredAnnotation(ViewObject.class));
 		if (entityClass.isAnnotationPresent(ViewObject.class)) {
 			final ViewObject viewObject = entityClass.getDeclaredAnnotation(ViewObject.class);
 			Map<String, Meta> result = new HashMap<>();
@@ -82,7 +82,7 @@ public class VoHandler extends AbstractHandler {
 							if (!Collection.class.isAssignableFrom(view.type()))
 								throw new IllegalArgumentException("view type is " + view.type().getName() + " must be collection subclasses");
 							final String name = view.name();
-							if (isNotBlank(name))
+							if (isBlank(name))
 								throw new NullPointerException("type is collection ,view name must be not null");
 							field.name = name;
 							field.paradigm = view.elementGroup();
@@ -91,7 +91,17 @@ public class VoHandler extends AbstractHandler {
 							meta.imports.add(voPackage + "." + view.elementGroup());
 							break;
 						case SIMPLE:
-							throw new UnsupportedOperationException("view class not support SIMPLE");
+							if (isNotBlank(view.name()))
+								throw new NullPointerException("type is SIMPLE ,view name must be not null");
+							if (view.type() == Object.class)
+								throw new NullPointerException("type is SIMPLE ,view type must be not Object");
+							field.name = view.name();
+							field.type = view.type().getSimpleName();
+							if (!view.type().getName().startsWith("java.lang")) {
+								meta.imports.add(view.type().getName());
+							}
+							break;
+						//throw new UnsupportedOperationException("view class not support SIMPLE");
 						case MAP:
 							//TODO
 							throw new UnsupportedOperationException("elementGroup type map");
@@ -101,7 +111,7 @@ public class VoHandler extends AbstractHandler {
 			}
 
 			for (Field f : getFields(entityClass)) {
-				if(f.isAnnotationPresent(View.class)){
+				if (f.isAnnotationPresent(View.class)) {
 					final View view = f.getDeclaredAnnotation(View.class);
 					for (String group : view.groups()) {
 						final Meta meta = result.get(group);
@@ -111,14 +121,14 @@ public class VoHandler extends AbstractHandler {
 						switch (view.elementGroupType()) {
 							case ASSOCIATION:
 								field.type = view.elementGroup();
-								field.name = isNotBlank(view.name()) ? replaceFirstToLower(view.elementGroup()) : view.name();
+								field.name = isBlank(view.name()) ? replaceFirstToLower(view.elementGroup()) : view.name();
 								meta.imports.add(voPackage + "." + view.elementGroup());
 								break;
 							case COLLECTION:
 								if (!Collection.class.isAssignableFrom(view.type()))
 									throw new IllegalArgumentException("view type is " + view.type().getName() + " must be collection subclasses");
 								final String name = view.name();
-								if (isNotBlank(name))
+								if (isBlank(name))
 									throw new NullPointerException("type is collection ,view name must be not null");
 								field.name = name;
 								field.paradigm = view.elementGroup();
@@ -127,7 +137,22 @@ public class VoHandler extends AbstractHandler {
 								meta.imports.add(voPackage + "." + view.elementGroup());
 								break;
 							case SIMPLE:
-//								field.name =
+								field.name = isBlank(view.name()) ? replaceFirstToLower(f.getName()) : view.name();
+								field.type = view.type() == Object.class ? f.getType().getSimpleName() : view.type().getSimpleName();
+								if (view.type() != Object.class) {
+									if (!view.type().getName().startsWith("java.lang")) {
+										meta.imports.add(view.type().getName());
+									}
+								} else {
+									if (!f.getType().getName().startsWith("java.lang")) {
+										if (f.getType().getName().contains("$")) {
+											meta.imports.add("static " + f.getType().getName().replace("$", "."));
+										} else {
+											meta.imports.add(f.getType().getName());
+										}
+									}
+								}
+
 								break;
 							case MAP:
 								//TODO
@@ -139,12 +164,11 @@ public class VoHandler extends AbstractHandler {
 
 			}
 
+			doWrite(result);
 		}
 	}
 
-	@Override
-	protected void doHandle(Set<Class<?>> entityClasses) {
-		Map<String, Meta> groupClassMap = init(entityClasses, initGroups(entityClasses));
+	protected void doWrite(Map<String, Meta> groupClassMap) {
 		groupClassMap.forEach((k, v) -> {
 			try {
 				final HashMap<String, Object> meta = new HashMap<String, Object>() {{

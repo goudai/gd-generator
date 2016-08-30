@@ -50,7 +50,7 @@ public class NodeHandler extends AbstractHandler {
 		try {
 			StringWriter out = new StringWriter();
 			Template template = null;
-			template = freemarkerConfiguration.getTemplate("node-yield.ftl");
+			template = freemarkerConfiguration.getTemplate("io/gd/generator/template/node-yield.ftl");
 			template.process(new HashMap<String,Object>(){{put("node",nodeMeta);}}, out);
 
 			String doc = "";

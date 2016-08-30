@@ -9,7 +9,7 @@ import lombok.Builder;
 
 <#if meta.imports??>
 	<#list meta.imports as import>
-	import ${import};
+import ${import};
 	</#list>
 </#if>
 
@@ -22,7 +22,7 @@ import lombok.Builder;
 public class ${meta.className} {
 
 <#list meta.fields as field>
-private <#if field.paradigm != ''>${field.type}${field.paradigm} ${field.name}= new ${field.type}();<#else>${field.type} ${field.name};</#if>
+	private <#if field.paradigm != ''>${field.type}${field.paradigm} ${field.name}= new ${field.type}();<#else>${field.type} ${field.name};</#if>
 </#list>
 
 

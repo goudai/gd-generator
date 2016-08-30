@@ -4,6 +4,7 @@ import io.gd.generator.api.Field;
 import io.gd.generator.api.query.Predicate;
 import io.gd.generator.api.query.Query;
 import io.gd.generator.api.query.QueryModel;
+import io.gd.generator.api.vo.ElementGroupType;
 import io.gd.generator.api.vo.View;
 import io.gd.generator.api.vo.ViewObject;
 
@@ -15,7 +16,7 @@ import java.util.Date;
 @Table(name = "user")
 @QueryModel
 @ViewObject(groups = { "UserSimpleVo", "UserListVo", "UserDetailVo" },
-		views = {@View(groups = { "UserDetailVo", "UserSimpleVo" }, name = "blogs", type = ArrayList.class, elementGroup ="UserBlogVo")}
+		views = {@View(groups = { "UserDetailVo", "UserSimpleVo" }, name = "blogs", type = ArrayList.class, elementGroup ="UserBlogVo",elementGroupType = ElementGroupType.COLLECTION)}
 )
 
 public class User {
@@ -49,7 +50,7 @@ public class User {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date registerTime;
 
-	@View(groups = "UserDetail", name = "lastLoginTimeLabel", type = String.class)
+	@View(groups = "UserDetailVo", name = "lastLoginTimeLabel", type = String.class)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastLoginTime;
 
