@@ -1,5 +1,6 @@
 package ${meta.voPackage};
 
+import java.io.Serializable;
 <#if meta.useLombok>
 
 import lombok.Getter;
@@ -17,7 +18,7 @@ import ${import};
 @Getter
 @Setter
 </#if>
-public class ${meta.className} {
+public class ${meta.className} implements Serializable {
 	/* 原生 */
 <#list meta.fields as field>
 	private <#if field.paradigm != ''>${field.type}${field.paradigm} ${field.name}= new ${field.type}();<#else>${field.type} ${field.name};</#if>
