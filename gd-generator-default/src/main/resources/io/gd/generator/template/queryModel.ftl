@@ -99,6 +99,9 @@ public class ${meta.type} implements Serializable {
 	}
 
 	public String getOrderByAndDirection() {
+		if (orderBy == null) {
+			return null;
+		}
 		String orderByStr = camelToUnderline(orderBy);
 		String directionStr = direction == null ? "desc" : direction.toString().toLowerCase();
 		return orderByStr + " " + directionStr;
