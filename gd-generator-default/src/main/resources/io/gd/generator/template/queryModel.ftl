@@ -85,11 +85,10 @@ public class ${meta.type} implements Serializable {
 	</#if>
 
 	public void setOrderBy(String orderBy) {
-		if (orderBy == null) {
-			this.orderBy = orderBy;
-		} else if (!fieldNames.contains(orderBy)) {
+		if (orderBy != null && !fieldNames.contains(orderBy)) {
 			throw new IllegalArgumentException("order by is invalid");
 		}
+		this.orderBy = orderBy;
 	}
 
 	public Long getOffset() {
