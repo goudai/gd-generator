@@ -3,7 +3,7 @@ package ${meta.queryModelPackage};
 import java.util.Set;
 import java.util.HashSet;
 
-import io.gd.generator.api.Direction;
+import io.gd.generator.api.query.Direction;
 <#if meta.useLombok>
 
 import lombok.Getter;

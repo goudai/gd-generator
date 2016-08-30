@@ -70,7 +70,7 @@ public class QueryModelHandler extends ScopedHandler<QueryModelMeta> {
 								queryModelField.setArray(true);
 							}
 							meta.getQueryModelFields().add(queryModelField);
-							meta.getImportFullTypes().add(v.getType().getName());
+							meta.getImportFullTypes().add(v.getType().getName().replaceAll("\\$", "."));
 						}
 					}
 					
