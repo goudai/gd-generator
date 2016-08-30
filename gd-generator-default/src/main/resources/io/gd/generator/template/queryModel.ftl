@@ -54,16 +54,6 @@ public class ${meta.type} {
 	</#list>
 	</#if>
 
-	private static Set<String> fieldNames = new HashSet<>();
-
-	static {
-		<#if meta.fieldNames??>
-		<#list meta.fieldNames as fieldName>
-		fieldNames.add("${fieldName}");
-		</#list>
-		</#if>
-	}
-
 	public Integer getPageNumber() {
 		return pageNumber;
 	}
@@ -96,7 +86,7 @@ public class ${meta.type} {
 	public void setOrderBy(String orderBy) {
 		if (orderBy == null) {
 			this.orderBy = orderBy;
-		} else if (!filedNames.contains(orderBy)) {
+		} else if (!fieldNames.contains(orderBy)) {
 			throw new IllegalArgumentException("order by is invalid");
 		}
 	}
@@ -130,6 +120,16 @@ public class ${meta.type} {
 			}
 		}
 		return sb.toString();
+	}
+
+	private static Set<String> fieldNames = new HashSet<>();
+
+	static {
+		<#if meta.fieldNames??>
+		<#list meta.fieldNames as fieldName>
+		fieldNames.add("${fieldName}");
+		</#list>
+		</#if>
 	}
 
 }
