@@ -8,3 +8,4 @@ web.xml
 .idea
 /*/*.iml
 target/
+/gd-generator-default/gd-generator-default.iml
