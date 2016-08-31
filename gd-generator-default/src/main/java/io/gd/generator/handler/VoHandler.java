@@ -161,7 +161,11 @@ public class VoHandler extends AbstractHandler {
 
 								break;
 							case MAP:
+								if (!Map.class.isAssignableFrom(view.type()))
+									throw new IllegalArgumentException("view type is " + view.type().getName() + " must be collection subclasses");
 
+								if (isBlank(view.name()))
+									throw new NullPointerException("type is collection ,view name must be not null");
 								meta.fields2.add(field);
 								isAdd = false;
 						}
