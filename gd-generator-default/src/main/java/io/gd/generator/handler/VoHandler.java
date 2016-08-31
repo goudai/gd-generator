@@ -14,7 +14,6 @@ import java.util.*;
 import static io.gd.generator.util.ClassHelper.getFields;
 import static io.gd.generator.util.StringUtils.*;
 import static java.io.File.separator;
-import static java.util.Arrays.stream;
 
 /**
  * Created by freeman on 16/8/29.
@@ -73,13 +72,12 @@ public class VoHandler extends AbstractHandler {
 				for (String group : groups) {
 					final Meta meta = result.get(group);
 					if (meta == null)
-						throw new NullPointerException("group " + group + "未在类 " + entityClass.getName() + "上声明");
+						throw new NullPointerException("group " + group + " 未在类 " + entityClass.getName() + "上声明");
 					final Meta.Field field = new Meta.Field();
 					switch (view.elementGroupType()) {
 						case ASSOCIATION:
 							field.type = view.elementGroup();
 							field.name = isNotBlank(view.name()) ? replaceFirstToLower(view.elementGroup()) : view.name();
-							meta.imports.add(voPackage + "." + view.elementGroup());
 							break;
 						case COLLECTION:
 							if (!Collection.class.isAssignableFrom(view.type()))
@@ -90,8 +88,11 @@ public class VoHandler extends AbstractHandler {
 							field.name = name;
 							field.paradigm = view.elementGroup();
 							field.type = view.type().getSimpleName();
-							meta.imports.add(view.type().getName());
-							meta.imports.add(voPackage + "." + view.elementGroup());
+							if (view.type().getName().startsWith("java")) {
+								meta.imports2.add(view.type().getName());
+							} else {
+								meta.imports.add(view.type().getName());
+							}
 							break;
 						case SIMPLE:
 							if (isBlank(view.name()))
@@ -102,7 +103,11 @@ public class VoHandler extends AbstractHandler {
 
 							field.type = view.type().getSimpleName();
 							if (!view.type().getName().startsWith("java.lang")) {
-								meta.imports.add(view.type().getName());
+								if (view.type().getName().startsWith("java")) {
+									meta.imports2.add(view.type().getName());
+								} else {
+									meta.imports.add(view.type().getName());
+								}
 							}
 							break;
 						//throw new UnsupportedOperationException("view class not support SIMPLE");
@@ -145,7 +150,11 @@ public class VoHandler extends AbstractHandler {
 								field.name = name;
 								field.paradigm = view.elementGroup();
 								field.type = view.type().getSimpleName();
-								meta.imports.add(view.type().getName());
+								if (view.type().getName().startsWith("java")) {
+									meta.imports2.add(view.type().getName());
+								} else {
+									meta.imports.add(view.type().getName());
+								}
 								meta.fields2.add(field);
 								isAdd = false;
 								break;
@@ -154,16 +163,34 @@ public class VoHandler extends AbstractHandler {
 								field.type = view.type() == Object.class ? f.getType().getSimpleName() : view.type().getSimpleName();
 								if (view.type() != Object.class) {
 									if (!view.type().getName().startsWith("java.lang")) {
-										meta.imports.add(view.type().getName());
+										if (view.type().getName().startsWith("java")) {
+											meta.imports2.add(view.type().getName());
+										} else {
+											meta.imports.add(view.type().getName());
+										}
 									}
 								} else {
 									if (!f.getType().getName().startsWith("java.lang")) {
 										if (f.getType().getName().contains("$")) {
-											meta.imports.add("static " + f.getType().getName().replace("$", "."));
+											if (f.getType().getName().startsWith("java")) {
+												meta.imports2.add(f.getType().getName().replace("$", "."));
+											} else {
+												meta.imports.add(f.getType().getName().replace("$", "."));
+											}
 										} else {
-											meta.imports.add(f.getType().getName());
+											if (f.getType().getName().startsWith("java")) {
+												meta.imports2.add(f.getType().getName());
+											} else {
+												meta.imports.add(f.getType().getName());
+											}
+
 										}
 									}
+								}
+
+								if (!(field.name.equals(f.getName()) && field.type.equals(f.getType().getSimpleName()))) {
+									meta.fields2.add(field);
+									isAdd = false;
 								}
 
 								break;
@@ -205,58 +232,9 @@ public class VoHandler extends AbstractHandler {
 	}
 
 
-	private void doHandleView(Map<String, Meta> groupClassMap, ViewObject viewObject, Field field, View view) {
-		String[] groups = view.groups();
-		if (groups.length == 0) {
-			groups = viewObject.groups();
-		}
-		stream(groups).forEach(group -> {
-			Meta meta = groupClassMap.get(group);
-			if (meta == null) {
-				meta = new Meta();
-				meta.className = group;
-				meta.voPackage = voPackage;
-				meta.useLombok = this.useLombok;
-				groupClassMap.put(group, meta);
-			}
-			final Meta.Field f = new Meta.Field();
-			f.name = (view.name() != null && !view.name().equals("")) ? view.name() : field.getName();
-			if (view.name() == null || "".equals(view.name())) {
-				f.type = field.getType().getSimpleName();
-			} else {
-				f.type = view.type().getSimpleName();
-			}
-			f.paradigm = view.elementGroup();
-			if (!field.getType().getName().startsWith("java.lang")) {
-				if (field.getType().getName().contains("$")) {
-					meta.imports.add("static " + field.getType().getName().replace("$", "."));
-				} else {
-					meta.imports.add(field.getType().getName());
-				}
-			}
-			meta.getFields().add(f);
-		});
-	}
-
-	private Map<String, Meta> initGroups(Set<Class<?>> entityClasses) {
-		Map<String, Meta> groupClassMap = new HashMap<>();
-		entityClasses.forEach(entityClasse -> {
-			if (entityClasse.isAnnotationPresent(ViewObject.class)) {
-				final ViewObject vo = entityClasse.getDeclaredAnnotation(ViewObject.class);
-				stream(vo.groups()).forEach(className -> {
-					final Meta value = new Meta();
-					value.className = className;
-					value.voPackage = voPackage;
-					value.useLombok = this.useLombok;
-					groupClassMap.put(className, value);
-				});
-			}
-		});
-		return groupClassMap;
-	}
-
 	public static class Meta {
 		private Set<String> imports = new HashSet<>();
+		private Set<String> imports2 = new HashSet<>();
 		private List<Field> fields = new ArrayList<>();
 		private List<Field> fields2 = new ArrayList<>();
 		private String voPackage;
@@ -352,13 +330,19 @@ public class VoHandler extends AbstractHandler {
 			this.fields2 = fields2;
 		}
 
+		public Set<String> getImports2() {
+			return imports2;
+		}
+
+		public void setImports2(Set<String> imports2) {
+			this.imports2 = imports2;
+		}
+
 		@Override
 		public String toString() {
 			return "Meta{" +
 					"imports=" + imports +
-					", fields=" + fields +
-					", voPackage='" + voPackage + '\'' +
-					", className='" + className + '\'' +
+					", imports2=" + imports2 +
 					'}';
 		}
 	}

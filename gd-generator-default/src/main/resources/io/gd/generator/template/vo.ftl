@@ -1,17 +1,23 @@
 package ${meta.voPackage};
 
-import java.io.Serializable;
-<#if meta.useLombok>
-
-import lombok.Getter;
-import lombok.Setter;
-</#if>
-
 <#if meta.imports??>
 	<#list meta.imports as import>
 import ${import};
 	</#list>
 </#if>
+
+<#if meta.useLombok>
+import lombok.Getter;
+import lombok.Setter;
+</#if>
+
+import java.io.Serializable;
+<#if meta.imports2??>
+	<#list meta.imports2 as import>
+import ${import};
+	</#list>
+</#if>
+
 
 
 <#if meta.useLombok>
