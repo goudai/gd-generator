@@ -1,4 +1,4 @@
-package io.gd.generator.api.query;
+package io.gd.generator.annotation.query;
 
 import java.lang.annotation.*;
 

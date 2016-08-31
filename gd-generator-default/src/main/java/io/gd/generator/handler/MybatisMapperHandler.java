@@ -1,6 +1,6 @@
 package io.gd.generator.handler;
 
-import io.gd.generator.api.query.QueryModel;
+import io.gd.generator.annotation.query.QueryModel;
 import io.gd.generator.meta.mybatis.MybatisMapperMeta;
 import io.gd.generator.util.ConfigChecker;
 import io.gd.generator.util.FileUtils;

@@ -1,22 +1,23 @@
 package io.gd.generator.test.entity;
 
-import io.gd.generator.api.Field;
+import io.gd.generator.annotation.Field;
+import io.gd.generator.annotation.query.Query;
+import io.gd.generator.annotation.query.QueryModel;
+import io.gd.generator.annotation.view.CollectionView;
+import io.gd.generator.annotation.view.View;
+import io.gd.generator.annotation.view.ViewObject;
 import io.gd.generator.api.query.Predicate;
-import io.gd.generator.api.query.Query;
-import io.gd.generator.api.query.QueryModel;
-import io.gd.generator.api.vo.ElementGroupType;
-import io.gd.generator.api.vo.View;
-import io.gd.generator.api.vo.ViewObject;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 
+
 @Entity
 @Table(name = "user")
 @QueryModel
 @ViewObject(groups = { "UserSimpleVo", "UserListVo", "UserDetailVo" },
-		views = {@View(groups = { "UserDetailVo", "UserSimpleVo" }, name = "blogs", type = ArrayList.class, elementGroup ="UserBlogVo",elementGroupType = ElementGroupType.COLLECTION)}
+		collectionViews = {@CollectionView(groups = { "UserDetailVo", "UserSimpleVo" }, name = "blogs", type = ArrayList.class, elementGroup ="UserBlogVo")}
 )
 
 public class User {

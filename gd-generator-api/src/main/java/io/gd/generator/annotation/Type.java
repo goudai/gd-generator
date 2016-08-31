@@ -1,4 +1,4 @@
-package io.gd.generator.api;
+package io.gd.generator.annotation;
 
 import java.lang.annotation.*;
 

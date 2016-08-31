@@ -1,8 +1,8 @@
 package io.gd.generator.test.entity;
 
 import io.gd.generator.api.query.Predicate;
-import io.gd.generator.api.query.Query;
-import io.gd.generator.api.query.QueryModel;
+import io.gd.generator.annotation.query.Query;
+import io.gd.generator.annotation.query.QueryModel;
 
 /**
  * Created by freeman on 16/6/21.

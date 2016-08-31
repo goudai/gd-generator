@@ -1,4 +1,4 @@
-package io.gd.generator.api.annotation.view;
+package io.gd.generator.annotation.view;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -12,4 +12,11 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface View {
+
+	String name() default "";
+
+	String[] groups() default {};
+
+	Class<?> type() default Object.class;
+
 }
