@@ -88,11 +88,7 @@ public class VoHandler extends AbstractHandler {
 							field.name = name;
 							field.paradigm = view.elementGroup();
 							field.type = view.type().getSimpleName();
-							if (view.type().getName().startsWith("java")) {
-								meta.imports2.add(view.type().getName());
-							} else {
-								meta.imports.add(view.type().getName());
-							}
+							addImport(meta, view.type());
 							break;
 						case SIMPLE:
 							if (isBlank(view.name()))
@@ -102,13 +98,7 @@ public class VoHandler extends AbstractHandler {
 							field.name = view.name();
 
 							field.type = view.type().getSimpleName();
-							if (!view.type().getName().startsWith("java.lang")) {
-								if (view.type().getName().startsWith("java")) {
-									meta.imports2.add(view.type().getName());
-								} else {
-									meta.imports.add(view.type().getName());
-								}
-							}
+							addImport(meta, view.type());
 							break;
 						//throw new UnsupportedOperationException("view class not support SIMPLE");
 						case MAP:
@@ -150,53 +140,30 @@ public class VoHandler extends AbstractHandler {
 								field.name = name;
 								field.paradigm = view.elementGroup();
 								field.type = view.type().getSimpleName();
-								if (view.type().getName().startsWith("java")) {
-									meta.imports2.add(view.type().getName());
-								} else {
-									meta.imports.add(view.type().getName());
-								}
+								addImport(meta, view.type());
 								meta.fields2.add(field);
 								isAdd = false;
 								break;
 							case SIMPLE:
 								field.name = isBlank(view.name()) ? replaceFirstToLower(f.getName()) : view.name();
-								field.type = view.type() == Object.class ? f.getType().getSimpleName() : view.type().getSimpleName();
+								final Class<?> type = f.getType();
+								field.type = view.type() == Object.class ? type.getSimpleName() : view.type().getSimpleName();
 								if (view.type() != Object.class) {
-									if (!view.type().getName().startsWith("java.lang")) {
-										if (view.type().getName().startsWith("java")) {
-											meta.imports2.add(view.type().getName());
-										} else {
-											meta.imports.add(view.type().getName());
-										}
-									}
+									addImport(meta, view.type());
 								} else {
-									if (!f.getType().getName().startsWith("java.lang")) {
-										if (f.getType().getName().contains("$")) {
-											if (f.getType().getName().startsWith("java")) {
-												meta.imports2.add(f.getType().getName().replace("$", "."));
-											} else {
-												meta.imports.add(f.getType().getName().replace("$", "."));
-											}
-										} else {
-											if (f.getType().getName().startsWith("java")) {
-												meta.imports2.add(f.getType().getName());
-											} else {
-												meta.imports.add(f.getType().getName());
-											}
-
-										}
-									}
+									addImport(meta, type);
 								}
 
-								if (!(field.name.equals(f.getName()) && field.type.equals(f.getType().getSimpleName()))) {
+								if (!(field.name.equals(f.getName()) && field.type.equals(type.getSimpleName()))) {
 									meta.fields2.add(field);
 									isAdd = false;
 								}
 
 								break;
 							case MAP:
-								//TODO
-								throw new UnsupportedOperationException("elementGroup type map");
+
+								meta.fields2.add(field);
+								isAdd = false;
 						}
 						if (isAdd)
 							meta.fields.add(field);
@@ -205,6 +172,25 @@ public class VoHandler extends AbstractHandler {
 
 			}
 			doWrite(result);
+		}
+	}
+
+	private void addImport(Meta meta, Class<?> type) {
+		if (!type.getName().startsWith("java.lang") && !type.isPrimitive()) {
+			if (type.getName().contains("$")) {
+				if (type.getName().startsWith("java")) {
+					meta.imports2.add(type.getName().replace("$", "."));
+				} else {
+					meta.imports.add(type.getName().replace("$", "."));
+				}
+			} else {
+				if (type.getName().startsWith("java")) {
+					meta.imports2.add(type.getName());
+				} else {
+					meta.imports.add(type.getName());
+				}
+
+			}
 		}
 	}
 
