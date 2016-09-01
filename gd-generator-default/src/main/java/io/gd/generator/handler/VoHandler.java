@@ -158,7 +158,7 @@ public class VoHandler extends AbstractHandler {
 						newField.type = view.associationGroup();
 					}
 					newField.name = name;
-					meta.getFields().add(newField);
+					meta.getAssociationFields().add(newField);
 				}
 			}
 		}
@@ -365,6 +365,7 @@ public class VoHandler extends AbstractHandler {
 				final Meta.Field field = new Meta.Field();
 				field.name = name;
 				field.type = type.getSimpleName();
+				addImport(meta,type);
 				meta.fields.add(field);
 			}
 		}
@@ -595,9 +596,6 @@ public class VoHandler extends AbstractHandler {
 	}
 
 
-	public static void main(String[] args) {
-		System.out.println(Collection.class.isAssignableFrom(List.class));
-	}
 }
 
 
