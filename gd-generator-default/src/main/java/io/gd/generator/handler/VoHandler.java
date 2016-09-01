@@ -370,7 +370,7 @@ public class VoHandler extends AbstractHandler {
 				field.name = name;
 				field.type = type.getSimpleName();
 				addImport(meta, type);
-				meta.fields.add(field);
+				meta.associationFields.add(field);
 			}
 		}
 	}
