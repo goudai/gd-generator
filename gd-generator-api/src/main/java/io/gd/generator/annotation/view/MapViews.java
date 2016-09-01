@@ -8,7 +8,7 @@ import java.lang.annotation.*;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface AssociationViews {
+public @interface MapViews {
 
-	AssociationView[] value();
+	MapView[] value();
 }

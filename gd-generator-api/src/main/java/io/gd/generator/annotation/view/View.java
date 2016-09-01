@@ -1,9 +1,6 @@
 package io.gd.generator.annotation.view;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * Created by freeman on 16/8/31.
@@ -11,6 +8,7 @@ import java.lang.annotation.Target;
 @Target({java.lang.annotation.ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
+@Repeatable(Views.class)
 public @interface View {
 
 	String name() default "";

@@ -9,10 +9,10 @@ import java.util.HashMap;
 @Target({java.lang.annotation.ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Repeatable()
+@Repeatable(MapViews.class)
 public @interface MapView {
 
-	String name() default "";
+	String name();
 
 	String[] groups() default {};
 

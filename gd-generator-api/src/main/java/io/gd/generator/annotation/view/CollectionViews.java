@@ -1,15 +1,14 @@
 package io.gd.generator.annotation.view;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * Created by freeman on 16/8/31.
  */
-@Target(ElementType.TYPE)
+@Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
+@Documented
 public @interface CollectionViews {
-	CollectionView[] collectionViews();
+
+	CollectionView[] value();
 }

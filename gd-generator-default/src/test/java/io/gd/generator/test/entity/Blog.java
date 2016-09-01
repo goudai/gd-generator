@@ -1,12 +1,12 @@
 package io.gd.generator.test.entity;
 
-import io.gd.generator.api.Field;
-import io.gd.generator.api.Type;
-import io.gd.generator.api.query.Predicate;
+import io.gd.generator.annotation.Field;
+import io.gd.generator.annotation.Type;
 import io.gd.generator.annotation.query.Query;
 import io.gd.generator.annotation.query.QueryModel;
-import io.gd.generator.api.vo.View;
-import io.gd.generator.api.vo.ViewObject;
+import io.gd.generator.annotation.view.View;
+import io.gd.generator.annotation.view.ViewObject;
+import io.gd.generator.api.query.Predicate;
 
 import javax.persistence.Entity;
 

@@ -18,5 +18,4 @@ public @interface AssociationView {
 	Class<?> type() default Object.class;
 
 	String associationGroup() default "";
-
 }

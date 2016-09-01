@@ -3,21 +3,21 @@ package io.gd.generator.test.entity;
 import io.gd.generator.annotation.Field;
 import io.gd.generator.annotation.query.Query;
 import io.gd.generator.annotation.query.QueryModel;
-import io.gd.generator.annotation.view.CollectionView;
-import io.gd.generator.annotation.view.View;
-import io.gd.generator.annotation.view.ViewObject;
-import io.gd.generator.api.query.Predicate;
+import io.gd.generator.annotation.view.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
+
+import static io.gd.generator.api.query.Predicate.*;
 
 
 @Entity
 @Table(name = "user")
 @QueryModel
 @ViewObject(groups = { "UserSimpleVo", "UserListVo", "UserDetailVo" },
-		collectionViews = {@CollectionView(groups = { "UserDetailVo", "UserSimpleVo" }, name = "blogs", type = ArrayList.class, elementGroup ="UserBlogVo")}
+		collectionViews = {@CollectionView(groups = { "UserDetailVo", "UserSimpleVo" }, name = "blogs",elementGroup = "", type = ArrayList.class)}
+		,mapViews = {@MapView(name = "userMaps")}
 )
 
 public class User {
@@ -27,10 +27,10 @@ public class User {
 	}
 
 	@Id
-	@Query(value = {Predicate.EQ, Predicate.NEQ, Predicate.IN})
+	@Query(value = {EQ, NEQ, IN})
 	private Long id;
 
-	@Query(value = {Predicate.LK})
+	@Query(value = {LK})
 	@Column(length = 11, unique = true)
 	@View(name = "phone", type = String.class, groups = { "UserSimpleVo" })
 	private String phone;
@@ -57,9 +57,11 @@ public class User {
 
 	private String lastLoginIp;
 
+	@MapView(name = "registerMaps")
 	private String registerIp;
 
 	@Column(length = 100)
+	@AssociationView(associationGroup = "UserSimpleVo")
 	private String sign;
 
 	@Enumerated(EnumType.ORDINAL)
@@ -75,7 +77,7 @@ public class User {
 
 	private Long district;
 
-	@Query(value = {Predicate.IN})
+	@Query(value = {IN})
 	private String job;
 
 	public String getJob() {
