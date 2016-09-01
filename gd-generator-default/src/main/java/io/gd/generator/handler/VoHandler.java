@@ -180,7 +180,12 @@ public class VoHandler extends AbstractHandler {
 					newField.name = name;
 					newField.type = type.getSimpleName();
 					addImport(meta, type);
-					meta.getFields().add(newField);
+					if (newField.name.equals(field.getName()) && newField.type.equals(field.getType().getSimpleName())) {
+						meta.getFields().add(newField);
+					} else {
+						meta.getAssociationFields().add(newField);
+					}
+
 				}
 			}
 		}
@@ -199,7 +204,6 @@ public class VoHandler extends AbstractHandler {
 		}
 		return name;
 	}
-
 
 
 	private void handleClassMapView(Class<?> entityClass, MapView[] mapViews, Map<String, Meta> result, String[] groups) {
@@ -254,7 +258,7 @@ public class VoHandler extends AbstractHandler {
 		meta.mapFields.add(field);
 	}
 
-	private void handleClassCollectionView(Class<?> entityClass, CollectionView [] collectionViews, Map<String, Meta> result, String[] groups) {
+	private void handleClassCollectionView(Class<?> entityClass, CollectionView[] collectionViews, Map<String, Meta> result, String[] groups) {
 		for (CollectionView view : collectionViews) {
 			String[] viewGroups = view.groups();
 			if (viewGroups.length == 0) {
@@ -365,7 +369,7 @@ public class VoHandler extends AbstractHandler {
 				final Meta.Field field = new Meta.Field();
 				field.name = name;
 				field.type = type.getSimpleName();
-				addImport(meta,type);
+				addImport(meta, type);
 				meta.fields.add(field);
 			}
 		}

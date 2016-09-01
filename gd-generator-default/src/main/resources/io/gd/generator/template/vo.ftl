@@ -5,7 +5,6 @@ package ${meta.voPackage};
 import ${import};
 	</#list>
 </#if>
-
 <#if meta.useLombok>
 import lombok.Getter;
 import lombok.Setter;
@@ -17,8 +16,6 @@ import java.io.Serializable;
 import ${import};
 	</#list>
 </#if>
-
-
 
 <#if meta.useLombok>
 @Getter
