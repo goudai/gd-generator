@@ -6,6 +6,7 @@ import io.gd.generator.annotation.query.QueryModel;
 import io.gd.generator.annotation.view.*;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -15,9 +16,13 @@ import static io.gd.generator.api.query.Predicate.*;
 @Entity
 @Table(name = "user")
 @QueryModel
-@ViewObject(groups = { "UserSimpleVo", "UserListVo", "UserDetailVo" },
+@ViewObject(
+		groups = { "UserSimpleVo", "UserListVo", "UserDetailVo" },
+		views = {@View(name = "user",type = BigDecimal.class)},
+		associationViews = {@AssociationView(name = "test",type = String.class,associationGroup = "UserSimpleVo")},
 		collectionViews = {@CollectionView(groups = { "UserDetailVo", "UserSimpleVo" }, name = "blogs",elementGroup = "", type = ArrayList.class)}
-		,mapViews = {@MapView(name = "userMaps")}
+		,mapViews = {@MapView(name = "userMaps")
+		}
 )
 
 public class User {
@@ -33,14 +38,19 @@ public class User {
 	@Query(value = {LK})
 	@Column(length = 11, unique = true)
 	@View(name = "phone", type = String.class, groups = { "UserSimpleVo" })
+
 	private String phone;
 
 	@Column(length = 20)
+	@AssociationView
+
 	private String password;
 
 	@Column(length = 6, unique = true)
+	@MapView(name = "phoneMap")
 	private String nickname;
 
+	@CollectionView(name = "collections")
 	private Boolean isTeacher;
 
 	@Field(label = "头像")
@@ -53,11 +63,11 @@ public class User {
 
 	@View(groups = "UserDetailVo", name = "lastLoginTimeLabel", type = String.class)
 	@Temporal(TemporalType.TIMESTAMP)
+	@Field(label = "最后登录时间")
 	private Date lastLoginTime;
 
 	private String lastLoginIp;
 
-	@MapView(name = "registerMaps")
 	private String registerIp;
 
 	@Column(length = 100)

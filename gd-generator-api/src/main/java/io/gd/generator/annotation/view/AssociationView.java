@@ -13,6 +13,8 @@ public @interface AssociationView {
 
 	String name() default "";
 
+	String label() default "";
+
 	String[] groups() default {};
 
 	Class<?> type() default Object.class;

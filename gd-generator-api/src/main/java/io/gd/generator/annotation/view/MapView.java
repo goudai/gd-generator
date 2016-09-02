@@ -14,6 +14,8 @@ public @interface MapView {
 
 	String name();
 
+	String label() default "";
+
 	String[] groups() default {};
 
 	Class<?> type() default HashMap.class;
