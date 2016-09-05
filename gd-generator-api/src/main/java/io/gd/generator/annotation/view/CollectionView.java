@@ -14,6 +14,8 @@ public @interface CollectionView {
 
 	String name();
 
+	String label() default "";
+
 	String[] groups() default {};
 
 	Class<?> type() default ArrayList.class;
