@@ -364,7 +364,7 @@ public class VoHandler extends AbstractHandler {
 				final Meta meta = metaCheck(entityClass, result, viewGroup);
 				final String name = checkName(entityClass.getName(), view.name());
 				final Class<?> type = checkType(entityClass.getName(), view.type());
-				if (!type.getName().startsWith("java"))
+				if (!type.getName().startsWith("java") && !type.isPrimitive())
 					throw new IllegalArgumentException(format("%s 类在@View注解上错误的引用了非java提供的类,如果需要请使用@AssociationView", entityClass));
 				final Meta.Field field = new Meta.Field();
 				field.name = name;
