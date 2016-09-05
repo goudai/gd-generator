@@ -3,7 +3,6 @@ package io.gd.generator.util;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.reflect.ClassPath;
 import com.google.common.reflect.ClassPath.ClassInfo;
-import org.omg.CORBA.Object;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +34,7 @@ public class ClassHelper {
 			try {
 				classes.add(Class.forName(k.getName()));
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 			}
 		});
 		return classes;
@@ -48,7 +47,7 @@ public class ClassHelper {
 			try {
 				classes.put(k.getSimpleName(), Class.forName(k.getName()));
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 			}
 		});
 		return classes;
@@ -78,7 +77,7 @@ public class ClassHelper {
 				if(declaredFields != null)
 				fields.addAll(Arrays.asList(declaredFields));
 			} catch (Exception e) {
-				//ig
+				logger.error(e.getMessage(),e);
 			}
 		}
 		return fields;
