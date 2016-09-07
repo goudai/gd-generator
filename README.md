@@ -46,12 +46,12 @@ private static final long serialVersionUID = 1L;
 		//Users/freeman/IdeaProjects/xxx-parent
 		String projectPath = "your project base path";
 
-        //xxx-service-impl\\src\\main\\java\\com\\zy\\mapper & windows
-        //xxx-service-impl/src/main/java/com/zy/mapper & max or linux
+        //xxx-service-impl\\src\\main\\java\\com\\xx\\mapper & windows
+        //xxx-service-impl/src/main/java/com/xx/mapper & max or linux
 		config.setMybatisMapperPath(projectPath + "your mybatis mapper path");
 		
-		//\\xx-service-impl\\src\\main\\resources\\com\\zy\\mapping & windows
-		//\\xx-service-impl/src/main/resources/com/zy/mapping & max or linux
+		//\\xx-service-impl\\src\\main\\resources\\com\\xx\\mapping & windows
+		//\\xx-service-impl/src/main/resources/com/xx/mapping & max or linux
 		config.setMybatisXmlPath(projectPath + "your mybatis mapping xml path");
 		config.setUsername("your db user");
 		config.setPassword("your db password");
@@ -60,12 +60,12 @@ private static final long serialVersionUID = 1L;
 		config.setUseLombok(true);
          //com.xx.model.query
 		config.setQueryModelPackage("your query model package name");
-		//\\zy-service\\src\\main\\java\\com\\xx\\model\\query & windows
-		//\\zy-service/src/main/java/com/xx/model/query & max or linux
+		//\\xx-service\\src\\main\\java\\com\\xx\\model\\query & windows
+		//\\xx-service/src/main/java/com/xx/model/query & max or linux
 		config.setQueryModelPath(projectPath + "your query model package name");
 
 		Generator.generate(config,
-				new VoHandler("com.zy.vo", projectPath + "\\zy-component\\src\\main\\java\\com\\zy\\vo", true),
+				new VoHandler("com.xx.vo", projectPath + "\\xx-component\\src\\main\\java\\com\\xx\\vo", true),
 				new QueryModelHandler(),
 				new MybatisMapperHandler(),
 				new MybatisXmlHandler(),
