@@ -4,11 +4,13 @@
 如生成接口mapper,生成xml配置文件。
 2. 可通过实体类在生成自动建表，自动加索引,自动更新数据列。
 3. 可检测出数据库与实体类之间的差异并在日志中打印出对饮警告或者修复用的sql语句。  
-如 warn : 数据库中的列  [mysql_ame --> mysqlNname] 在实体类 Admin 不存在;
+如 warn : 数据库中的列  [mysql_name --> mysqlNname] 在实体类 Admin 不存在;
 4. 支持大部分JPA注解解析，可通过此代码生成器快速从hibernate转换到mybatis。
 5. 抽取查询对象，简化查询。QuerModel
 6. 自动驼峰装换
-
+update ========
+1. 生成查询对象，提供查询相关注解
+2. 生成VO对象，提供四中注解注册，@View  @AssociationView @CollectionView @MapView
 ### 实体类demo
 ```java
 //JPA注解 需要解析的类必须加此注解
@@ -29,42 +31,47 @@ private static final long serialVersionUID = 1L;
     //getter setter
 }
 ```
-### 查询对象DEMO
-```java
-//注意查询对象是由于Admin+QueryModel来进行命名
-public class AdminQueryModel  {
-    private static final long serialVersionUID = -8493398486786898485L;
-    //字段命名规则为需要进行的操作的属性名+操作符号 操作符会在代码解析的时候进行对应解析
-    //支持几乎大部分的操作符解析 集体解析请看src\main\java\com\code\core\parse\MybatisXmlParser.java
-    private String nicknameLK;
-    private String phoneEQ;
-    
-    //getter setter
-}
-```
+
 ### 快速使用
 
 ```java
-public static void main(String[] S) {
-        Config config = new Config();
-        config.setGenLogFile(System.getProperty("user.home") + File.pathSeparator + "/gd-test.log");
-        config.setUrl("jdbc:mysql://192.168.10.240/sk");
-        config.setEntityPackage("com.sk.entity");
-        config.setMybatisMapperPackage("com.sk.mapper");
-        config.setQueryModelPackage("com.sk.model.query");
-        config.setMybatisXmlPackage("com.sk.mapping");
-        config.setJavaSrc("/Users/freeman/IdeaProjects/miziProjects/sk/sk-service/src/main/java");
-        config.setResources("/Users/freeman/IdeaProjects/miziProjects/sk/sk-service-impl/src/main/resources");
-        config.setUsername("root");
-        config.setPassword("123456");
-        AbstractGenerator generator = new MybatisGenerator(config);
-        //		NodeConfig nodeConfig = new NodeConfig();
-        //		nodeConfig.setDistFile(new File("./dubbo.js"));
-        //		nodeConfig.setDocFile(new File("./doc.js"));
-        //		nodeConfig.setServicePackage("com.sk.service");
-        //		generator = new NodeGenerator(nodeConfig);
-        generator.generate();
-}
+	public static void main(String[] args) throws Exception {
+		Config config = new Config();
+		config.setGenLogFile(Paths.get(System.getProperty("user.home") , "yourProject.log").toString());
+		config.setUrl("jdbc:mysql://mysqlIP/yourdb");
+		config.setEntityPackage("com.zy.entity");
+		config.setMybatisMapperPackage("com.zy.mapper");
+		
+		//D:\\Work\\Workspace\\xx-parent
+		//Users/freeman/IdeaProjects/xxx-parent
+		String projectPath = "your project base path";
+
+        //xxx-service-impl\\src\\main\\java\\com\\zy\\mapper & windows
+        //xxx-service-impl/src/main/java/com/zy/mapper & max or linux
+		config.setMybatisMapperPath(projectPath + "your mybatis mapper path");
+		
+		//\\xx-service-impl\\src\\main\\resources\\com\\zy\\mapping & windows
+		//\\xx-service-impl/src/main/resources/com/zy/mapping & max or linux
+		config.setMybatisXmlPath(projectPath + "your mybatis mapping xml path");
+		config.setUsername("your db user");
+		config.setPassword("your db password");
+        
+        // is use lombok default : true
+		config.setUseLombok(true);
+         //com.xx.model.query
+		config.setQueryModelPackage("your query model package name");
+		//\\zy-service\\src\\main\\java\\com\\xx\\model\\query & windows
+		//\\zy-service/src/main/java/com/xx/model/query & max or linux
+		config.setQueryModelPath(projectPath + "your query model package name");
+
+		Generator.generate(config,
+				new VoHandler("com.zy.vo", projectPath + "\\zy-component\\src\\main\\java\\com\\zy\\vo", true),
+				new QueryModelHandler(),
+				new MybatisMapperHandler(),
+				new MybatisXmlHandler(),
+				new MysqlHandler()
+		);
+	}
 ```
 ### 生成的结果   
 
