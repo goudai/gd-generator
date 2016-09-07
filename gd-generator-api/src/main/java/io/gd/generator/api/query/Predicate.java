@@ -1,7 +1,7 @@
 package io.gd.generator.api.query;
 
 public enum Predicate {
-	
+
 	EQ, // equal
 	NEQ, // not equal
 	GT, // greater than
@@ -14,6 +14,6 @@ public enum Predicate {
 	SW, // start with
 	EW,  // end with
 	IN // in
-	
+
 }
 

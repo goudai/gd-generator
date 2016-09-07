@@ -501,6 +501,77 @@ public class VoHandler extends AbstractHandler {
 		private String className;
 		private boolean useLombok;
 
+		public List<Field> getFields() {
+			return fields;
+		}
+
+		public void setFields(List<Field> fields) {
+			this.fields = fields;
+		}
+
+		public String getVoPackage() {
+			return voPackage;
+		}
+
+		public void setVoPackage(String voPackage) {
+			this.voPackage = voPackage;
+		}
+
+		public String getClassName() {
+			return className;
+		}
+
+		public void setClassName(String className) {
+			this.className = className;
+		}
+
+		public boolean isUseLombok() {
+			return useLombok;
+		}
+
+		public void setUseLombok(boolean useLombok) {
+			this.useLombok = useLombok;
+		}
+
+		public List<Field> getAssociationFields() {
+			return associationFields;
+		}
+
+		public void setAssociationFields(List<Field> associationFields) {
+			this.associationFields = associationFields;
+		}
+
+		public Set<String> getImportJava() {
+			return importJava;
+		}
+
+		public void setImportJava(Set<String> importJava) {
+			this.importJava = importJava;
+		}
+
+		public Set<String> getImportOther() {
+			return importOther;
+		}
+
+		public void setImportOther(Set<String> importOther) {
+			this.importOther = importOther;
+		}
+
+		public List<CollectionField> getCollectionFields() {
+			return collectionFields;
+		}
+
+		public void setCollectionFields(List<CollectionField> collectionFields) {
+			this.collectionFields = collectionFields;
+		}
+
+		public List<MapField> getMapFields() {
+			return mapFields;
+		}
+
+		public void setMapFields(List<MapField> mapFields) {
+			this.mapFields = mapFields;
+		}
 
 		public static class MapField extends Field {
 			private String _interface;
@@ -593,79 +664,6 @@ public class VoHandler extends AbstractHandler {
 			public void setOrder(int order) {
 				this.order = order;
 			}
-		}
-
-
-		public List<Field> getFields() {
-			return fields;
-		}
-
-		public void setFields(List<Field> fields) {
-			this.fields = fields;
-		}
-
-		public String getVoPackage() {
-			return voPackage;
-		}
-
-		public void setVoPackage(String voPackage) {
-			this.voPackage = voPackage;
-		}
-
-		public String getClassName() {
-			return className;
-		}
-
-		public void setClassName(String className) {
-			this.className = className;
-		}
-
-		public boolean isUseLombok() {
-			return useLombok;
-		}
-
-		public void setUseLombok(boolean useLombok) {
-			this.useLombok = useLombok;
-		}
-
-		public List<Field> getAssociationFields() {
-			return associationFields;
-		}
-
-		public void setAssociationFields(List<Field> associationFields) {
-			this.associationFields = associationFields;
-		}
-
-		public Set<String> getImportJava() {
-			return importJava;
-		}
-
-		public void setImportJava(Set<String> importJava) {
-			this.importJava = importJava;
-		}
-
-		public Set<String> getImportOther() {
-			return importOther;
-		}
-
-		public void setImportOther(Set<String> importOther) {
-			this.importOther = importOther;
-		}
-
-		public List<CollectionField> getCollectionFields() {
-			return collectionFields;
-		}
-
-		public void setCollectionFields(List<CollectionField> collectionFields) {
-			this.collectionFields = collectionFields;
-		}
-
-		public List<MapField> getMapFields() {
-			return mapFields;
-		}
-
-		public void setMapFields(List<MapField> mapFields) {
-			this.mapFields = mapFields;
 		}
 	}
 

@@ -107,20 +107,20 @@ public class UserQueryModel {
 		return orderBy;
 	}
 
-	public Direction getDirection() {
-		return direction;
-	}
-
-	public void setDirection(Direction direction) {
-		this.direction = direction;
-	}
-
 	public void setOrderBy(String orderBy) {
 		if (orderBy == null) {
 			this.orderBy = orderBy;
 		} else if (!filedNames.contains(orderBy)) {
 			throw new IllegalArgumentException("order by is invalid");
 		}
+	}
+
+	public Direction getDirection() {
+		return direction;
+	}
+
+	public void setDirection(Direction direction) {
+		this.direction = direction;
 	}
 
 	public Long getOffset() {

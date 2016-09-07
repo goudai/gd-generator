@@ -2,6 +2,8 @@ package io.gd.generator.util;
 
 public class StringUtils {
 
+	public static final char UNDERLINE = '_';
+
 	public static boolean isBlank(String string) {
 		return string == null || "".equals(string);
 	}
@@ -9,8 +11,6 @@ public class StringUtils {
 	public static boolean isNotBlank(String string) {
 		return string != null && !"".equals(string);
 	}
-
-	public static final char UNDERLINE = '_';
 
 	public static String camelToUnderline(String param) {
 		if (param == null || "".equals(param.trim())) {

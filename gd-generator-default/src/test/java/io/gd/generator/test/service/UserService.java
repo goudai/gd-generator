@@ -15,18 +15,12 @@ public interface UserService {
 	public User register(User user);
 
 
-
 	/**
-	 *
-	 *
 	 * 以下是自动生成url
 	 */
 
 	// http://localhost:8090?service=userService&method=getById&id=1
 	public User getById(Integer id);
-
-
-
 
 
 	// http://localhost:8090?service=userService&method=deleteById&id=1

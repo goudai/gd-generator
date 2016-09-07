@@ -6,9 +6,9 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Type {
-	
+
 	String label();
-	
+
 	String description() default "";
-	
+
 }

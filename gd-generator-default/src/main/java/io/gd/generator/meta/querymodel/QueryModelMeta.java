@@ -19,40 +19,6 @@ public class QueryModelMeta {
 
 	private Set<String> importFullTypes = new HashSet<>(); // import全名
 
-	public static class QueryModelField {
-
-		private String name;
-
-		private String type;
-
-		private boolean array;
-
-		public boolean isArray() {
-			return array;
-		}
-
-		public void setArray(boolean array) {
-			this.array = array;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public void setName(String name) {
-			this.name = name;
-		}
-
-		public String getType() {
-			return type;
-		}
-
-		public void setType(String type) {
-			this.type = type;
-		}
-
-	}
-
 	public Set<String> getFieldNames() {
 		return fieldNames;
 	}
@@ -99,6 +65,40 @@ public class QueryModelMeta {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public static class QueryModelField {
+
+		private String name;
+
+		private String type;
+
+		private boolean array;
+
+		public boolean isArray() {
+			return array;
+		}
+
+		public void setArray(boolean array) {
+			this.array = array;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public String getType() {
+			return type;
+		}
+
+		public void setType(String type) {
+			this.type = type;
+		}
+
 	}
 
 }

@@ -17,76 +17,52 @@ import static io.gd.generator.api.query.Predicate.*;
 @Table(name = "user")
 @QueryModel
 @ViewObject(
-		groups = { "UserSimpleVo", "UserListVo", "UserDetailVo" },
-		views = {@View(name = "user",type = BigDecimal.class,field = @Field(label = "view",order = 1))},
-		associationViews = {@AssociationView(name = "test",type = String.class,associationGroup = "UserSimpleVo")},
-		collectionViews = {@CollectionView(groups = { "UserDetailVo", "UserSimpleVo" }, name = "blogs",elementGroup = "", type = ArrayList.class)}
-		,mapViews = {@MapView(name = "userMaps")
-		}
+		groups = {"UserSimpleVo", "UserListVo", "UserDetailVo"},
+		views = {@View(name = "user", type = BigDecimal.class, field = @Field(label = "view", order = 1))},
+		associationViews = {@AssociationView(name = "test", type = String.class, associationGroup = "UserSimpleVo")},
+		collectionViews = {@CollectionView(groups = {"UserDetailVo", "UserSimpleVo"}, name = "blogs", elementGroup = "", type = ArrayList.class)}
+		, mapViews = {@MapView(name = "userMaps")
+}
 )
 
 public class User {
 
-	public enum Gender {
-		男, 女;
-	}
-
 	@Id
 	@Query(value = {EQ, NEQ, IN})
 	private Long id;
-
 	@Query(value = {LK})
 	@Column(length = 11, unique = true)
-	@View(name = "phone", type = String.class, groups = { "UserSimpleVo" })
+	@View(name = "phone", type = String.class, groups = {"UserSimpleVo"})
 
 	private String phone;
-
 	@Column(length = 20)
 	@AssociationView
 
 	private String password;
-
 	@Column(length = 6, unique = true)
 	@MapView(name = "phoneMap")
 	private String nickname;
-
 	@CollectionView(name = "collections")
 	private Boolean isTeacher;
-
 	@Field(label = "头像")
 	private String avatar; // 头像
-
 	private Boolean isFrozen;
-
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date registerTime;
-
 	@View(groups = "UserDetailVo", name = "lastLoginTimeLabel", type = String.class)
 	@Temporal(TemporalType.TIMESTAMP)
 	@Field(label = "最后登录时间")
 	private Date lastLoginTime;
-
 	private String lastLoginIp;
-
 	private String registerIp;
-
 	@Column(length = 100)
-	@AssociationView(associationGroup = "UserSimpleVo",field = @Field(order = 1))
+	@AssociationView(associationGroup = "UserSimpleVo", field = @Field(order = 1))
 	private String sign;
-
 	@Enumerated(EnumType.ORDINAL)
 	private Gender gender;
-
-
-
-
-
 	private Long province;
-
 	private Long city;
-
 	private Long district;
-
 	@Query(value = {IN})
 	private String job;
 
@@ -224,5 +200,9 @@ public class User {
 
 	public void setRegisterIp(String registerIp) {
 		this.registerIp = registerIp;
+	}
+
+	public enum Gender {
+		男, 女;
 	}
 }

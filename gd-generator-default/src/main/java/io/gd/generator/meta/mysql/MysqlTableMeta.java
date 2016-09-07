@@ -42,7 +42,7 @@ public class MysqlTableMeta {
 	public void setUniques(List<String> uniques) {
 		this.uniques = uniques;
 	}
-	
+
 	public static class MysqlColumnMeta {
 
 		private String name;
@@ -65,5 +65,5 @@ public class MysqlTableMeta {
 		}
 
 	}
-	
+
 }
