@@ -17,7 +17,7 @@ import java.util.Set;
 
 public abstract class AbstractHandler implements Handler {
 
-	Logger logger = LoggerFactory.getLogger(AbstractHandler.class);
+	Logger logger = LoggerFactory.getLogger(getClass());
 
 	protected Config config;
 
