@@ -31,15 +31,15 @@ public class ${meta.className} implements Serializable {
 
 	/* 扩展 */
 <#list meta.associationFields as field>
-	@Field(label = "${field.label}")
+	@Field(label = "${field.label}",order = ${field.order})
 	private ${field.type} ${field.name};
 </#list>
 <#list meta.collectionFields as field>
-	@Field(label = "${field.label}")
+	@Field(label = "${field.label}",order = ${field.order})
 	private ${field._interface}${field.elementGroup} ${field.name} = new ${field.type}<>();
 </#list>
 <#list meta.mapFields as field>
-	@Field(label = "${field.label}")
+	@Field(label = "${field.label}",order = ${field.order})
 	private ${field._interface}<${field.key},${field.value}> ${field.name} = new ${field.type}<>();
 </#list>
 

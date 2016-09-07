@@ -18,7 +18,7 @@ import static io.gd.generator.api.query.Predicate.*;
 @QueryModel
 @ViewObject(
 		groups = { "UserSimpleVo", "UserListVo", "UserDetailVo" },
-		views = {@View(name = "user",type = BigDecimal.class)},
+		views = {@View(name = "user",type = BigDecimal.class,field = @Field(label = "view",order = 1))},
 		associationViews = {@AssociationView(name = "test",type = String.class,associationGroup = "UserSimpleVo")},
 		collectionViews = {@CollectionView(groups = { "UserDetailVo", "UserSimpleVo" }, name = "blogs",elementGroup = "", type = ArrayList.class)}
 		,mapViews = {@MapView(name = "userMaps")
@@ -71,7 +71,7 @@ public class User {
 	private String registerIp;
 
 	@Column(length = 100)
-	@AssociationView(associationGroup = "UserSimpleVo")
+	@AssociationView(associationGroup = "UserSimpleVo",field = @Field(order = 1))
 	private String sign;
 
 	@Enumerated(EnumType.ORDINAL)

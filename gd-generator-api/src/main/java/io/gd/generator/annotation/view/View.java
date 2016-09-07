@@ -1,5 +1,7 @@
 package io.gd.generator.annotation.view;
 
+import io.gd.generator.annotation.Field;
+
 import java.lang.annotation.*;
 
 /**
@@ -13,10 +15,11 @@ public @interface View {
 
 	String name() default "";
 
-	String label() default "";
-
 	String[] groups() default {};
 
 	Class<?> type() default Object.class;
+
+	Field field() default @Field(label = "");
+
 
 }

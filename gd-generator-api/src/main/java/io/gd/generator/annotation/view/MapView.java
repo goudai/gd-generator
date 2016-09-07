@@ -1,5 +1,7 @@
 package io.gd.generator.annotation.view;
 
+import io.gd.generator.annotation.Field;
+
 import java.lang.annotation.*;
 import java.util.HashMap;
 
@@ -14,7 +16,6 @@ public @interface MapView {
 
 	String name();
 
-	String label() default "";
 
 	String[] groups() default {};
 
@@ -27,5 +28,8 @@ public @interface MapView {
 	String keyGroup() default "";
 
 	String valueGroup() default "";
+
+	Field field() default @Field(label = "");
+
 }
 

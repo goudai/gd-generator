@@ -10,7 +10,10 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Field {
-	String label();
+
+	String label() default "";
 
 	String description() default "";
+
+	int order() default 999;
 }

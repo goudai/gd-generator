@@ -1,5 +1,7 @@
 package io.gd.generator.annotation.view;
 
+import io.gd.generator.annotation.Field;
+
 import java.lang.annotation.*;
 import java.util.ArrayList;
 
@@ -14,7 +16,6 @@ public @interface CollectionView {
 
 	String name();
 
-	String label() default "";
 
 	String[] groups() default {};
 
@@ -23,4 +24,7 @@ public @interface CollectionView {
 	Class<?> elementType() default Object.class;
 
 	String elementGroup() default "";
+
+	Field field() default @Field(label = "");
+
 }

@@ -106,8 +106,12 @@ public class VoHandler extends AbstractHandler {
 			for (String group : viewGroups) {
 				final String entityClassName = entityClass.getName();
 				final String format = format("%s 类的属性 %s 上使用注解@MapView，注解的name属性不能为空", entityClassName, field.getName());
-				doHandleMapView(entityClass, result, view, group, entityClassName, format, field.getType(), handleFieldLabel(field, view.label(),
-						format("%s 类中的字段 %s 上使用@MapView时,label属性为空,并且没有加@Field注解", entityClass.getName(), field.getName())));
+				final io.gd.generator.annotation.Field viewField = view.field();
+
+				final String label = handleFieldLabel(field, viewField.label(),
+						format("%s 类中的字段 %s 上使用@MapView时,@Field的label属性为空", entityClass.getName(), field.getName()));
+
+				doHandleMapView(entityClass, result, view, group, entityClassName, format, field.getType(), label, viewField.order());
 
 			}
 		}
@@ -134,7 +138,8 @@ public class VoHandler extends AbstractHandler {
 					}
 					final Meta.CollectionField collectionField = new Meta.CollectionField();
 					collectionField.name = name;
-					collectionField.label = handleFieldLabel(field, view.label(), format("%s 类中的字段 %s 上使用@AssociationView时,label属性为空,并且没有加@Field注解", entityClass.getName(), field.getName()));
+					collectionField.order = view.field().order();
+					collectionField.label = handleFieldLabel(field, view.field().label(), format("%s 类中的字段 %s 上使用@AssociationView时,label属性为空,并且没有加@Field注解", entityClass.getName(), field.getName()));
 					handleCollectionView(view, meta, type, collectionField, field.getType());
 				}
 			}
@@ -161,7 +166,8 @@ public class VoHandler extends AbstractHandler {
 						newField.type = view.associationGroup();
 					}
 					newField.name = name;
-					final String label = view.label();
+					final String label = view.field().label();
+					newField.order = view.field().order();
 					newField.label = handleFieldLabel(field, label, format("%s 类中的字段 %s 上使用@AssociationView时,label属性为空,并且没有加@Field注解", entityClass.getName(), field.getName()));
 					meta.getAssociationFields().add(newField);
 				}
@@ -185,11 +191,9 @@ public class VoHandler extends AbstractHandler {
 					newField.name = name;
 					newField.type = type.getSimpleName();
 					addImport(meta, type);
-
-					final String label = view.label();
-					String viewName = "View";
-					newField.label = handleFieldLabel(field, label, format("%s 类中的字段 %s 上使用@View时,label属性为空,并且没有加@Field注解", entityClass.getName(), field.getName()));
-
+					final String label = view.field().label();
+					newField.order = view.field().order();
+					newField.label = handleFieldLabel(field, label, format("%s 类中的字段 %s 上使用@View时,@Field注解label属性为空,并且没有加@Field注解", entityClass.getName(), field.getName()));
 					if (newField.name.equals(field.getName()) && newField.type.equals(field.getType().getSimpleName())) {
 						meta.getFields().add(newField);
 					} else {
@@ -239,19 +243,18 @@ public class VoHandler extends AbstractHandler {
 			for (String group : viewGroups) {
 				final String entityClassName = entityClass.getName();
 				final String format = format("%s 类上的注解@MapView中的type属性必须为Map", entityClassName);
-				final Meta.MapField mapField = new Meta.MapField();
-				String label = view.label();
+				String label = view.field().label();
 				if (isBlank(label)) {
 					label = view.name();
-					logger.warn(format("%s 类上使用@MapView（name=%s）中的label属性为空，默认使用name属性的 [%s]", entityClass.getName(), view.name(),label));
+					logger.warn(format("%s 类上使用@MapView（name=%s）中的label属性为空，默认使用name属性的 [%s]", entityClass.getName(), view.name(), label));
 				}
-				doHandleMapView(entityClass, result, view, group, entityClassName, format, entityClass, label);
+				doHandleMapView(entityClass, result, view, group, entityClassName, format, entityClass, label, view.field().order());
 
 			}
 		}
 	}
 
-	private void doHandleMapView(Class<?> entityClass, Map<String, Meta> result, MapView view, String group, String entityClassName, String format, Class<?> simple, String label) {
+	private void doHandleMapView(Class<?> entityClass, Map<String, Meta> result, MapView view, String group, String entityClassName, String format, Class<?> simple, String label, int order) {
 		final Meta meta = metaCheck(entityClass, result, group);
 		final String name = checkName(entityClassName, view.name());
 		final Class<?> type = view.type();
@@ -284,6 +287,7 @@ public class VoHandler extends AbstractHandler {
 			}
 		}
 		field.label = label;
+		field.order = order;
 		addImport(meta, type);
 		meta.mapFields.add(field);
 	}
@@ -306,10 +310,10 @@ public class VoHandler extends AbstractHandler {
 				}
 				final Meta.CollectionField field = new Meta.CollectionField();
 				field.name = name;
-				String label = view.label();
+				String label = view.field().label();
 				if (isBlank(label)) {
 					label = view.name();
-					logger.warn(format("%s 类上使用@AssociationView（name=%s）中的label属性为空，默认使用name属性 [%s]", entityClass.getName(),label, name,label));
+					logger.warn(format("%s 类上使用@AssociationView（name=%s）中的label属性为空，默认使用name属性 [%s]", entityClass.getName(), label, name, label));
 				}
 				field.label = label;
 				handleCollectionView(view, meta, type, field, entityClass);
@@ -345,6 +349,7 @@ public class VoHandler extends AbstractHandler {
 			}
 		}
 		addImport(meta, type);
+		field.order = view.field().order();
 		meta.collectionFields.add(field);
 	}
 
@@ -373,8 +378,8 @@ public class VoHandler extends AbstractHandler {
 				final String name = checkName(entityClassName, view.name());
 				final Class<?> type = view.type();
 				final String associationGroup = view.associationGroup();
-				if ((type.getName().startsWith("java") ||type.isPrimitive()) && isBlank(associationGroup)) {
-					throw new IllegalArgumentException(format("%s 类上的注解@AssociationView的type属性,为java包的类或者基本类型,associationGroup属性必须填写",entityClass));
+				if ((type.getName().startsWith("java") || type.isPrimitive()) && isBlank(associationGroup)) {
+					throw new IllegalArgumentException(format("%s 类上的注解@AssociationView的type属性,为java包的类或者基本类型,associationGroup属性必须填写", entityClass));
 				}
 				final Meta.Field field = new Meta.Field();
 				field.name = name;
@@ -384,12 +389,13 @@ public class VoHandler extends AbstractHandler {
 					field.type = type.getSimpleName();
 					addImport(meta, type);
 				}
-				 String label = view.label();
+				String label = view.field().label();
 				if (isBlank(label)) {
 					label = view.name();
-					logger.warn(format("%s 类上使用@AssociationView（name=%s）中的label属性为空，默认使用name属性 [%s]", entityClass.getName(), name,label));
+					logger.warn(format("%s 类上使用@AssociationView（name=%s）中的label属性为空，默认使用name属性 [%s]", entityClass.getName(), name, label));
 				}
 				field.label = label;
+				field.order = view.field().order();
 				meta.associationFields.add(field);
 			}
 		}
@@ -411,12 +417,13 @@ public class VoHandler extends AbstractHandler {
 				field.name = name;
 				field.type = type.getSimpleName();
 				addImport(meta, type);
-				String label = view.label();
+				String label = view.field().label();
 				if (isBlank(label)) {
 					label = view.name();
-					logger.warn(format("%s 类上使用@View（name=%s）中的label属性为空,默认使用name属性 [%s]", entityClass.getName(), name,name,viewGroup));
+					logger.warn(format("%s 类上使用@View（name=%s）中的label属性为空,默认使用name属性 [%s]", entityClass.getName(), name, name, viewGroup));
 				}
 				field.label = label;
+				field.order = view.field().order();
 				meta.associationFields.add(field);
 			}
 		}
@@ -552,6 +559,7 @@ public class VoHandler extends AbstractHandler {
 			protected String name;
 			protected String type;
 			protected String label;
+			protected int order;
 
 			public String getName() {
 				return name;
@@ -576,6 +584,14 @@ public class VoHandler extends AbstractHandler {
 
 			public void setLabel(String label) {
 				this.label = label;
+			}
+
+			public int getOrder() {
+				return order;
+			}
+
+			public void setOrder(int order) {
+				this.order = order;
 			}
 		}
 
