@@ -39,8 +39,8 @@ private static final long serialVersionUID = 1L;
 		Config config = new Config();
 		config.setGenLogFile(Paths.get(System.getProperty("user.home") , "yourProject.log").toString());
 		config.setUrl("jdbc:mysql://mysqlIP/yourdb");
-		config.setEntityPackage("com.zy.entity");
-		config.setMybatisMapperPackage("com.zy.mapper");
+		config.setEntityPackage("com.xx.entity");
+		config.setMybatisMapperPackage("com.xx.mapper");
 		
 		//D:\\Work\\Workspace\\xx-parent
 		//Users/freeman/IdeaProjects/xxx-parent
