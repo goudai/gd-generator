@@ -159,27 +159,27 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
 				switch (predicate) {
 				case EQ:
 					if (field.getType().isEnum())
-						value = " and " + camelToUnderlineName + " = #{" + nameWithPredicate + ",typeHandler=" + this.parseEnum(field) + "}";
+						value = "and " + camelToUnderlineName + " = #{" + nameWithPredicate + ",typeHandler=" + this.parseEnum(field) + "}";
 					else
-						value = " and " + camelToUnderlineName + " = #{" + nameWithPredicate + "}";
+						value = "and " + camelToUnderlineName + " = #{" + nameWithPredicate + "}";
 					break;
 				case NEQ:
 					if (field.getType().isEnum())
-						value = " and " + camelToUnderlineName + " != #{" + nameWithPredicate + ",typeHandler=" + this.parseEnum(field) + "}";
+						value = "and " + camelToUnderlineName + " != #{" + nameWithPredicate + ",typeHandler=" + this.parseEnum(field) + "}";
 					else
-						value = " and " + camelToUnderlineName + " != #{" + nameWithPredicate + "}";
+						value = "and " + camelToUnderlineName + " != #{" + nameWithPredicate + "}";
 					break;
 				case GT:
-					value = " and " + camelToUnderlineName + " &gt; #{" + nameWithPredicate + "}";
+					value = "and " + camelToUnderlineName + " &gt; #{" + nameWithPredicate + "}";
 					break;
 				case GTE:
-					value = " and " + camelToUnderlineName + " &gt;= #{" + nameWithPredicate + "}";
+					value = "and " + camelToUnderlineName + " &gt;= #{" + nameWithPredicate + "}";
 					break;
 				case LT:
-					value = " and " + camelToUnderlineName + " &lt; #{" + nameWithPredicate + "}";
+					value = "and " + camelToUnderlineName + " &lt; #{" + nameWithPredicate + "}";
 					break;
 				case LTE:
-					value = " and " + camelToUnderlineName + " &lt;= #{" + nameWithPredicate + "}";
+					value = "and " + camelToUnderlineName + " &lt;= #{" + nameWithPredicate + "}";
 					break;
 				case EW:
 					bind = "<bind name=\"" + nameWithPredicate + "\" value=\"'%' + " + nameWithPredicate + "\"/>";
@@ -194,18 +194,36 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
 					value = bind + " and " + camelToUnderlineName + " like #{" + nameWithPredicate + "}";
 					break;
 				case NL:
-					value = " and " + camelToUnderlineName + " is null";
+					value = "and " + camelToUnderlineName + " is null";
 					break;
 				case NN:
-					value = " and " + camelToUnderlineName + " is not null";
+					value = "and " + camelToUnderlineName + " is not null";
 					break;
 				case IN:
 					if (field.getType().isEnum())
-						value = " and " + camelToUnderlineName + " in\r\n" + "\t\t\t\t<foreach collection=\"" + nameWithPredicate
-						+ "\" item=\"item\" open=\"(\" separator=\",\" close=\")\">\r\n\t\t\t\t#{item"  + ",typeHandler=" + this.parseEnum(field) + "}\r\n\t\t\t\t</foreach>";
+						value = 
+								"<if test=\"" + nameWithPredicate + ".length != 0\">\r\n"
+								+ "\t\t\t\tand " + camelToUnderlineName + " in\r\n" 
+								+ "\t\t\t\t<foreach collection=\"" + nameWithPredicate + "\" item=\"item\" open=\"(\" separator=\",\" close=\")\">\r\n"
+								+ "\t\t\t\t#{item"  + ",typeHandler=" + this.parseEnum(field) + "}\r\n"
+								+ "\t\t\t\t</foreach>\r\n"
+								+ "\t\t\t\t</if>\r\n"
+								+ "\t\t\t\t<if test=\"" + nameWithPredicate + ".length == 0\">\r\n"
+								+ "\t\t\t\t1 = 2\r\n"
+								+ "\t\t\t\t</if>"
+								;
 					else
-						value = " and " + camelToUnderlineName + " in\r\n" + "\t\t\t\t<foreach collection=\"" + nameWithPredicate
-						+ "\" item=\"item\" open=\"(\" separator=\",\" close=\")\">\r\n\t\t\t\t#{item}\r\n\t\t\t\t</foreach>";
+						value = 
+						"<if test=\"" + nameWithPredicate + ".length != 0\">\r\n"
+						+ "\t\t\t\tand " + camelToUnderlineName + " in\r\n"
+						+ "\t\t\t\t<foreach collection=\"" + nameWithPredicate + "\" item=\"item\" open=\"(\" separator=\",\" close=\")\">\r\n"
+						+ "\t\t\t\t#{item}\r\n"
+						+ "\t\t\t\t</foreach>\r\n"
+						+ "\t\t\t\t</if>\r\n"
+						+ "\t\t\t\t<if test=\"" + nameWithPredicate + ".length == 0\">\r\n"
+						+ "\t\t\t\t1 = 2\r\n"
+						+ "\t\t\t\t</if>"
+						;
 					break;
 				default:
 					break;
