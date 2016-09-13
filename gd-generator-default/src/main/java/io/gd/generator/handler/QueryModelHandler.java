@@ -1,8 +1,8 @@
 package io.gd.generator.handler;
 
-import io.gd.generator.api.query.Predicate;
 import io.gd.generator.annotation.query.Query;
 import io.gd.generator.annotation.query.QueryModel;
+import io.gd.generator.api.query.Predicate;
 import io.gd.generator.meta.querymodel.QueryModelMeta;
 import io.gd.generator.meta.querymodel.QueryModelMeta.QueryModelField;
 import io.gd.generator.util.ClassHelper;
@@ -32,11 +32,11 @@ public class QueryModelHandler extends ScopedHandler<QueryModelMeta> {
 		}
 
 	}
-	
+
 	private String getQueryModelFilePath(Class<?> entityClass) {
 		return config.getQueryModelPath() + File.separator + entityClass.getSimpleName() + config.getQueryModelSuffix() + ".java";
 	}
-	
+
 	@Override
 	protected void preRead(Class<?> entityClass) throws Exception {
 	}
@@ -56,26 +56,26 @@ public class QueryModelHandler extends ScopedHandler<QueryModelMeta> {
 			meta.setType(entityClass.getSimpleName() + config.getQueryModelSuffix());
 			meta.setQueryModelPackage(config.getQueryModelPackage());
 			meta.setUseLombok(config.isUseLombok());
-			
+
 			ClassHelper.getFields(entityClass).stream().filter(ClassHelper::isNotStaticField)
-				.forEach(v -> {
-					meta.getFieldNames().add(v.getName());
-					Query query = v.getAnnotation(Query.class);
-					if (query != null) {
-						for (Predicate predicate : query.value()) {
-							QueryModelField queryModelField = new QueryModelField();
-							queryModelField.setType(v.getType().getSimpleName());
-							queryModelField.setName(v.getName() + predicate);
-							if (predicate == Predicate.IN) {
-								queryModelField.setArray(true);
+					.forEach(v -> {
+						meta.getFieldNames().add(v.getName());
+						Query query = v.getAnnotation(Query.class);
+						if (query != null) {
+							for (Predicate predicate : query.value()) {
+								QueryModelField queryModelField = new QueryModelField();
+								queryModelField.setType(v.getType().getSimpleName());
+								queryModelField.setName(v.getName() + predicate);
+								if (predicate == Predicate.IN) {
+									queryModelField.setArray(true);
+								}
+								meta.getQueryModelFields().add(queryModelField);
+								meta.getImportFullTypes().add(v.getType().getName().replaceAll("\\$", "."));
 							}
-							meta.getQueryModelFields().add(queryModelField);
-							meta.getImportFullTypes().add(v.getType().getName().replaceAll("\\$", "."));
 						}
-					}
-					
-				});
-			
+
+					});
+
 			return meta;
 		}
 	}
@@ -95,7 +95,7 @@ public class QueryModelHandler extends ScopedHandler<QueryModelMeta> {
 			model.put("meta", merged);
 			String mapper = renderTemplate("queryModel", model);
 			File file = new File(getQueryModelFilePath(entityClass));
-			
+
 			if (file.exists()) {
 				file.delete();
 			}

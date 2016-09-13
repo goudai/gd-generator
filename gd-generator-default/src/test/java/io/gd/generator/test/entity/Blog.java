@@ -16,7 +16,7 @@ import javax.persistence.Entity;
 @Entity
 public class Blog {
 
-	@Query(value = { Predicate.EQ })
+	@Query(value = {Predicate.EQ})
 	@View(groups = {"UserBlogVo"}, name = "titleLabel", type = String.class)
 	@Field(label = "标题")
 	private String title;

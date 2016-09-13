@@ -19,9 +19,9 @@ import java.util.Map;
 public class MysqlHandler extends ScopedHandler<MysqlTableMeta> {
 
 	static final Logger logger = LoggerFactory.getLogger(MysqlHandler.class);
-	
+
 	protected Connection connection;
-	
+
 	@Override
 	protected void init() throws Exception {
 		super.init();
@@ -232,7 +232,7 @@ public class MysqlHandler extends ScopedHandler<MysqlTableMeta> {
 		}
 		if (field.getType().isAssignableFrom(BigDecimal.class)) {
 			Column column = field.getAnnotation(Column.class);
-			if(column == null) {
+			if (column == null) {
 				return "decimal(19,2)";
 			} else {
 				int precision = column.precision() == 0 ? 19 : column.precision();
@@ -242,7 +242,7 @@ public class MysqlHandler extends ScopedHandler<MysqlTableMeta> {
 		}
 		if (field.getType().isAssignableFrom(Double.class)) {
 			Column column = field.getAnnotation(Column.class);
-			if(column == null) {
+			if (column == null) {
 				return "double(19,2)";
 			} else {
 				int precision = column.precision() == 0 ? 19 : column.precision();

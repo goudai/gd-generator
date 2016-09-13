@@ -5,13 +5,13 @@ import java.io.File;
 import java.io.FileReader;
 
 public class FileUtils {
-	
+
 	public static String read(String file) {
 		return read(new File(file));
 	}
 
 	public static String read(File file) {
-		if(!file.exists()) {
+		if (!file.exists()) {
 			return null;
 		}
 		try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {

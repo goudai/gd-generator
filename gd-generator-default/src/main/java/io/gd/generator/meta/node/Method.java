@@ -7,6 +7,7 @@ public class Method {
 	private String name;
 	private String json;
 	private String serviceName;
+
 	public Method(String name, String json) {
 		this.json = json;
 		this.name = name;

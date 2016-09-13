@@ -34,7 +34,7 @@ public class ClassHelper {
 			try {
 				classes.add(Class.forName(k.getName()));
 			} catch (Exception e) {
-				logger.error(e.getMessage(),e);
+				logger.error(e.getMessage(), e);
 			}
 		});
 		return classes;
@@ -47,7 +47,7 @@ public class ClassHelper {
 			try {
 				classes.put(k.getSimpleName(), Class.forName(k.getName()));
 			} catch (Exception e) {
-				logger.error(e.getMessage(),e);
+				logger.error(e.getMessage(), e);
 			}
 		});
 		return classes;
@@ -71,13 +71,13 @@ public class ClassHelper {
 
 	public static List<Field> getFields(Class<?> clazz) {
 		List<Field> fields = new ArrayList<>();
-		for (; clazz!=null && clazz != Object.class; clazz = clazz.getSuperclass()) {
+		for (; clazz != null && clazz != Object.class; clazz = clazz.getSuperclass()) {
 			try {
 				Field[] declaredFields = clazz.getDeclaredFields();
-				if(declaredFields != null)
-				fields.addAll(Arrays.asList(declaredFields));
+				if (declaredFields != null)
+					fields.addAll(Arrays.asList(declaredFields));
 			} catch (Exception e) {
-				logger.error(e.getMessage(),e);
+				logger.error(e.getMessage(), e);
 			}
 		}
 		return fields;

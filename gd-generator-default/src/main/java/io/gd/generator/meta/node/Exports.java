@@ -7,7 +7,7 @@ import java.util.Set;
  * Created by freeman on 16/6/21.
  */
 public class Exports {
-	private  String serviceName;
+	private String serviceName;
 
 	private Set<Method> methods = new LinkedHashSet<>();
 

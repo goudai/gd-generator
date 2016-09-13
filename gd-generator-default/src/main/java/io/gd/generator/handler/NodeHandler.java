@@ -22,26 +22,26 @@ public class NodeHandler extends AbstractHandler {
 
 	@Override
 	public void doHandle(Set<Class<?>> classes) {
-		classes.stream().filter(service ->!(service.getName().endsWith("Impl"))).forEach(service ->{
-			nodeMeta.getServices().add(new Service(service.getName(),service.getSimpleName()));
+		classes.stream().filter(service -> !(service.getName().endsWith("Impl"))).forEach(service -> {
+			nodeMeta.getServices().add(new Service(service.getName(), service.getSimpleName()));
 			Exports exports = new Exports(service.getSimpleName());
 			nodeMeta.getExports().add(exports);
 			Arrays.stream(service.getMethods()).forEach(method -> {
 				String name = method.getName();
 				final StringBuilder jsonParamters = new StringBuilder("{");
 				Parameter[] parameters = method.getParameters();
-				if(parameters.length == 0){
-					exports.getMethods().add(new Method(method.getName(),"{}"));
-				}else{
+				if (parameters.length == 0) {
+					exports.getMethods().add(new Method(method.getName(), "{}"));
+				} else {
 					Arrays.stream(parameters).forEach(parameter -> {
 						Class<?> type = parameter.getType();
-						jsonParamters.append(parameter.getName()+":"+getTypeName(type,beans) +",");
+						jsonParamters.append(parameter.getName() + ":" + getTypeName(type, beans) + ",");
 
 					});
 					String s = jsonParamters.toString();
-					s = s.substring(0,s.length()-1);
-					s+="}";
-					exports.getMethods().add(new Method(name,s));
+					s = s.substring(0, s.length() - 1);
+					s += "}";
+					exports.getMethods().add(new Method(name, s));
 				}
 
 			});
@@ -51,23 +51,25 @@ public class NodeHandler extends AbstractHandler {
 			StringWriter out = new StringWriter();
 			Template template = null;
 			template = freemarkerConfiguration.getTemplate("io/gd/generator/template/node-yield.ftl");
-			template.process(new HashMap<String,Object>(){{put("node",nodeMeta);}}, out);
+			template.process(new HashMap<String, Object>() {{
+				put("node", nodeMeta);
+			}}, out);
 
 			String doc = "";
 			for (Class<?> bean : beans) {
-					StringBuilder builder = new StringBuilder(bean.getName() +": {");
-					ClassHelper.getFields(bean).forEach(field -> {
-						builder.append(field.getName()+ ":" + getTypeName(field.getType(),null)+", ");
-					});
+				StringBuilder builder = new StringBuilder(bean.getName() + ": {");
+				ClassHelper.getFields(bean).forEach(field -> {
+					builder.append(field.getName() + ":" + getTypeName(field.getType(), null) + ", ");
+				});
 				String s = builder.toString();
-				s = s.substring(0,s.length()-2);
-				s+="}";
-				doc +=s + "\n";
+				s = s.substring(0, s.length() - 2);
+				s += "}";
+				doc += s + "\n";
 			}
-			try (FileWriter writer = new FileWriter(new File(config.getNodeDestFile()))){
+			try (FileWriter writer = new FileWriter(new File(config.getNodeDestFile()))) {
 				writer.write(out.toString());
 			}
-			try (FileWriter writer = new FileWriter(new File(config.getNodeDocFile()))){
+			try (FileWriter writer = new FileWriter(new File(config.getNodeDocFile()))) {
 				writer.write(doc.toString());
 			}
 			System.out.println("success ");
@@ -78,7 +80,7 @@ public class NodeHandler extends AbstractHandler {
 
 	}
 
-	public  boolean isWrapClass(Class clz) {
+	public boolean isWrapClass(Class clz) {
 		try {
 			return ((Class) clz.getField("TYPE").get(null)).isPrimitive();
 		} catch (Exception e) {
@@ -86,25 +88,23 @@ public class NodeHandler extends AbstractHandler {
 		}
 	}
 
-	String getTypeName(Class<?> type,Set<Class<?>> sets){
-		if(type.isPrimitive() || Date.class.isAssignableFrom(type)|| (this.isWrapClass(type)))
-			return  type.getSimpleName();
-		else if(String.class.isAssignableFrom(type))
+	String getTypeName(Class<?> type, Set<Class<?>> sets) {
+		if (type.isPrimitive() || Date.class.isAssignableFrom(type) || (this.isWrapClass(type)))
+			return type.getSimpleName();
+		else if (String.class.isAssignableFrom(type))
 			return "''";
-		else if (Enum.class.isAssignableFrom(type)){
+		else if (Enum.class.isAssignableFrom(type)) {
 			Enum[] enumConstants = ((Class<? extends Enum>) type).getEnumConstants();
 			String s = "";
 			for (Enum enumConstant : enumConstants) {
-				s+=enumConstant.name() +"="+enumConstant.ordinal()+",";
+				s += enumConstant.name() + "=" + enumConstant.ordinal() + ",";
 			}
-			return "enum{"+s.substring(0,s.length()-1)+"}";
-		}
-
-		else if(type.isArray())
-			return"[]";
+			return "enum{" + s.substring(0, s.length() - 1) + "}";
+		} else if (type.isArray())
+			return "[]";
 		else {
-			if(sets != null)
-			sets.add(type);
+			if (sets != null)
+				sets.add(type);
 			return type.getName();
 		}
 	}

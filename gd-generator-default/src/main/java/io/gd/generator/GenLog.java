@@ -42,7 +42,7 @@ public class GenLog {
 	}
 
 	public void flush() throws FileNotFoundException, IOException {
-		
+
 		try (FileOutputStream fos = new FileOutputStream(file, true)) {
 			if (sb.length() > 0) {
 				fos.write(("\r\n\r\n\r\n\r\n" + "--" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())).getBytes());

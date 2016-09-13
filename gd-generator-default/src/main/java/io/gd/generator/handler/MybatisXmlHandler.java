@@ -1,22 +1,14 @@
 package io.gd.generator.handler;
 
-import io.gd.generator.api.query.Predicate;
 import io.gd.generator.annotation.query.Query;
 import io.gd.generator.annotation.query.QueryModel;
+import io.gd.generator.api.query.Predicate;
 import io.gd.generator.meta.mybatis.MybatisXmlMeta;
 import io.gd.generator.meta.mybatis.MybatisXmlMeta.MybatisMappingMeta;
 import io.gd.generator.util.ClassHelper;
 import io.gd.generator.util.ConfigChecker;
 import io.gd.generator.util.StringUtils;
-import org.dom4j.Document;
-import org.dom4j.Element;
-import org.dom4j.io.SAXReader;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Version;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.StringReader;
@@ -25,6 +17,16 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Version;
+
+import org.dom4j.Document;
+import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
 
 public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
 

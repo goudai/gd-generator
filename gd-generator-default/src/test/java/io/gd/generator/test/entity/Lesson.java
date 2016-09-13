@@ -6,17 +6,9 @@ import java.util.Date;
 @Entity
 @Table(name = "lesson")
 public class Lesson {
-	public enum LessonStatus {
-		已创建, 已审核, 已拒绝;
-	}
-
-	public enum LessonLevel {
-		初级, 中级, 高级;
-	}
-
 	@Id
 	private Long id;
-	@Column(length = 14,unique=true)
+	@Column(length = 14, unique = true)
 	private String title;
 	private Long userId;
 	private Long categoryId;
@@ -144,6 +136,14 @@ public class Lesson {
 
 	public void setCreatedTime(Date createdTime) {
 		this.createdTime = createdTime;
+	}
+
+	public enum LessonStatus {
+		已创建, 已审核, 已拒绝;
+	}
+
+	public enum LessonLevel {
+		初级, 中级, 高级;
 	}
 
 }

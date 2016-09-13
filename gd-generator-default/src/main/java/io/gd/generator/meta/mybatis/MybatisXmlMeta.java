@@ -99,7 +99,7 @@ public class MybatisXmlMeta {
 	public void setMappingMetas(List<MybatisMappingMeta> mappingMetas) {
 		this.mappingMetas = mappingMetas;
 	}
-	
+
 	public static class MybatisMappingMeta {
 		private String column;
 		private String property;

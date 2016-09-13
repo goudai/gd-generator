@@ -17,13 +17,10 @@ import java.util.Set;
 
 public abstract class AbstractHandler implements Handler {
 
-	Logger logger = LoggerFactory.getLogger(AbstractHandler.class);
-
 	protected Config config;
-
 	protected Configuration freemarkerConfiguration;
-
 	protected GenLog genLog;
+	Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Override
 	public void start(Config config) throws Exception {
@@ -47,7 +44,7 @@ public abstract class AbstractHandler implements Handler {
 	protected void init() throws Exception {
 		freemarkerConfiguration = new Configuration(new Version(config.getFreemakerVersion()));
 		freemarkerConfiguration.setDefaultEncoding(config.getDefaultEncoding());
-		freemarkerConfiguration.setClassForTemplateLoading(getClass(),"/io/gd/generator/template");
+		freemarkerConfiguration.setClassForTemplateLoading(getClass(), "/io/gd/generator/template");
 		genLog = new GenLog(config.getGenLogFile());
 	}
 
