@@ -18,14 +18,37 @@
 * 在实体类上使用,用于标示是否解析该类的VO
 
 属性 | 类型 | 描述
------:|:------:|:----
+-----|------|----
 groups    | String[]    | 需要生成的VO的名称
 views    | @Views[]    | 需要生成的基本属性
 associationViews    | @AssociationView[]    | 需要生成的对象属性一般填VO的名称
 collectionViews    | @CollectionView[]    | 需要生成的集合属性
 mapViews    | @MapView[]    | 需要生成的Map属性
 
+#### @View
 ### 实体类demo
+* 在实体中的属性上使用,标示该熟悉将被解析为一个VO的属性
+一个属性上可以使用多个View注,如果使用View全部默认属性,那么将取得原始字段的name和type
+
+属性 | 类型 | 描述
+-----|------|----
+name    | String    | 需要生成的字段名成,如果不写将默认取属性名称,注意如果是在ViewObject上使用必须填写
+groups    | String[]    | 填写VO的名称,如果不写默认取ViewObject中的属性
+type    | Class<?>    | 生成属性的type,一般为String
+collectionViews    | @CollectionView[]    | 需要生成的集合属性
+
+#### @View
+### 实体类demo
+* 在实体中的属性上使用,标示该熟悉将被解析为一个VO的属性
+一个属性上可以使用多个View注,如果使用View全部默认属性,那么将取得原始字段的name和type
+
+属性 | 类型 | 描述
+-----|------|----
+name    | String    | 需要生成的字段名成,如果不写将默认取属性名称,注意如果是在ViewObject上使用必须填写
+groups    | String[]    | 填写VO的名称,如果不写默认取ViewObject中的属性
+type    | Class<?>    | 生成属性的type,一般为String
+collectionViews    | @CollectionView[]    | 需要生成的集合属性
+
 ```java
 /* JPA注解 需要解析的实体类必须加此注解*/
 @Entity
