@@ -24,9 +24,9 @@ associationViews|AssociationView   | 需要生成的对象属性   |
 collectionViews |views             | 需要生成的集合属性   |
 mapViews        |MapView           | 需要生成的map属性   |
 
-属性 | EFGH | IGKL
+属性 | 类型 | 描述
 -----|------|----
-a    | b    | c
+groups    | views[]    | 需要生成的VO的名称
 d    | e    | f
 g    | h    | i
 
