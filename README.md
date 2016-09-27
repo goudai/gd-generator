@@ -43,7 +43,7 @@ collectionViews    | @CollectionView[]    | 需要生成的集合属性
 mapViews    | @MapView[]    | 需要生成的Map属性
 
 #### @View
-* 在实体中的属性上使用,标示该熟悉将被解析为一个VO的属性
+* 在实体中的属性上使用,标示该属性将被解析为一个VO的属性
 一个属性上可以使用多个View注,如果使用View全部默认属性,那么将取得原始字段的name和type
 
 属性 | 类型 | 描述
@@ -54,8 +54,8 @@ type    | Class    | 生成属性的type,一般为String
 collectionViews    | @CollectionView[]    | 需要生成的集合属性
 
 #### @AssociationView
-* 在实体中的属性上使用,标示该熟悉将被解析为一个VO的属性
-一个属性上可以使用多个View注,如果使用View全部默认属性,那么将取得原始字段的name和type
+* 在实体中的属性上使用,标示该属性将被解析为一个VO的属性
+一个属性上可以使用多个AssociationView注
 
 属性 | 类型 | 描述
 -----|------|----
@@ -65,8 +65,8 @@ type    | Class    | 生成属性的类型,一般为复杂类型 如BigDecimal.c
 associationGroup    | String    | 生成属性的类型,一般为VO的名称 注意 与type属性冲突
 
 #### @CollectionView
-* 在实体中的属性上使用,标示该熟悉将被解析为一个VO的属性
-一个属性上可以使用多个View注,如果使用View全部默认属性,那么将取得原始字段的name和type
+* 在实体中的属性上使用,标示该属性将被解析为一个VO的属性
+一个属性上可以使用多个CollectionView
 
 属性 | 类型 | 描述
 -----|------|----
@@ -77,8 +77,8 @@ elementType    | Class    | 生成的集合的泛型
 elementGroup    | String   | 生成的集合的泛型 与elementType冲突
 
 #### @MapView
-* 在实体中的属性上使用,标示该熟悉将被解析为一个VO的属性
-一个属性上可以使用多个View注,如果使用View全部默认属性,那么将取得原始字段的name和type
+* 在实体中的属性上使用,标示该属性将被解析为一个VO的属性
+一个属性上可以使用多个MapView
 
 属性 | 类型 | 描述
 -----|------|----
