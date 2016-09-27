@@ -11,7 +11,24 @@
 7. 生成VO对象，提供四中注解注册，@View  @AssociationView @CollectionView @MapView
 
 ### 安装
-
+        wget https://github.com/goudai/gd-generator/archive/gd-generator-1.0.0.zip
+        unzip gd-generator-1.0.0.zip
+        cd gd-generator-1.0.0
+        mvn clean install 
+       
+### maven 依赖
+```xml
+<dependency>
+    <groupId>io.goudai</groupId>
+    <artifactId>gd-generator-api</artifactId>
+    <version>1.0.0</version>
+</dependency>
+<dependency>
+    <groupId>io.goudai</groupId>
+    <artifactId>gd-generator-api</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
 
 ### 注解对照表
 #### @ViewObject
