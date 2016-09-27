@@ -24,7 +24,7 @@
 |collectionViews |views             | 需要生成的集合属性   |
 |mapViews        |MapView           | 需要生成的map属性   |
 
-ABCD | EFGH | IGKL
+属性 | EFGH | IGKL
 -----|------|----
 a    | b    | c
 d    | e    | f
