@@ -16,12 +16,13 @@
 ### 注解对照表
 #### @ViewObject
 * 在实体类上使用,用户标示是否解析该类的VO
-|:--------------:|:--——------------|:------------------:|
-|groups          |views[]          | 需要生成的VO的昵称    |
-|views           |views[]          | 需要生成的基本属性    |
-|associationViews|AssociationView[]| 需要生成的对象属性    |
-|collectionViews |views[]          | 需要生成的集合属性    |
-|mapViews        |MapView[]        | 需要生成的map属性    |
+|属性名           |类型              | 描述
+|:--------------:|:--——------------:|:------------------:|
+|groups          |views[]           | 需要生成的VO的昵称    |
+|views           |views[]           | 需要生成的基本属性    |
+|associationViews|AssociationView[] | 需要生成的对象属性    |
+|collectionViews |views[]           | 需要生成的集合属性    |
+|mapViews        |MapView[]         | 需要生成的map属性     |
 
 
 ### 实体类demo
