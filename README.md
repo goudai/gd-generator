@@ -33,7 +33,7 @@ mapViews    | @MapView[]    | 需要生成的Map属性
 -----|------|----
 name    | String    | 需要生成的字段名成,如果不写将默认取属性名称,注意如果是在ViewObject上使用必须填写
 groups    | String[]    | 填写VO的名称,如果不写默认取ViewObject中的属性
-type    | Class<?>    | 生成属性的type,一般为String
+type    | Class    | 生成属性的type,一般为String
 collectionViews    | @CollectionView[]    | 需要生成的集合属性
 
 #### @AssociationView
@@ -44,7 +44,7 @@ collectionViews    | @CollectionView[]    | 需要生成的集合属性
 -----|------|----
 name    | String    | 需要生成的字段名成,如果不写将默认取属性名称,注意如果是在ViewObject上使用必须填写
 groups    | String[]    | 填写VO的名称,如果不写默认取ViewObject中的属性
-type    | Class<?>    | 生成属性的类型,一般为复杂类型 如BigDecimal.class
+type    | Class    | 生成属性的类型,一般为复杂类型 如BigDecimal.class
 associationGroup    | String    | 生成属性的类型,一般为VO的名称 注意 与type属性冲突
 
 #### @CollectionView
@@ -55,13 +55,23 @@ associationGroup    | String    | 生成属性的类型,一般为VO的名称 注
 -----|------|----
 name    | String    | 需要生成的字段名成,如果不写将默认取属性名称,注意如果是在ViewObject上使用必须填写
 groups    | String[]    | 填写VO的名称,如果不写默认取ViewObject中的属性
-type    | Class<?>    | 需要生成的集合实现类,默认为ArrayList.class
-elementType    | Class<?>    | 生成的集合的泛型
+type    | Class    | 需要生成的集合实现类,默认为ArrayList.class
+elementType    | Class    | 生成的集合的泛型
 elementGroup    | String   | 生成的集合的泛型 与elementType冲突
 
+#### @MapView
+* 在实体中的属性上使用,标示该熟悉将被解析为一个VO的属性
+一个属性上可以使用多个View注,如果使用View全部默认属性,那么将取得原始字段的name和type
 
-
-
+属性 | 类型 | 描述
+-----|------|----
+name    | String    | 需要生成的字段名成,如果不写将默认取属性名称,注意如果是在ViewObject上使用必须填写
+groups    | String[]    | 填写VO的名称,如果不写默认取ViewObject中的属性
+type    | Class    | 需要生成的Map实现类,默认为HashMap.class
+keyType    | Class    | 生成的Map的Key泛型
+keyGroup    | String   | 生成的Map的Key泛型 与keyType冲突
+valueType    | Class   | 生成的Map的Value泛型 
+valueGroup    | String   | 生成的Map的Key泛型 与valueType冲突
 
 
 ```java
