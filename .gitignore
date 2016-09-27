@@ -1,11 +1,9 @@
-*.idea
+.idea
 *.class
-/*/target/
+target
 .project
 .settings/
 .classpath
 web.xml
-.idea
-/*/*.iml
-target/
-/gd-generator-default/gd-generator-default.iml
+*.iml
+
