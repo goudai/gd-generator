@@ -4,31 +4,157 @@
 如生成接口mapper,生成xml配置文件。
 2. 可通过实体类在生成自动建表，自动加索引,自动更新数据列。
 3. 可检测出数据库与实体类之间的差异并在日志中打印出对饮警告或者修复用的sql语句。  
-如 warn : 数据库中的列  [mysql_name --> mysqlNname] 在实体类 Admin 不存在;
+如 warn : 数据库中的列  [mysql_name --> mysqlName] 在实体类 Admin 不存在;
 4. 支持大部分JPA注解解析，可通过此代码生成器快速从hibernate转换到mybatis。
-5. 抽取查询对象，简化查询。QuerModel
+5. 抽取查询对象，简化查询。QuerModel,自动生成QueryModel
 6. 自动驼峰装换
-update ========
-1. 生成查询对象，提供查询相关注解
-2. 生成VO对象，提供四中注解注册，@View  @AssociationView @CollectionView @MapView
+7. 生成VO对象，提供四中注解注册，@View  @AssociationView @CollectionView @MapView
+
+### 安装
+
+
+### 注解对照表
+#### @ViewObject
+* 在实体类上使用,用户标示是否解析该类的VO
+|:--------------:|:--——------------|:------------------:|
+|groups          |views[]          | 需要生成的VO的昵称    |
+|views           |views[]          | 需要生成的基本属性    |
+|associationViews|AssociationView[]| 需要生成的对象属性    |
+|collectionViews |views[]          | 需要生成的集合属性    |
+|mapViews        |MapView[]        | 需要生成的map属性    |
+
+
 ### 实体类demo
 ```java
-//JPA注解 需要解析的类必须加此注解
+/* JPA注解 需要解析的实体类必须加此注解*/
 @Entity
-//JPA注解 name表示数据表的名称 uniqueConstraints表示需要进行唯一约束的列,可自动追加到数据库
-@Table(name = "admin",uniqueConstraints=@UniqueConstraint(columnNames={"userId,age"}))
-public class Admin implements Serializable {
-private static final long serialVersionUID = 1L;
-    //JPA 注解 此注解会自动同步数据为主键
-    @Id
-    private Long id;
-    private Long userId;
-    //唯一约束
-    @Column(unique=true)//
-    private String roleNames;
-    private int age;
-    
-    //getter setter
+@Table(name = "usr_user")
+/*lombok提供注解*/
+@Getter
+@Setter
+/*此注解表示是否生成查询对象*/
+@QueryModel
+/*此注解为预留注解 为以后生成页面以及生成excel*/
+@Type(label = "用户")
+@ViewObject(groups = {VO_LIST, VO_SIMPLE, VO_ADMIN, VO_ADMIN_SIMPLE, VO_ADMIN_FULL},
+	collectionViews = {
+		@CollectionView(name = "userUpgrades", elementGroup = UserUpgrade.VO_ADMIN, groups = VO_ADMIN_FULL),
+		@CollectionView(name = "teammates", elementGroup = VO_ADMIN_SIMPLE, groups = VO_ADMIN_FULL)
+	},
+	associationViews = {
+		@AssociationView(name = "portrait", associationGroup = Portrait.VO_ADMIN, groups = VO_ADMIN_FULL),
+		@AssociationView(name = "appearance", associationGroup = Appearance.VO_ADMIN, groups = VO_ADMIN_FULL)
+	}
+
+)
+public class User implements Serializable {
+      /*此处定义的为需要生成的VO的类名称*/
+	public static final String VO_LIST = "UserListVo";
+	public static final String VO_SIMPLE = "UserSimpleVo";
+	public static final String VO_ADMIN = "UserAdminVo";
+	public static final String VO_ADMIN_SIMPLE = "UserAdminSimpleVo";
+	public static final String VO_ADMIN_FULL = "UserAdminFullVo";
+
+	@Id
+	@Query(Predicate.IN)
+	@Field(label = "id")
+	@View
+	private Long id;
+
+	@Column(length = 11, unique = true)
+	@NotBlank
+	@Pattern(regexp = "^1[\\d]{10}$")
+	@StringBinder
+	@Query(Predicate.EQ)
+	@Field(label = "手机号")
+	@View(groups = {VO_LIST, VO_ADMIN, VO_ADMIN_SIMPLE, VO_ADMIN_FULL})
+	private String phone;
+
+	@Column(length = 60)
+	@Field(label = "密码")
+	private String password;
+
+	@Column(length = 60)
+	@NotBlank
+	@StringBinder
+	@Query(Predicate.LK)
+	@Length(max = 60)
+	@Field(label = "昵称")
+	@View
+	private String nickname;
+
+	@NotNull
+	@Query(Predicate.EQ)
+	@Field(label = "用户类型")
+	@View(groups = {VO_ADMIN, VO_ADMIN_SIMPLE, VO_ADMIN_FULL})
+	private UserType userType;
+
+	@NotNull
+	@Query(Predicate.EQ)
+	@Field(label = "用户等级")
+	@View(groups = {VO_LIST, VO_ADMIN, VO_ADMIN_SIMPLE, VO_ADMIN_FULL})
+	@View(name = "userRankLabel", type = String.class, groups = {VO_ADMIN, VO_ADMIN_SIMPLE, VO_ADMIN_FULL})
+	private UserRank userRank;
+
+	@Column(length = 11)
+	@Pattern(regexp = "^[\\d]{5,11}$")
+	@Field(label = "qq")
+	@View(groups = {VO_ADMIN, VO_ADMIN_FULL})
+	private String qq;
+
+	@NotBlank
+	@Field(label = "头像")
+	@View(name = "avatarThumbnail", type = String.class)
+	@Length(max = 250)
+	private String avatar;
+
+	@NotNull
+	@Query(Predicate.EQ)
+	@Field(label = "是否冻结")
+	@View(groups = {VO_ADMIN, VO_ADMIN_FULL})
+	private Boolean isFrozen;
+
+	@NotNull
+	@Temporal(TemporalType.TIMESTAMP)
+	@Query({Predicate.GTE, Predicate.LT})
+	@Field(label = "注册时间")
+	@View(groups = {VO_ADMIN, VO_ADMIN_FULL})
+	private Date registerTime;
+
+	@NotNull
+	@Field(label = "注册ip")
+	@View(groups = {VO_ADMIN, VO_ADMIN_FULL})
+	private String registerIp;
+
+	@Query({Predicate.EQ, Predicate.IN})
+	@Field(label = "邀请人id", description = "此用户不是最终上下级关系")
+	@AssociationView(name = "inviter", associationGroup = VO_ADMIN_SIMPLE, groups = {VO_ADMIN, VO_ADMIN_FULL})
+	private Long inviterId;
+
+	@Query({Predicate.EQ, Predicate.IN})
+	@Field(label = "上级id")
+	@AssociationView(name = "parent", associationGroup = VO_ADMIN_SIMPLE, groups = {VO_ADMIN, VO_ADMIN_FULL})
+	private Long parentId;
+
+	@Field(label = "remark")
+	@View(groups = {VO_ADMIN, VO_ADMIN_FULL})
+	private String remark;
+
+	@Temporal(TemporalType.DATE)
+	@Field(label = "vipExpiredDate")
+	private Date vipExpiredDate;
+
+	@Column(length = 60, unique = true)
+	@Field(label = "微信openId")
+	private String openId;
+
+	@Column(length = 60, unique = true)
+	@Field(label = "微信unionId")
+	private String unionId;
+
+	@Field(label = "上次升级时间")
+	private Date lastUpgradedTime;
+
 }
 ```
 
