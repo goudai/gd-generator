@@ -8,7 +8,7 @@
 4. 支持大部分JPA注解解析，可通过此代码生成器快速从hibernate转换到mybatis。
 5. 抽取查询对象，简化查询。QuerModel,自动生成QueryModel
 6. 自动驼峰装换
-7. 生成VO对象，提供四中注解注册，@View  @AssociationView @CollectionView @MapView
+7. 生成VO对象，提供四种注解，@View  @AssociationView @CollectionView @MapView
 
 ### 安装
         wget https://github.com/goudai/gd-generator/archive/gd-generator-1.0.0.zip
