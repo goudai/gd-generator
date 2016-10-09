@@ -9,7 +9,7 @@ public enum Predicate {
 	LT, // less than
 	LTE, // less than equal
 	NL, // null
-	NN, // not null
+//	NN, // not null
 	LK, // like
 	SW, // start with
 	EW,  // end with

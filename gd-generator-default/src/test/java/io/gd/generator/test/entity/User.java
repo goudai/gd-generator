@@ -30,14 +30,14 @@ public class User {
 	@Id
 	@Query(value = {EQ, NEQ, IN})
 	private Long id;
-	@Query(value = {LK})
+
+	@Query(value = {LK,NL})
 	@Column(length = 11, unique = true)
 	@View(name = "phone", type = String.class, groups = {"UserSimpleVo"})
-
 	private String phone;
+
 	@Column(length = 20)
 	@AssociationView
-
 	private String password;
 	@Column(length = 6, unique = true)
 	@MapView(name = "phoneMap")

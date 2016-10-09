@@ -9,7 +9,9 @@ import io.gd.generator.annotation.view.ViewObject;
 import io.gd.generator.api.query.Predicate;
 
 import javax.persistence.Entity;
+import javax.persistence.Table;
 
+@Table
 @QueryModel
 @ViewObject(groups = {"BlogVo", "UserBlogVo"})
 @Type(label = "博客")

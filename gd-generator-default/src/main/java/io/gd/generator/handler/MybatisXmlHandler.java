@@ -196,10 +196,7 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
 					value = bind + " and " + camelToUnderlineName + " like #{" + nameWithPredicate + "}";
 					break;
 				case NL:
-					value = "and " + camelToUnderlineName + " is null";
-					break;
-				case NN:
-					value = "and " + camelToUnderlineName + " is not null";
+					value = "and " + camelToUnderlineName;
 					break;
 				case IN:
 					if (field.getType().isEnum())

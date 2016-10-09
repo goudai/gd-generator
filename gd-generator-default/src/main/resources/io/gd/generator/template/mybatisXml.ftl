@@ -94,9 +94,20 @@
 		from `${meta.table?trim}`
 		<where>
 			<#list meta.querys?keys as key>
+			<#if key?contains("NL")>
+             <if test="${key} != null">
+                 <if test="${key}">
+                    ${meta.querys[key]} is null
+                 </if>
+                 <if test="!${key}">
+                    ${meta.querys[key]} is not null
+                 </if>
+             </if>
+			<#else>
 			<if test="${key} != null">
 				${meta.querys[key]}
 			</if>
+			</#if>
 			</#list>
 		</where>
 		<choose>
@@ -116,9 +127,20 @@
 		select count(*) from `${meta.table?trim}`
 		<where>
 			<#list meta.querys?keys as key>
+		<#if key?contains("NL")>
+			<if test="${key} != null">
+				<if test="${key}">
+					${meta.querys[key]} is  null
+				</if>
+                <if test="!${key}">
+				    ${meta.querys[key]} is not null
+                </if>
+			</if>
+		<#else >
 			<if test="${key} != null">
 				${meta.querys[key]}
 			</if>
+		</#if>
 			</#list>
 		</where>
 	</select>

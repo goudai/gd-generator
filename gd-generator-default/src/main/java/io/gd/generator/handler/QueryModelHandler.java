@@ -69,6 +69,9 @@ public class QueryModelHandler extends ScopedHandler<QueryModelMeta> {
 								if (predicate == Predicate.IN) {
 									queryModelField.setArray(true);
 								}
+								if (predicate == Predicate.NL){
+									queryModelField.setType("Boolean");
+								}
 								meta.getQueryModelFields().add(queryModelField);
 								meta.getImportFullTypes().add(v.getType().getName().replaceAll("\\$", "."));
 							}
