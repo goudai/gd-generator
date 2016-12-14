@@ -74,7 +74,7 @@ public class NodeHandler extends AbstractHandler {
             String doc = "";
             for (Class<?> bean : beans) {
                 StringBuilder builder = new StringBuilder(bean.getName() + ": {");
-                ClassHelper.getFields(bean).forEach(field -> {
+                ClassHelper.getFields(bean).stream().filter(ClassHelper::isNotStaticField).forEach(field -> {
                     builder.append(field.getName() + ":" + getTypeName(field.getType(), null) + ", ");
                 });
                 String s = builder.toString();

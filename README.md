@@ -3,13 +3,13 @@
 1. 基于实体类为主导的代码生成器，可基于实体类快速的生成mybatis的相关配置。
 如生成接口mapper,生成xml配置文件。
 2. 可通过实体类在生成自动建表，自动加索引,自动更新数据列。
-3. 可检测出数据库与实体类之间的差异并在日志中打印出对饮警告或者修复用的sql语句。  
+3. 可检测出数据库与实体类之间的差异并在日志中打印出对应警告或者修复用的sql语句。  
 如 warn : 数据库中的列  [mysql_name --> mysqlName] 在实体类 Admin 不存在;
 4. 支持大部分JPA注解解析，可通过此代码生成器快速从hibernate转换到mybatis。
-5. 抽取查询对象，简化查询。QuerModel,自动生成QueryModel
+5. 抽取查询对象 ,简化查询 ,自动生成QueryModel
 6. 自动驼峰装换
 7. 生成VO对象，提供四种注解，@View  @AssociationView @CollectionView @MapView
-
+8. 可在开发中运行
 ### 安装
         wget https://github.com/goudai/gd-generator/archive/gd-generator-1.0.0.zip
         unzip gd-generator-1.0.0.zip
@@ -108,11 +108,11 @@ valueGroup    | String   | 生成的Map的Key泛型 与valueType冲突
 		String projectPath = "your project base path";
 
         //xxx-service-impl\\src\\main\\java\\com\\xx\\mapper & windows
-        //xxx-service-impl/src/main/java/com/xx/mapper & max or linux
+        //xxx-service-impl/src/main/java/com/xx/mapper & mac or linux
 		config.setMybatisMapperPath(projectPath + "your mybatis mapper path");
 		
 		//\\xx-service-impl\\src\\main\\resources\\com\\xx\\mapping & windows
-		//\\xx-service-impl/src/main/resources/com/xx/mapping & max or linux
+		//\\xx-service-impl/src/main/resources/com/xx/mapping & mac or linux
 		config.setMybatisXmlPath(projectPath + "your mybatis mapping xml path");
 		config.setUsername("your db user");
 		config.setPassword("your db password");
@@ -122,7 +122,7 @@ valueGroup    | String   | 生成的Map的Key泛型 与valueType冲突
          //com.xx.model.query
 		config.setQueryModelPackage("your query model package name");
 		//\\xx-service\\src\\main\\java\\com\\xx\\model\\query & windows
-		//\\xx-service/src/main/java/com/xx/model/query & max or linux
+		//\\xx-service/src/main/java/com/xx/model/query & mac or linux
 		config.setQueryModelPath(projectPath + "your query model package name");
 
 		Generator.generate(config,

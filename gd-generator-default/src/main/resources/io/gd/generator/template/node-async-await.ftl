@@ -1,5 +1,5 @@
-let {Client} = require('dubbo-node-yield')
-	, client = new Client({'level': 'debug'})
+let {Client} = require('./dubbo-node-async-await')
+	, client = exports.client = new Client({'level': 'debug'})
 
 <#list node.services as service>
 let execute${service.simpleName} = async(method, body) => {
@@ -12,11 +12,11 @@ exports.${export.serviceName?uncap_first} = {
 	/*body : ${method.json}*/
 	<#if method_has_next>
 	${method.name}: async body => {
-		await execute${export.serviceName}('${method.name}', body)
+		return await execute${export.serviceName}('${method.name}', body)
 	},
 	<#else>
 	${method.name}: async body => {
-		await execute${export.serviceName}('${method.name}', body)
+		return await execute${export.serviceName}('${method.name}', body)
 	}
 	</#if>
 </#list>
