@@ -10,6 +10,7 @@
 6. 自动驼峰装换
 7. 生成VO对象，提供四种注解，@View  @AssociationView @CollectionView @MapView
 8. 可在开发中运行
+
 ### 安装
         wget https://github.com/goudai/gd-generator/archive/gd-generator-1.0.0.zip
         unzip gd-generator-1.0.0.zip
