@@ -15,6 +15,7 @@ public class MybatisXmlMeta {
 	private String version;
 	private Map<String, String> querys = new HashMap<>();
 	private boolean hasQueryModel;
+	private boolean useGeneratedKeys;
 
 	private List<MybatisMappingMeta> mappingMetas = new ArrayList<>();
 
@@ -98,6 +99,14 @@ public class MybatisXmlMeta {
 
 	public void setMappingMetas(List<MybatisMappingMeta> mappingMetas) {
 		this.mappingMetas = mappingMetas;
+	}
+
+	public boolean isUseGeneratedKeys() {
+		return useGeneratedKeys;
+	}
+
+	public void setUseGeneratedKeys(boolean useGeneratedKeys) {
+		this.useGeneratedKeys = useGeneratedKeys;
 	}
 
 	public static class MybatisMappingMeta {
