@@ -8,7 +8,15 @@ import io.gd.generator.meta.mybatis.MybatisXmlMeta.MybatisMappingMeta;
 import io.gd.generator.util.ClassHelper;
 import io.gd.generator.util.ConfigChecker;
 import io.gd.generator.util.StringUtils;
+import org.dom4j.Document;
+import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Version;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.StringReader;
@@ -18,24 +26,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Version;
-
-import org.dom4j.Document;
-import org.dom4j.Element;
-import org.dom4j.io.SAXReader;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
-
 public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
 
-	
+	private boolean useGeneratedKeys;
+
+	public MybatisXmlHandler() {
+		this.useGeneratedKeys = true;
+	}
+
+	public MybatisXmlHandler(boolean useGeneratedKeys) {
+		this.useGeneratedKeys = useGeneratedKeys;
+	}
+
 	@Override
 	protected void init() throws Exception {
 		super.init();
 		ConfigChecker.notBlank(config.getMybatisXmlPath(), "config mybatisXmlPath is miss");
-		
+
 		String xmlPath = config.getMybatisXmlPath();
 	
 		/* 初始化文件夹 */
@@ -47,21 +54,21 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
 		}
 
 	}
-	
+
 	private String getXmlFilePath(Class<?> entityClass) {
 		return config.getMybatisXmlPath() + File.separator + entityClass.getSimpleName() + "Mapper.xml";
 	}
-	
+
 	@Override
 	protected void preRead(Class<?> entityClass) throws Exception {
-		
+
 	}
 
 	@Override
 	protected MybatisXmlMeta read(Class<?> entityClass) throws Exception {
 		MybatisXmlMeta meta = new MybatisXmlMeta();
 		File file = new File(getXmlFilePath(entityClass));
-		if(file.exists()) {
+		if (file.exists()) {
 			SAXReader reader = new SAXReader();
 			reader.setEntityResolver(new MyEntityResolver());
 			Document doc = reader.read(file);
@@ -77,6 +84,7 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
 				});
 			}
 		}
+		meta.setUseGeneratedKeys(this.useGeneratedKeys);
 		return meta;
 
 	}
@@ -90,9 +98,9 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
 		@SuppressWarnings("unused")
 		String trableName = ClassHelper.resolveTableName(entityClass);
 		//meta.setTable(StringUtils.camelToUnderline(entityClass.getSimpleName()).replaceFirst("\\_", " ")); bug fix
-		
+
 		meta.setTable(ClassHelper.resolveTableName(entityClass));
-		
+
 		meta.setSimpleName(entityClass.getSimpleName());
 		parseBasic(entityClass, meta);
 		QueryModel queryModel = entityClass.getAnnotation(QueryModel.class);
@@ -109,7 +117,7 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
 
 	@Override
 	protected MybatisXmlMeta merge(MybatisXmlMeta parsed, MybatisXmlMeta read, Class<?> entityClass) throws Exception {
-		if(read != null) {
+		if (read != null) {
 			parsed.setOtherMappings(read.getOtherMappings());
 		}
 		return parsed;
@@ -140,11 +148,11 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
 	/**
 	 * <if test="registerTimeLT != null"> and register_time &lt;
 	 * #{registerTimeLT} </if> nicknameLK = key
-	 * 
+	 * <p>
 	 * <if test="nicknameLK != null"> <bind name="nicknameLK"
 	 * value="'%' + _parameter.getNicknameLK() + '%'"/> and nickname like
 	 * #{nicknameLK} </if>
-	 * 
+	 *
 	 * @param meta
 	 * @param field
 	 */
@@ -159,76 +167,76 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
 				String nameWithPredicate = name + predicate.toString();
 				String bind = null;
 				switch (predicate) {
-				case EQ:
-					if (field.getType().isEnum())
-						value = "and " + camelToUnderlineName + " = #{" + nameWithPredicate + ",typeHandler=" + this.parseEnum(field) + "}";
-					else
-						value = "and " + camelToUnderlineName + " = #{" + nameWithPredicate + "}";
-					break;
-				case NEQ:
-					if (field.getType().isEnum())
-						value = "and " + camelToUnderlineName + " != #{" + nameWithPredicate + ",typeHandler=" + this.parseEnum(field) + "}";
-					else
-						value = "and " + camelToUnderlineName + " != #{" + nameWithPredicate + "}";
-					break;
-				case GT:
-					value = "and " + camelToUnderlineName + " &gt; #{" + nameWithPredicate + "}";
-					break;
-				case GTE:
-					value = "and " + camelToUnderlineName + " &gt;= #{" + nameWithPredicate + "}";
-					break;
-				case LT:
-					value = "and " + camelToUnderlineName + " &lt; #{" + nameWithPredicate + "}";
-					break;
-				case LTE:
-					value = "and " + camelToUnderlineName + " &lt;= #{" + nameWithPredicate + "}";
-					break;
-				case EW:
-					bind = "<bind name=\"" + nameWithPredicate + "\" value=\"'%' + " + nameWithPredicate + "\"/>";
-					value = bind + " and " + camelToUnderlineName + " like #{" + nameWithPredicate + "}";
-					break;
-				case SW:
-					bind = "<bind name=\"" + nameWithPredicate + "\" value=\"" + nameWithPredicate + " + '%'\"/>";
-					value = bind + " and " + camelToUnderlineName + " like #{" + nameWithPredicate + "}";
-					break;
-				case LK:
-					bind = "<bind name=\"" + nameWithPredicate + "\" value=\"'%' + " + nameWithPredicate + " + '%'\"/>";
-					value = bind + " and " + camelToUnderlineName + " like #{" + nameWithPredicate + "}";
-					break;
-				case NL:
-					value = "and " + camelToUnderlineName + " is null";
-					break;
-				case NN:
-					value = "and " + camelToUnderlineName + " is not null";
-					break;
-				case IN:
-					if (field.getType().isEnum())
-						value = 
-								"<if test=\"" + nameWithPredicate + ".length != 0\">\r\n"
-								+ "\t\t\t\tand " + camelToUnderlineName + " in\r\n" 
-								+ "\t\t\t\t<foreach collection=\"" + nameWithPredicate + "\" item=\"item\" open=\"(\" separator=\",\" close=\")\">\r\n"
-								+ "\t\t\t\t#{item"  + ",typeHandler=" + this.parseEnum(field) + "}\r\n"
-								+ "\t\t\t\t</foreach>\r\n"
-								+ "\t\t\t\t</if>\r\n"
-								+ "\t\t\t\t<if test=\"" + nameWithPredicate + ".length == 0\">\r\n"
-								+ "\t\t\t\t1 = 2\r\n"
-								+ "\t\t\t\t</if>"
-								;
-					else
-						value = 
-						"<if test=\"" + nameWithPredicate + ".length != 0\">\r\n"
-						+ "\t\t\t\tand " + camelToUnderlineName + " in\r\n"
-						+ "\t\t\t\t<foreach collection=\"" + nameWithPredicate + "\" item=\"item\" open=\"(\" separator=\",\" close=\")\">\r\n"
-						+ "\t\t\t\t#{item}\r\n"
-						+ "\t\t\t\t</foreach>\r\n"
-						+ "\t\t\t\t</if>\r\n"
-						+ "\t\t\t\t<if test=\"" + nameWithPredicate + ".length == 0\">\r\n"
-						+ "\t\t\t\t1 = 2\r\n"
-						+ "\t\t\t\t</if>"
-						;
-					break;
-				default:
-					break;
+					case EQ:
+						if (field.getType().isEnum())
+							value = "and " + camelToUnderlineName + " = #{" + nameWithPredicate + ",typeHandler=" + this.parseEnum(field) + "}";
+						else
+							value = "and " + camelToUnderlineName + " = #{" + nameWithPredicate + "}";
+						break;
+					case NEQ:
+						if (field.getType().isEnum())
+							value = "and " + camelToUnderlineName + " != #{" + nameWithPredicate + ",typeHandler=" + this.parseEnum(field) + "}";
+						else
+							value = "and " + camelToUnderlineName + " != #{" + nameWithPredicate + "}";
+						break;
+					case GT:
+						value = "and " + camelToUnderlineName + " &gt; #{" + nameWithPredicate + "}";
+						break;
+					case GTE:
+						value = "and " + camelToUnderlineName + " &gt;= #{" + nameWithPredicate + "}";
+						break;
+					case LT:
+						value = "and " + camelToUnderlineName + " &lt; #{" + nameWithPredicate + "}";
+						break;
+					case LTE:
+						value = "and " + camelToUnderlineName + " &lt;= #{" + nameWithPredicate + "}";
+						break;
+					case EW:
+						bind = "<bind name=\"" + nameWithPredicate + "\" value=\"'%' + " + nameWithPredicate + "\"/>";
+						value = bind + " and " + camelToUnderlineName + " like #{" + nameWithPredicate + "}";
+						break;
+					case SW:
+						bind = "<bind name=\"" + nameWithPredicate + "\" value=\"" + nameWithPredicate + " + '%'\"/>";
+						value = bind + " and " + camelToUnderlineName + " like #{" + nameWithPredicate + "}";
+						break;
+					case LK:
+						bind = "<bind name=\"" + nameWithPredicate + "\" value=\"'%' + " + nameWithPredicate + " + '%'\"/>";
+						value = bind + " and " + camelToUnderlineName + " like #{" + nameWithPredicate + "}";
+						break;
+					case NL:
+						value = "and " + camelToUnderlineName + " is null";
+						break;
+					case NN:
+						value = "and " + camelToUnderlineName + " is not null";
+						break;
+					case IN:
+						if (field.getType().isEnum())
+							value =
+									"<if test=\"" + nameWithPredicate + ".length != 0\">\r\n"
+											+ "\t\t\t\tand " + camelToUnderlineName + " in\r\n"
+											+ "\t\t\t\t<foreach collection=\"" + nameWithPredicate + "\" item=\"item\" open=\"(\" separator=\",\" close=\")\">\r\n"
+											+ "\t\t\t\t#{item" + ",typeHandler=" + this.parseEnum(field) + "}\r\n"
+											+ "\t\t\t\t</foreach>\r\n"
+											+ "\t\t\t\t</if>\r\n"
+											+ "\t\t\t\t<if test=\"" + nameWithPredicate + ".length == 0\">\r\n"
+											+ "\t\t\t\t1 = 2\r\n"
+											+ "\t\t\t\t</if>"
+									;
+						else
+							value =
+									"<if test=\"" + nameWithPredicate + ".length != 0\">\r\n"
+											+ "\t\t\t\tand " + camelToUnderlineName + " in\r\n"
+											+ "\t\t\t\t<foreach collection=\"" + nameWithPredicate + "\" item=\"item\" open=\"(\" separator=\",\" close=\")\">\r\n"
+											+ "\t\t\t\t#{item}\r\n"
+											+ "\t\t\t\t</foreach>\r\n"
+											+ "\t\t\t\t</if>\r\n"
+											+ "\t\t\t\t<if test=\"" + nameWithPredicate + ".length == 0\">\r\n"
+											+ "\t\t\t\t1 = 2\r\n"
+											+ "\t\t\t\t</if>"
+									;
+						break;
+					default:
+						break;
 				}
 				meta.getQuerys().put(name + predicate, value);
 			}

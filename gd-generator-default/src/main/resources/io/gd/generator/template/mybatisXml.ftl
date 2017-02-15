@@ -23,8 +23,8 @@
 		</#if>
 	</resultMap>
 
-	<insert id="insert" parameterType="${meta.model}" useGeneratedKeys="true" keyProperty="id">
-	  insert into `${meta.table?trim}` (${baseColumn})
+	<insert id="insert" parameterType="${meta.model}"<#if meta.useGeneratedKeys> useGeneratedKeys="true" keyProperty="id"</#if>>
+	  insert into `${meta.table?trim}` (<#if !meta.useGeneratedKeys>id,</#if>${baseColumn})
 	  values (${baseProperty}<#if meta.version??>,${rep}{${meta.version}}</#if>)
 	</insert>
 

@@ -2,8 +2,8 @@ package io.gd.generator.test;
 
 import io.gd.generator.Config;
 import io.gd.generator.Generator;
+import io.gd.generator.handler.MybatisXmlHandler;
 import io.gd.generator.handler.NodeHandler;
-import io.gd.generator.handler.VoHandler;
 
 public class Main {
 	public static void main(String[] S) throws Exception {
@@ -27,6 +27,7 @@ public class Main {
 		Generator.generate(config
 //				,new VoHandler("io.gd.generator.test.vo", "/Users/freeman/IdeaProjects/gd-generator/gd-generator-default/src/test/java/io/gd/generator/test/vo", true)
 				,new NodeHandler("service.js","service.doc.json","io.gd.generator.test.service")
+				,new MybatisXmlHandler(false)
 		);
 	}
 
