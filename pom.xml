@@ -85,12 +85,12 @@
 	<distributionManagement>
 		<repository>
 			<id>my-nexus-releases</id>
-			<url>http://nexus.binggejia.com/content/repositories/releases/</url>
+			<url>http://nexus.xxxx.com/content/repositories/releases/</url>
 		</repository>
 
 		<snapshotRepository>
 			<id>my-nexus-snapshot</id>
-			<url>http://nexus.binggejia.com/content/repositories/snapshots/</url>
+			<url>http://nexus.xxxx.com/content/repositories/snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
 
