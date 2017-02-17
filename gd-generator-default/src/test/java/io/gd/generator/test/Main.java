@@ -3,7 +3,6 @@ package io.gd.generator.test;
 import io.gd.generator.Config;
 import io.gd.generator.Generator;
 import io.gd.generator.handler.MybatisXmlHandler;
-import io.gd.generator.handler.NodeHandler;
 
 public class Main {
 	public static void main(String[] S) throws Exception {
@@ -19,15 +18,15 @@ public class Main {
 
 		config.setEntityPackage("io.gd.generator.test.entity");
 		config.setUseLombok(false);
-
+		config.setMybatisXmlPath("/Users/freeman/logs/amapper");
 
 		config.setQueryModelPackage("io.gd.generator.test.model.query");
 		config.setQueryModelPath("D:\\Work\\Workspace2016\\gd-generator\\src\\test\\java\\io\\gd\\generator\\test\\model\\query\\");
 
 		Generator.generate(config
 //				,new VoHandler("io.gd.generator.test.vo", "/Users/freeman/IdeaProjects/gd-generator/gd-generator-default/src/test/java/io/gd/generator/test/vo", true)
-				,new NodeHandler("service.js","service.doc.json","io.gd.generator.test.service")
-				,new MybatisXmlHandler(false)
+//				,new NodeHandler("service.js","service.doc.json","io.gd.generator.test.service")
+				,new MybatisXmlHandler(true)
 		);
 	}
 

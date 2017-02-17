@@ -23,6 +23,8 @@
 		</#if>
 	</resultMap>
 
+	<sql id="baseColumn">id,${baseColumn}</sql>
+
 	<insert id="insert" parameterType="${meta.model}"<#if meta.useGeneratedKeys> useGeneratedKeys="true" keyProperty="id"</#if>>
 	  insert into `${meta.table?trim}` (<#if !meta.useGeneratedKeys>id,</#if>${baseColumn})
 	  values (${baseProperty}<#if meta.version??>,${rep}{${meta.version}}</#if>)
@@ -73,7 +75,7 @@
 
 	<select id="findOne" resultMap="baseResultMap" parameterType="long">
 		select
-		id,${baseColumn}
+		<include refid="baseColumn"/>
 		from `${meta.table?trim}`
 		where id = ${rep}{id}
 	</select>
@@ -81,7 +83,7 @@
 
 	<select id="findAll" resultMap="baseResultMap">
 		select
-		id,${baseColumn}
+		<include refid="baseColumn"/>
 		from `${meta.table?trim}`
 		order by id desc
 	</select>
@@ -90,7 +92,7 @@
 
 	<select id="findAll" resultMap="baseResultMap" parameterType="${meta.query}">
 		select
-		id,${baseColumn}
+		<include refid="baseColumn"/>
 		from `${meta.table?trim}`
 		<where>
 			<#list meta.querys?keys as key>
