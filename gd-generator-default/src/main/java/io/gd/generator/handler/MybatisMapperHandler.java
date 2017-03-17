@@ -6,8 +6,10 @@ import io.gd.generator.util.ConfigChecker;
 import io.gd.generator.util.FileUtils;
 import io.gd.generator.util.StringUtils;
 
+import javax.persistence.Id;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -117,7 +119,16 @@ public class MybatisMapperHandler extends ScopedHandler<MybatisMapperMeta> {
 
 	@Override
 	protected void write(MybatisMapperMeta merged, Class<?> entityClass) throws Exception {
+
 		Map<String, Object> model = new HashMap<>();
+		Field[] fields = entityClass.getDeclaredFields();
+		for (Field field : fields) {
+			Id declaredAnnotation = field.getDeclaredAnnotation(Id.class);
+			if(declaredAnnotation != null){
+				merged.setIdType(field.getType().getSimpleName());
+				break;
+			}
+		}
 		model.put("meta", merged);
 		String mapper = renderTemplate("mybatisMapper", model);
 		File file = new File(getMapperFilePath(entityClass));

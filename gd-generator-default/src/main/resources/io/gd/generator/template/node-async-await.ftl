@@ -1,23 +1,19 @@
-let {Client} = require('./dubbo-node-async-await')
+const {Client} = require('./DubboNodeAsyncAwait')
 	, client = exports.client = new Client({'level': 'debug'})
 
 <#list node.services as service>
-let execute${service.simpleName} = async(method, body) => {
-	return await client.execute('${service.name}', method, body);
-}
+const execute${service.simpleName} = async(method, body) => await client.execute('${service.name}', method, body);
 </#list>
+
 <#list node.exports as export>
+/***************************======>> ${export.serviceName?uncap_first} <<======***************************************/
 exports.${export.serviceName?uncap_first} = {
 <#list export.methods as method>
-	/*body : ${method.json}*/
+					/*body => ${method.json}*/
 	<#if method_has_next>
-	${method.name}: async body => {
-		return await execute${export.serviceName}('${method.name}', body)
-	},
+	${method.name}: async body => await execute${export.serviceName}('${method.name}', body),
 	<#else>
-	${method.name}: async body => {
-		return await execute${export.serviceName}('${method.name}', body)
-	}
+	${method.name}: async body => await execute${export.serviceName}('${method.name}', body)
 	</#if>
 </#list>
 }

@@ -27,7 +27,7 @@
 
 	<insert id="insert" parameterType="${meta.model}"<#if meta.useGeneratedKeys> useGeneratedKeys="true" keyProperty="id"</#if>>
 	  insert into `${meta.table?trim}` (<#if !meta.useGeneratedKeys>id,</#if>${baseColumn})
-	  values (${baseProperty}<#if meta.version??>,${rep}{${meta.version}}</#if>)
+	  values (<#if !meta.useGeneratedKeys>${rep}{id},</#if>${baseProperty}<#if meta.version??>,${rep}{${meta.version}}</#if>)
 	</insert>
 
 	<delete id="delete">
@@ -73,7 +73,7 @@
 		where id = ${rep}{${meta.simpleName?uncap_first}.id}
 	</update>
 
-	<select id="findOne" resultMap="baseResultMap" parameterType="long">
+	<select id="findOne" resultMap="baseResultMap">
 		select
 		<include refid="baseColumn"/>
 		from `${meta.table?trim}`

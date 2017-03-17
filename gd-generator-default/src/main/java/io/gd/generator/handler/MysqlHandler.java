@@ -22,6 +22,16 @@ public class MysqlHandler extends ScopedHandler<MysqlTableMeta> {
 
 	protected Connection connection;
 
+	private boolean useGeneratedKeys = true;
+
+	public MysqlHandler() {
+		this.useGeneratedKeys = true;
+	}
+
+	public MysqlHandler(boolean useGeneratedKeys) {
+		this.useGeneratedKeys = useGeneratedKeys;
+	}
+
 	@Override
 	protected void init() throws Exception {
 		super.init();
@@ -202,14 +212,18 @@ public class MysqlHandler extends ScopedHandler<MysqlTableMeta> {
 		if (typeName.toUpperCase().contains("long".toUpperCase())) {
 			Id id = field.getDeclaredAnnotation(Id.class);
 			if (id == null)
-				return "int(20)";
-			return "int(20) not null AUTO_INCREMENT PRIMARY KEY";
+				return "bigInt(20)";
+			if (useGeneratedKeys)
+				return "bigInt(20) not null AUTO_INCREMENT PRIMARY KEY";
+			return "bigInt(20) not null PRIMARY KEY";
 		}
 		if (typeName.toUpperCase().contains("int".toUpperCase())) {
 			Id id = field.getDeclaredAnnotation(Id.class);
 			if (id == null)
 				return "int(11)";
-			return "int(11) not null AUTO_INCREMENT PRIMARY KEY";
+			if (useGeneratedKeys)
+				return "int(11) not null AUTO_INCREMENT PRIMARY KEY";
+			return "int(11) not null  PRIMARY KEY";
 		}
 
 		if (typeName.toUpperCase().contains("string".toUpperCase())) {
