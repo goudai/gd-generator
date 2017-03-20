@@ -6,10 +6,9 @@ target
 .classpath
 web.xml
 *.iml
+gd-generator-api.iml
 
 .DS_Store
 gd-generator-api/.DS_Store
 gd-generator-default/.DS_Store
-gd-generator-default/gd-generator-default.iml
 gd-generator-default/src/test/java/io/gd/generator/test/vo/
-
