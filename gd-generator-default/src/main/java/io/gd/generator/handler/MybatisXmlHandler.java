@@ -28,7 +28,7 @@ import java.util.Map;
 
 public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
 
-	private boolean useGeneratedKeys;
+	private boolean useGeneratedKeys = true;
 
 	public MybatisXmlHandler() {
 		this.useGeneratedKeys = true;
@@ -78,15 +78,13 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
 				elements.forEach((element) -> {
 					String id = element.attribute("id").getStringValue().intern();
 					if (!(id == "delete".intern() || id == "insert".intern() || id == "update".intern() || id == "findOne".intern() || id == "findAll".intern()
-							|| id == "baseResultMap".intern() || id == "merge".intern() || id == "count".intern())) {
+							|| id == "baseResultMap".intern() || id == "merge".intern() || id == "count".intern() || id == "baseColumn".intern())) {
 						meta.getOtherMappings().add(element.asXML());
 					}
 				});
 			}
 		}
-		meta.setUseGeneratedKeys(this.useGeneratedKeys);
 		return meta;
-
 	}
 
 	@Override
@@ -126,6 +124,7 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
 	@Override
 	protected void write(MybatisXmlMeta merged, Class<?> entityClass) throws Exception {
 		Map<String, Object> model = new HashMap<>();
+		merged.setUseGeneratedKeys(this.useGeneratedKeys);
 		model.put("meta", merged);
 		String xml = renderTemplate("mybatisXml", model);
 		File file = new File(getXmlFilePath(entityClass));
@@ -219,7 +218,7 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
 											+ "\t\t\t\t</foreach>\r\n"
 											+ "\t\t\t\t</if>\r\n"
 											+ "\t\t\t\t<if test=\"" + nameWithPredicate + ".length == 0\">\r\n"
-											+ "\t\t\t\t1 = 2\r\n"
+											+ "\t\t\t\tand 1 = 2\r\n"
 											+ "\t\t\t\t</if>"
 									;
 						else
@@ -231,7 +230,7 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
 											+ "\t\t\t\t</foreach>\r\n"
 											+ "\t\t\t\t</if>\r\n"
 											+ "\t\t\t\t<if test=\"" + nameWithPredicate + ".length == 0\">\r\n"
-											+ "\t\t\t\t1 = 2\r\n"
+											+ "\t\t\t\tand 1 = 2\r\n"
 											+ "\t\t\t\t</if>"
 									;
 						break;

@@ -8,6 +8,7 @@ public class MybatisMapperMeta {
 	private String mapperPackage;
 
 	private String entityName;
+	private String idType;
 	private String entitySimpleName;
 	private String queryModelName;
 	private String queryModelSimpleName;
@@ -79,4 +80,11 @@ public class MybatisMapperMeta {
 		this.otherImports = otherImports;
 	}
 
+	public String getIdType() {
+		return idType;
+	}
+
+	public void setIdType(String idType) {
+		this.idType = idType;
+	}
 }

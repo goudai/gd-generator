@@ -95,7 +95,7 @@ public class ${meta.type} implements Serializable {
 		if (pageNumber == null || pageSize == null) {
 			return null;
 		}
-		return ((long) pageNumber) * pageSize;
+		return ((long) pageNumber - 1) * pageSize;
 	}
 
 	public String getOrderByAndDirection() {
