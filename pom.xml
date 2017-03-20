@@ -28,7 +28,11 @@
 		</snapshotRepository>
 	</distributionManagement>
 
-
+	<scm>
+		<connection>scm:git:https://github.com/goudai/gd-generator.git</connection>
+		<developerConnection>scm:git:https://github.com/goudai/gd-generator.git</developerConnection>
+		<url>scm:git:https://github.com/goudai/gd-generator.git</url>
+	</scm>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -100,12 +104,6 @@
 	</dependencyManagement>
 
 
-    <scm>
-		<connection>scm:git:https://github.com/goudai/gd-generator.git</connection>
-		<developerConnection>scm:git:https://github.com/goudai/gd-generator.git</developerConnection>
-		<url>scm:git:https://github.com/goudai/gd-generator.git</url>
-		<tag>1.0.2</tag>
-	</scm>
 
 
 
