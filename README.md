@@ -13,8 +13,8 @@
 
 ### 安装
         wget https://github.com/goudai/gd-generator/archive/gd-generator-2.0.0.zip
-        unzip gd-generator-1.0.0.zip
-        cd gd-generator-1.0.0
+        unzip gd-generator-2.0.0.zip
+        cd gd-generator-2.0.0
         mvn clean install 
        
 ### maven 依赖
