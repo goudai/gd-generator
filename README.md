@@ -12,7 +12,7 @@
 8. 可在开发中运行
 
 ### 安装
-        wget https://github.com/goudai/gd-generator/archive/gd-generator-1.0.0.zip
+        wget https://github.com/goudai/gd-generator/archive/gd-generator-2.0.0.zip
         unzip gd-generator-1.0.0.zip
         cd gd-generator-1.0.0
         mvn clean install 
@@ -22,12 +22,12 @@
 <dependency>
     <groupId>io.goudai</groupId>
     <artifactId>gd-generator-api</artifactId>
-    <version>1.0.0</version>
+    <version>2.0.0</version>
 </dependency>
 <dependency>
     <groupId>io.goudai</groupId>
     <artifactId>gd-generator-default</artifactId>
-    <version>1.0.0</version>
+    <version>2.0.0</version>
 </dependency>
 ```
 
