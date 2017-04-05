@@ -220,7 +220,7 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
 											+ "\t\t\t\t</foreach>\r\n"
 											+ "\t\t\t\t</if>\r\n"
 											+ "\t\t\t\t<if test=\"" + nameWithPredicate + ".length == 0\">\r\n"
-											+ "\t\t\t\t1 = 2\r\n"
+											+ "\t\t\t\tand 1 = 2\r\n"
 											+ "\t\t\t\t</if>"
 									;
 						else
@@ -232,7 +232,7 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
 											+ "\t\t\t\t</foreach>\r\n"
 											+ "\t\t\t\t</if>\r\n"
 											+ "\t\t\t\t<if test=\"" + nameWithPredicate + ".length == 0\">\r\n"
-											+ "\t\t\t\t1 = 2\r\n"
+											+ "\t\t\t\tand 1 = 2\r\n"
 											+ "\t\t\t\t</if>"
 									;
 						break;
