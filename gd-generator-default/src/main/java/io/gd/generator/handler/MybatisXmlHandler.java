@@ -84,7 +84,7 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
 				});
 			}
 		}
-		meta.setUseGeneratedKeys(this.useGeneratedKeys);
+
 		return meta;
 
 	}
@@ -120,6 +120,7 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
 		if (read != null) {
 			parsed.setOtherMappings(read.getOtherMappings());
 		}
+		parsed.setUseGeneratedKeys(this.useGeneratedKeys);
 		return parsed;
 	}
 
