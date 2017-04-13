@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.function.Predicate;
 
 import static io.gd.generator.util.ClassHelper.getFields;
 import static io.gd.generator.util.StringUtils.isBlank;
@@ -26,6 +27,15 @@ public class VoHandler extends AbstractHandler {
 	private String voPackage;
 	private String dir;
 	private boolean useLombok;
+	private Predicate<String> predicate = v -> true;
+
+
+	public VoHandler(String voPackage, String dir, boolean useLombok, Predicate<String> predicate) {
+		this.voPackage = voPackage;
+		this.dir = dir;
+		this.useLombok = useLombok;
+		this.predicate = predicate;
+	}
 
 	public VoHandler(String voPackage, String dir, boolean useLombok) {
 		this.voPackage = voPackage;
@@ -35,6 +45,10 @@ public class VoHandler extends AbstractHandler {
 		if (dir == null || "".equals(dir))
 			throw new NullPointerException("VO dir does nou be null");
 		this.useLombok = useLombok;
+	}
+
+	public void setPredicate(Predicate<String> predicate) {
+		this.predicate = predicate;
 	}
 
 	@Override
@@ -61,8 +75,13 @@ public class VoHandler extends AbstractHandler {
 	private Map<String, Meta> handleClass(Class<?> entityClass) {
 		final ViewObject viewObject = entityClass.getDeclaredAnnotation(ViewObject.class);
 		final String[] groups = viewObject.groups();
-		Map<String, Meta> result = initMeta(groups);
-
+		List<String> groupList = new ArrayList<>();
+		for (String group : groups) {
+			if (predicate.test(group)) {
+				groupList.add(group);
+			}
+		}
+		Map<String, Meta> result = initMeta(groupList.toArray(new String[groupList.size()]));
 		handleClassView(entityClass, viewObject.views(), result, groups);
 
 		handleClassAssociationView(entityClass, viewObject.associationViews(), result, groups);
@@ -77,7 +96,6 @@ public class VoHandler extends AbstractHandler {
 	}
 
 	private Map<String, Meta> handleField(Class<?> entityClass, Map<String, Meta> result) {
-
 		final ViewObject viewObject = entityClass.getDeclaredAnnotation(ViewObject.class);
 		final String[] groups = viewObject.groups();
 		getFields(entityClass).stream().filter(ClassHelper::isNotStaticField).forEach(field -> {
