@@ -230,8 +230,16 @@ public class MysqlHandler extends ScopedHandler<MysqlTableMeta> {
 			Column column = field.getDeclaredAnnotation(Column.class);
 			if (column == null)
 				return "varchar(255)";
-			int length = column.length();
-			return "varchar(" + length + ")";
+			else {
+				final String columnDefinition = column.columnDefinition();
+				if (columnDefinition == null || "".equals(columnDefinition)) {
+					int length = column.length();
+					return "varchar(" + length + ")";
+				}
+				return columnDefinition;
+			}
+
+
 		}
 
 		if (field.getType().isEnum()) {
