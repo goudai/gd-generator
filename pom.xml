@@ -16,7 +16,7 @@
 
 	<url>http://maven.apache.org</url>
 
-
+	<!--/root/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml-->
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -91,12 +91,12 @@
 	<distributionManagement>
 		<repository>
 			<id>my-nexus-releases</id>
-			<url>http://nexus.binggejia.com/content/repositories/releases/</url>
+			<url>http://nexus.xxx.com/content/repositories/releases/</url>
 		</repository>
 
 		<snapshotRepository>
 			<id>my-nexus-snapshot</id>
-			<url>http://nexus.binggejia.com/content/repositories/snapshots/</url>
+			<url>http://nexus.xxx.com/content/repositories/snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
 
