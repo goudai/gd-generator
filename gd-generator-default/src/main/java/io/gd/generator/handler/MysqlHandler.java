@@ -227,24 +227,23 @@ public class MysqlHandler extends ScopedHandler<MysqlTableMeta> {
 		}
 
 		if (typeName.toUpperCase().contains("string".toUpperCase())) {
-				Id id = field.getDeclaredAnnotation(Id.class);
-				if (id == null){
-					Column column = field.getDeclaredAnnotation(Column.class);
-					if (column == null)
-						return "varchar(255)";
-					else {
-						final String columnDefinition = column.columnDefinition();
-						if (columnDefinition == null || "".equals(columnDefinition)) {
-							int length = column.length();
-							return "varchar(" + length + ")";
-						}
-						return columnDefinition;
+			Id id = field.getDeclaredAnnotation(Id.class);
+			if (id == null){
+				Column column = field.getDeclaredAnnotation(Column.class);
+				if (column == null)
+					return "varchar(255)";
+				else {
+					final String columnDefinition = column.columnDefinition();
+					if (columnDefinition == null || "".equals(columnDefinition)) {
+						int length = column.length();
+						return "varchar(" + length + ")";
 					}
+					return columnDefinition;
 				}
-
-				if (useGeneratedKeys)
-					return "int(20) not null AUTO_INCREMENT PRIMARY KEY";
-				return "BIGINT(20) not null  PRIMARY KEY";
+			}
+			if (useGeneratedKeys)
+				return "BIGINT(20) not null AUTO_INCREMENT PRIMARY KEY";
+			return "BIGINT(20) not null  PRIMARY KEY";
 		}
 
 		if (field.getType().isEnum()) {
