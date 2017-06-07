@@ -242,7 +242,7 @@ public class MysqlHandler extends ScopedHandler<MysqlTableMeta> {
 				}
 			}
 			if (useGeneratedKeys)
-				return "int(20) not null AUTO_INCREMENT PRIMARY KEY";
+				return "BIGINT(20) not null AUTO_INCREMENT PRIMARY KEY";
 			return "BIGINT(20) not null  PRIMARY KEY";
 		}
 
