@@ -9,7 +9,7 @@
 5. 抽取查询对象 ,简化查询 ,自动生成QueryModel
 6. 自动驼峰装换
 7. 生成VO对象，提供四种注解，@View  @AssociationView @CollectionView @MapView
-8. 可在开发中运行
+8. 可在开发中运行（增量运行 可随时修改，增加，删除类属性后继续运行，此时将同步数据库表结构并给出响应修复sql，自动增量的保存开发书写的个性的mybatis中的xml语句）
 
 ### 安装
         wget https://github.com/goudai/gd-generator/archive/gd-generator-2.0.0.zip
