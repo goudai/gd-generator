@@ -12,9 +12,9 @@
 8. 可在开发中运行（增量运行 可随时修改，增加，删除类属性后继续运行，此时将同步数据库表结构并给出响应修复sql，自动增量的保存开发书写的个性的mybatis中的xml语句）
 
 ### 安装
-        wget https://github.com/goudai/gd-generator/archive/gd-generator-2.0.0.zip
-        unzip gd-generator-2.0.0.zip
-        cd gd-generator-2.0.0
+        wget https://github.com/goudai/gd-generator/archive/gd-generator-2.0.3.zip
+        unzip gd-generator-2.0.3.zip
+        cd gd-generator-2.0.3
         mvn clean install 
        
 ### maven 依赖
