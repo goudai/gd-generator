@@ -429,7 +429,7 @@ public interface UserMapper {
 				</foreach>
 				</if>
 				<if test="idIN.length == 0">
-				1 = 2
+				 and 1 = 2
 				</if>
 			</if>
 			<if test="userTypeEQ != null">
@@ -549,7 +549,7 @@ public interface UserMapper {
 </mapper>        
 ```	 
    
-####UserQueryModel   
+#### UserQueryModel   
 ```java
 @Getter
 @Setter
@@ -656,8 +656,8 @@ public class UserQueryModel implements Serializable {
 
 }
 ```
-###VO
-####UserListVo
+### VO
+#### UserListVo
 ```java
 @Getter
 @Setter
@@ -678,7 +678,7 @@ public class UserListVo implements Serializable {
 
 }
 ```
-####UserSimpleVo
+#### UserSimpleVo
 ```java
 @Getter
 @Setter
@@ -695,7 +695,7 @@ public class UserSimpleVo implements Serializable {
 
 }
 ```
-####UserAdminVo
+#### UserAdminVo
 ```java
 @Getter
 @Setter
@@ -759,7 +759,7 @@ public class UserAdminSimpleVo implements Serializable {
 
 }
 ```
-####UserAdminFullVo
+#### UserAdminFullVo
 ```java
 @Getter
 @Setter
