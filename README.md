@@ -176,7 +176,6 @@ public class User implements Serializable {
 	@Column(length = 11, unique = true)
 	@NotBlank
 	@Pattern(regexp = "^1[\\d]{10}$")
-	@StringBinder
 	@Query(Predicate.EQ)
 	@Field(label = "手机号")
 	@View(groups = {VO_LIST, VO_ADMIN, VO_ADMIN_SIMPLE, VO_ADMIN_FULL})
@@ -188,7 +187,6 @@ public class User implements Serializable {
 
 	@Column(length = 60)
 	@NotBlank
-	@StringBinder
 	@Query(Predicate.LK)
 	@Length(max = 60)
 	@Field(label = "昵称")
