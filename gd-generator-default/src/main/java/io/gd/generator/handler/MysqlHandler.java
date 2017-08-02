@@ -210,12 +210,19 @@ public class MysqlHandler extends ScopedHandler<MysqlTableMeta> {
 			return "datetime";
 		}
 		if (typeName.toUpperCase().contains("long".toUpperCase())) {
+			Column column = field.getDeclaredAnnotation(Column.class);
+			int length = 20;
+			if(column != null){
+				if(column.length() != 255){
+					length = column.length();
+				}
+			}
 			Id id = field.getDeclaredAnnotation(Id.class);
 			if (id == null)
-				return "bigInt(20)";
+				return "bigInt("+length+")";
 			if (useGeneratedKeys)
-				return "bigInt(20) not null AUTO_INCREMENT PRIMARY KEY";
-			return "bigInt(20) not null PRIMARY KEY";
+				return "bigInt("+length+") not null AUTO_INCREMENT PRIMARY KEY";
+			return "bigInt("+length+") not null PRIMARY KEY";
 		}
 		if (typeName.toUpperCase().contains("int".toUpperCase())) {
 			Id id = field.getDeclaredAnnotation(Id.class);
