@@ -211,7 +211,7 @@ public class MysqlHandler extends ScopedHandler<MysqlTableMeta> {
         }
         if (typeName.toUpperCase().contains("long".toUpperCase())) {
             Column column = field.getDeclaredAnnotation(Column.class);
-            int length = 20;
+            int length = 32;
             if (column != null) {
                 if (column.length() != 255 && column.length() > 0 && column.length() < 255) {
                     length = column.length();
