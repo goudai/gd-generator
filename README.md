@@ -9,12 +9,12 @@
 5. 抽取查询对象 ,简化查询 ,自动生成QueryModel
 6. 自动驼峰装换
 7. 生成VO对象，提供四种注解，@View  @AssociationView @CollectionView @MapView
-8. 可在开发中运行
+8. 可在开发中运行（增量运行 可随时修改，增加，删除类属性后继续运行，此时将同步数据库表结构并给出响应修复sql，自动增量的保存开发书写的个性的mybatis中的xml语句）
 
 ### 安装
-        wget https://github.com/goudai/gd-generator/archive/gd-generator-2.0.0.zip
-        unzip gd-generator-2.0.0.zip
-        cd gd-generator-2.0.0
+        wget https://github.com/goudai/gd-generator/archive/gd-generator-2.0.3.zip
+        unzip gd-generator-2.0.3.zip
+        cd gd-generator-2.0.3
         mvn clean install 
        
 ### maven 依赖
@@ -22,12 +22,12 @@
 <dependency>
     <groupId>io.goudai</groupId>
     <artifactId>gd-generator-api</artifactId>
-    <version>2.0.0</version>
+    <version>2.0.3</version>
 </dependency>
 <dependency>
     <groupId>io.goudai</groupId>
     <artifactId>gd-generator-default</artifactId>
-    <version>2.0.0</version>
+    <version>2.0.3</version>
 </dependency>
 ```
 
@@ -176,7 +176,6 @@ public class User implements Serializable {
 	@Column(length = 11, unique = true)
 	@NotBlank
 	@Pattern(regexp = "^1[\\d]{10}$")
-	@StringBinder
 	@Query(Predicate.EQ)
 	@Field(label = "手机号")
 	@View(groups = {VO_LIST, VO_ADMIN, VO_ADMIN_SIMPLE, VO_ADMIN_FULL})
@@ -188,7 +187,6 @@ public class User implements Serializable {
 
 	@Column(length = 60)
 	@NotBlank
-	@StringBinder
 	@Query(Predicate.LK)
 	@Length(max = 60)
 	@Field(label = "昵称")
@@ -429,7 +427,7 @@ public interface UserMapper {
 				</foreach>
 				</if>
 				<if test="idIN.length == 0">
-				1 = 2
+				 and 1 = 2
 				</if>
 			</if>
 			<if test="userTypeEQ != null">
@@ -549,7 +547,7 @@ public interface UserMapper {
 </mapper>        
 ```	 
    
-####UserQueryModel   
+#### UserQueryModel   
 ```java
 @Getter
 @Setter
@@ -656,8 +654,8 @@ public class UserQueryModel implements Serializable {
 
 }
 ```
-###VO
-####UserListVo
+### VO
+#### UserListVo
 ```java
 @Getter
 @Setter
@@ -678,7 +676,7 @@ public class UserListVo implements Serializable {
 
 }
 ```
-####UserSimpleVo
+#### UserSimpleVo
 ```java
 @Getter
 @Setter
@@ -695,7 +693,7 @@ public class UserSimpleVo implements Serializable {
 
 }
 ```
-####UserAdminVo
+#### UserAdminVo
 ```java
 @Getter
 @Setter
@@ -759,7 +757,7 @@ public class UserAdminSimpleVo implements Serializable {
 
 }
 ```
-####UserAdminFullVo
+#### UserAdminFullVo
 ```java
 @Getter
 @Setter
