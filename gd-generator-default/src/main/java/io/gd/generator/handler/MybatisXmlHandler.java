@@ -158,7 +158,13 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
      */
     private void parseQueryModel(MybatisXmlMeta meta, Field field) {
         String name = field.getName();
+        Column column = field.getDeclaredAnnotation(Column.class);
         String camelToUnderlineName = StringUtils.camelToUnderline(name);
+        if (column != null) {
+            if (StringUtils.isNotBlank(column.name())) {
+                camelToUnderlineName = column.name();
+            }
+        }
         Query query = field.getAnnotation(Query.class);
         String value = null;
         Predicate[] predicates = null;
@@ -275,7 +281,6 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
                     mappingMeta.setEnumHander(parseEnum(field));
                     mappingMeta.setJavaType(field.getType().getName());
                 }
-
                 meta.getMappingMetas().add(mappingMeta);
             }
 
