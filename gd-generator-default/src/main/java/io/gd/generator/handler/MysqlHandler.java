@@ -259,7 +259,7 @@ public class MysqlHandler extends ScopedHandler<MysqlTableMeta> {
                 EnumType value = enumd.value();
                 if (value.equals(EnumType.ORDINAL))
                     return "int(2)";
-                return "varchar(2)";
+                return "varchar(255)";
             }
             return "int(2)";
         }
