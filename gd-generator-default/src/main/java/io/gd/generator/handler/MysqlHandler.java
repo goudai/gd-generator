@@ -255,11 +255,16 @@ public class MysqlHandler extends ScopedHandler<MysqlTableMeta> {
 
         if (field.getType().isEnum()) {
             Enumerated enumd = field.getDeclaredAnnotation(Enumerated.class);
+            Column column = field.getDeclaredAnnotation(Column.class);
+            int length = 255;
+            if(column!= null && column.length() > 0){
+                length = column.length();
+            }
             if (enumd != null) {
                 EnumType value = enumd.value();
                 if (value.equals(EnumType.ORDINAL))
                     return "int(2)";
-                return "varchar(255)";
+                return "varchar("+length+")";
             }
             return "int(2)";
         }
