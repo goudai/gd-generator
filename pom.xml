@@ -3,7 +3,7 @@
 
 	<groupId>io.goudai</groupId>
 	<artifactId>gd-generator</artifactId>
-	<version>2.0.4</version>
+	<version>2.0.5</version>
 
 	<modules>
 		<module>gd-generator-api</module>
@@ -91,12 +91,12 @@
 	<distributionManagement>
 		<repository>
 			<id>my-nexus-releases</id>
-			<url>http://nexus.binggejia.com/content/repositories/releases/</url>
+			<url>http://nexus.xxxx.com/content/repositories/releases/</url>
 		</repository>
 
 		<snapshotRepository>
 			<id>my-nexus-snapshot</id>
-			<url>http://nexus.binggejia.com/content/repositories/snapshots/</url>
+			<url>http://nexus.xxxx.com/content/repositories/snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
 
