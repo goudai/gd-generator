@@ -1,24 +1,27 @@
 package io.gd.generator;
 
 import io.gd.generator.handler.Handler;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
 import java.util.Objects;
 
 
-@Slf4j
+
 public class Generator {
 
-    public static void generate(final Config config, Handler... hanlderClasses) {
-        Objects.requireNonNull(hanlderClasses, "handler classes must not be null");
-        Arrays.stream(hanlderClasses).forEach(handler -> {
+   static Logger logger = LoggerFactory.getLogger(Generator.class);
+    public static void generate(final Config config, Handler... hanlders) {
+
+        Objects.requireNonNull(hanlders, "handlers must not be null");
+        for (Handler handler : hanlders) {
             try {
                 handler.start(config);
             } catch (Exception e) {
-                log.error(e.getMessage(), e);
+                logger.error(e.getMessage(),e);
             }
-        });
+        }
+
     }
 
 }
