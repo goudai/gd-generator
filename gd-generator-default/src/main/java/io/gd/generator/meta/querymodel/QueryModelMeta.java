@@ -17,7 +17,10 @@ public class QueryModelMeta {
 
 	private List<QueryModelField> queryModelFields = new ArrayList<>();
 
-	private Set<String> importFullTypes = new HashSet<>(); // import全名
+	/**
+	 * import全名
+	 */
+	private Set<String> importFullTypes = new HashSet<>();
 
 	public Set<String> getFieldNames() {
 		return fieldNames;

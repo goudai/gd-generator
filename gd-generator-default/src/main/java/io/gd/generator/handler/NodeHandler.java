@@ -88,9 +88,9 @@ public class NodeHandler extends AbstractHandler {
             try (FileWriter writer = new FileWriter(new File(nodeDocFile))) {
                 writer.write(doc.toString());
             }
-            System.out.println("success ");
+
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
 
 

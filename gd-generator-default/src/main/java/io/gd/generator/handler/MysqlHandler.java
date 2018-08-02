@@ -213,8 +213,9 @@ public class MysqlHandler extends ScopedHandler<MysqlTableMeta> {
             Column column = field.getDeclaredAnnotation(Column.class);
             int length = 32;
             if (column != null) {
-                if (column.length() != 255 && column.length() > 0 && column.length() < 255) {
-                    length = column.length();
+                final int length1 = column.length();
+                if (length1 != 255 && length1 > 0 && length1 < 255) {
+                    length = length1;
                 }
             }
             Id id = field.getDeclaredAnnotation(Id.class);

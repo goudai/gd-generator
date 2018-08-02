@@ -3,6 +3,7 @@ package io.gd.generator.handler;
 import io.gd.generator.annotation.query.Query;
 import io.gd.generator.annotation.query.QueryModel;
 import io.gd.generator.api.query.Predicate;
+import io.gd.generator.meta.mybatis.MybatisMapperMeta;
 import io.gd.generator.meta.mybatis.MybatisXmlMeta;
 import io.gd.generator.meta.mybatis.MybatisXmlMeta.MybatisMappingMeta;
 import io.gd.generator.util.ClassHelper;
@@ -14,10 +15,7 @@ import org.dom4j.io.SAXReader;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 
-import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Version;
+import javax.persistence.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.StringReader;
@@ -46,7 +44,7 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
 
         String xmlPath = config.getMybatisXmlPath();
 
-		/* 初始化文件夹 */
+        /* 初始化文件夹 */
         File xmlPathDir = new File(xmlPath);
         if (!xmlPathDir.exists()) {
             xmlPathDir.mkdirs();
@@ -95,7 +93,7 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
         meta.setMapperName(mapperName);
         meta.setModel(entityClass.getName());
         @SuppressWarnings("unused")
-        String trableName = ClassHelper.resolveTableName(entityClass);
+        String tableName = ClassHelper.resolveTableName(entityClass);
         //meta.setTable(StringUtils.camelToUnderline(entityClass.getSimpleName()).replaceFirst("\\_", " ")); bug fix
 
         meta.setTable(ClassHelper.resolveTableName(entityClass));
@@ -170,17 +168,18 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
         Predicate[] predicates = null;
         if (query != null && (predicates = query.value()) != null) {
             for (Predicate predicate : predicates) {
+                final Class<?> type = field.getType();
                 String nameWithPredicate = name + predicate.toString();
                 String bind = null;
                 switch (predicate) {
                     case EQ:
-                        if (field.getType().isEnum())
+                        if (type.isEnum())
                             value = "and " + camelToUnderlineName + " = #{" + nameWithPredicate + ",typeHandler=" + this.parseEnum(field) + "}";
                         else
                             value = "and " + camelToUnderlineName + " = #{" + nameWithPredicate + "}";
                         break;
                     case NEQ:
-                        if (field.getType().isEnum())
+                        if (type.isEnum())
                             value = "and " + camelToUnderlineName + " != #{" + nameWithPredicate + ",typeHandler=" + this.parseEnum(field) + "}";
                         else
                             value = "and " + camelToUnderlineName + " != #{" + nameWithPredicate + "}";
@@ -216,7 +215,7 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
                         value = "and " + camelToUnderlineName + " is not null";
                         break;
                     case IN:
-                        if (field.getType().isEnum())
+                        if (type.isEnum())
                             value =
                                     "<if test=\"" + nameWithPredicate + ".length != 0\">\r\n"
                                             + "\t\t\t\tand " + camelToUnderlineName + " in\r\n"
@@ -250,7 +249,7 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
     }
 
     private void parseBasic(Class<?> klass, MybatisXmlMeta meta) {
-        Arrays.asList(klass.getDeclaredFields()).stream().filter(ClassHelper::isNotStaticField).forEach((field) -> {
+        Arrays.asList(klass.getDeclaredFields()).stream().filter(ClassHelper::isNotStaticField).forEach(field -> {
             Column column = field.getDeclaredAnnotation(Column.class);
             String columnName = null;
             if (column != null) {
@@ -278,9 +277,24 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
                 }
                 mappingMeta.setProperty(name);
                 if (field.getType().isEnum()) {
-                    mappingMeta.setEnumHander(parseEnum(field));
+                    mappingMeta.setEnumHandler(parseEnum(field));
                     mappingMeta.setJavaType(field.getType().getName());
+                } else {
+                    if (field.getType().getName().toUpperCase().contains("Date".toUpperCase())) {
+                        Temporal dateType = field.getDeclaredAnnotation(Temporal.class);
+                        if (dateType != null) {
+                            TemporalType value = dateType.value();
+                            if (value != null)
+                                if (value.equals(TemporalType.DATE))
+                                    mappingMeta.setJdbcType("DATE");
+                                else if (value.equals(TemporalType.TIMESTAMP))
+                                    mappingMeta.setJdbcType("TIMESTAMP");
+                                else if (value.equals(TemporalType.TIME))
+                                    mappingMeta.setJdbcType("TIME");
+                        }
+                    }
                 }
+
                 meta.getMappingMetas().add(mappingMeta);
             }
 

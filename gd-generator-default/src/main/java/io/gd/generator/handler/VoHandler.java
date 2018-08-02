@@ -524,10 +524,8 @@ public class VoHandler extends AbstractHandler {
 				try (FileOutputStream os = new FileOutputStream(file)) {
 					os.write(vo.getBytes());
 				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (TemplateException e) {
-				e.printStackTrace();
+			} catch (Exception e) {
+				logger.error(e.getMessage(),e);
 			}
 		});
 

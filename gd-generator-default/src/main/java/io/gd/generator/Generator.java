@@ -13,7 +13,7 @@ public class Generator {
 			try {
 				handler.start(config);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);();
 			}
 		});
 	}
