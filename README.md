@@ -1,20 +1,20 @@
-### QQ群 
-* 128436143 
+
 
 ### 简介
 
-1. 基于实体类为主导的代码生成器，可基于实体类快速的生成mybatis的相关配置。
+* 基于实体类为主导的代码生成器，可基于实体类快速的生成mybatis的相关配置。
 如生成接口mapper,生成xml配置文件。
-2. 可通过实体类在生成自动建表，自动加索引,自动更新数据列。
-3. 可检测出数据库与实体类之间的差异并在日志中打印出对应警告或者修复用的sql语句。  
+* 可通过实体类在生成自动建表，自动加索引,自动更新数据列。
+* 可检测出数据库与实体类之间的差异并在日志中打印出对应警告或者修复用的sql语句。  
 如 warn : 数据库中的列  [mysql_name --> mysqlName] 在实体类 Admin 不存在;
-4. 支持大部分JPA注解解析，可通过此代码生成器快速从hibernate转换到mybatis。
-5. 抽取查询对象 ,简化查询 ,自动生成QueryModel
-6. 自动驼峰装换
-7. 生成VO对象，提供四种注解，@View  @AssociationView @CollectionView @MapView
-8. 可在开发中运行（增量运行 可随时修改，增加，删除类属性后继续运行，此时将同步数据库表结构并给出响应修复sql，自动增量的保存开发书写的个性的mybatis中的xml语句）
+* 支持大部分JPA注解解析，可通过此代码生成器快速从hibernate转换到mybatis。
+* 抽取查询对象 ,简化查询 ,自动生成QueryModel
+* 自动驼峰装换
+* 生成VO对象，提供四种注解，@View  @AssociationView @CollectionView @MapView
+* 可在开发中运行（增量运行 可随时修改，增加，删除类属性后继续运行，此时将同步数据库表结构并给出响应修复sql，自动增量的保存开发书写的个性的mybatis中的xml语句）
 
 ### 安装
+
         wget https://github.com/goudai/gd-generator/archive/gd-generator-2.0.3.zip
         unzip gd-generator-2.0.6.zip
         cd gd-generator-2.0.6
