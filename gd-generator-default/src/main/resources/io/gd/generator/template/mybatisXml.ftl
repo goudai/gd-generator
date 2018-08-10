@@ -29,6 +29,14 @@
 
 	<sql id="baseColumn">id,${baseColumn}</sql>
 
+	<sql id="condition">
+	<#list meta.querys?keys as key>
+		<if test="${key} != null">
+			${meta.querys[key]}
+		</if>
+	</#list>
+	</sql>
+
 	<insert id="insert" parameterType="${meta.model}"<#if meta.useGeneratedKeys> useGeneratedKeys="true" keyProperty="id"</#if>>
 	  insert into `${meta.table?trim}` (<#if !meta.useGeneratedKeys>id,</#if>${baseColumn})
 	  values (<#if !meta.useGeneratedKeys>${rep}{id},</#if>${baseProperty}<#if meta.version??>,${rep}{${meta.version}}</#if>)
@@ -107,11 +115,7 @@
 		<include refid="baseColumn"/>
 		from `${meta.table?trim}`
 		<where>
-			<#list meta.querys?keys as key>
-			<if test="${key} != null">
-				${meta.querys[key]}
-			</if>
-			</#list>
+			<include refid="condition"/>
 		</where>
 		<choose>
 			<when test="orderByAndDirection != null">
@@ -129,11 +133,7 @@
 	<select id="count" resultType="_long" parameterType="${meta.query}">
 		select count(*) from `${meta.table?trim}`
 		<where>
-			<#list meta.querys?keys as key>
-			<if test="${key} != null">
-				${meta.querys[key]}
-			</if>
-			</#list>
+            <include refid="condition"/>
 		</where>
 	</select>
 	</#if>

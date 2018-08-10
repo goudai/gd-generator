@@ -75,8 +75,19 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
                 List<Element> elements = doc.getRootElement().elements();
                 elements.forEach((element) -> {
                     String id = element.attribute("id").getStringValue().intern();
-                    if (!(id == "delete".intern() || id == "insert".intern() || id == "update".intern() || id == "findOne".intern() || id == "findAll".intern()
-                            || id == "baseResultMap".intern() || id == "merge".intern() || id == "count".intern() || id == "baseColumn".intern())) {
+                    final boolean isAdd =
+                               id == "delete".intern()
+                            || id == "insert".intern()
+                            || id == "update".intern()
+                            || id == "findOne".intern()
+                            || id == "findAll".intern()
+                            || id == "baseResultMap".intern()
+                            || id == "merge".intern()
+                            || id == "count".intern()
+                            || id == "baseColumn".intern()
+                            || id == "condition".intern()
+                            ;
+                    if (!isAdd) {
                         meta.getOtherMappings().add(element.asXML());
                     }
                 });
@@ -162,6 +173,7 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
                 camelToUnderlineName = column.name();
             }
         }
+        camelToUnderlineName = "`"+meta.getTable()+"`."+camelToUnderlineName;
         Query query = field.getAnnotation(Query.class);
         String value = null;
         Predicate[] predicates = null;
