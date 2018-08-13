@@ -14,7 +14,20 @@
 
 	<name>gd-generator</name>
 
-	<url>http://maven.apache.org</url>
+	<developers>
+		<developer>
+			<name>qingmu</name>
+			<email>247687009@qq.com</email>
+		</developer>
+	</developers>
+
+	<licenses>
+		<license>
+			<name>MIT License</name>
+			<url>http://www.opensource.org/licenses/mit-license.php</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
 
 
 
