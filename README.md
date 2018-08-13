@@ -15,9 +15,9 @@
 
 ### 安装
 
-        wget https://github.com/goudai/gd-generator/archive/gd-generator-2.0.7.zip
-        unzip gd-generator-2.0.7.zip
-        cd gd-generator-2.0.7
+        wget https://github.com/goudai/gd-generator/archive/gd-generator-2.0.8.zip
+        unzip gd-generator-2.0.8.zip
+        cd gd-generator-2.0.8
         mvn clean install 
        
 ### maven 依赖
@@ -25,12 +25,12 @@
 <dependency>
     <groupId>io.goudai</groupId>
     <artifactId>gd-generator-api</artifactId>
-    <version>2.0.7</version>
+    <version>2.0.8</version>
 </dependency>
 <dependency>
     <groupId>io.goudai</groupId>
     <artifactId>gd-generator-default</artifactId>
-    <version>2.0.7</version>
+    <version>2.0.8</version>
 </dependency>
 ```
 
