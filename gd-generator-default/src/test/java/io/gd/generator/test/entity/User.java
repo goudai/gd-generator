@@ -70,6 +70,7 @@ public class User {
 	private Long district;
 	@Query(value = {IN})
 	private String job;
+	@Lob
 	@TypeHandler(StringTypeHandler.class)
 	private Map<String, Object> metadata;
 
