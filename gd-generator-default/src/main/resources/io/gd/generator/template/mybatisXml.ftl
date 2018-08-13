@@ -4,7 +4,7 @@
 <#assign rep="#">
 <#assign rep$="$">
 <#assign baseColumn><#list meta.mappingMetas as br><#if br.column != 'id'><#if br_has_next>${br.column},<#else>${br.column}</#if></#if></#list><#if meta.version??>,version</#if></#assign>
-<#assign baseProperty><#list meta.mappingMetas as br><#if br.property != 'id'><#if br_has_next><#if br.enumHandler??>${rep}{${br.property},typeHandler=${br.typeHandler}},<#else>${rep}{${br.property}},</#if><#else><#if br.typeHandler??>${rep}{${br.property},typeHandler=${br.typeHandler}}<#else>${rep}{${br.property}}</#if></#if></#if></#list></#assign>
+<#assign baseProperty><#list meta.mappingMetas as br><#if br.property != 'id'><#if br_has_next><#if br.typeHandler??>${rep}{${br.property},typeHandler=${br.typeHandler}},<#else>${rep}{${br.property}},</#if><#else><#if br.typeHandler??>${rep}{${br.property},typeHandler=${br.typeHandler}}<#else>${rep}{${br.property}}</#if></#if></#if></#list></#assign>
 
 	<resultMap id="baseResultMap" type="${meta.model}">
 		<#list meta.mappingMetas as br>
@@ -76,7 +76,7 @@
 				<choose>
 				<#list meta.mappingMetas as br>
 				<#if br.property != 'id'>
-					<#if br.enumHandler??>
+					<#if br.typeHandler??>
 					<when test="field == '${br.property}'">${br.column} = ${rep}{${meta.simpleName?uncap_first}.${br.property},typeHandler=${br.typeHandler},javaType=${br.javaType}},</when>
 					<#else>
 					<#if br.jdbcType??>
