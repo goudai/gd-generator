@@ -1,5 +1,6 @@
 package io.gd.generator.handler;
 
+import io.gd.generator.annotation.TypeHandler;
 import io.gd.generator.annotation.query.Query;
 import io.gd.generator.annotation.query.QueryModel;
 import io.gd.generator.api.query.Predicate;
@@ -76,17 +77,16 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
                 elements.forEach((element) -> {
                     String id = element.attribute("id").getStringValue().intern();
                     final boolean isAdd =
-                               id == "delete".intern()
-                            || id == "insert".intern()
-                            || id == "update".intern()
-                            || id == "findOne".intern()
-                            || id == "findAll".intern()
-                            || id == "baseResultMap".intern()
-                            || id == "merge".intern()
-                            || id == "count".intern()
-                            || id == "baseColumn".intern()
-                            || id == "condition".intern()
-                            ;
+                            id == "delete".intern()
+                                    || id == "insert".intern()
+                                    || id == "update".intern()
+                                    || id == "findOne".intern()
+                                    || id == "findAll".intern()
+                                    || id == "baseResultMap".intern()
+                                    || id == "merge".intern()
+                                    || id == "count".intern()
+                                    || id == "baseColumn".intern()
+                                    || id == "condition".intern();
                     if (!isAdd) {
                         meta.getOtherMappings().add(element.asXML());
                     }
@@ -173,7 +173,7 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
                 camelToUnderlineName = column.name();
             }
         }
-        camelToUnderlineName = "`"+meta.getTable()+"`."+camelToUnderlineName;
+        camelToUnderlineName = "`" + meta.getTable() + "`." + camelToUnderlineName;
         Query query = field.getAnnotation(Query.class);
         String value = null;
         Predicate[] predicates = null;
@@ -288,7 +288,7 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
                 }
                 mappingMeta.setProperty(name);
                 if (field.getType().isEnum()) {
-                    mappingMeta.setEnumHandler(parseEnum(field));
+                    mappingMeta.setTypeHandler(parseEnum(field));
                     mappingMeta.setJavaType(field.getType().getName());
                 } else {
                     if (field.getType().getName().toUpperCase().contains("Date".toUpperCase())) {
@@ -304,6 +304,14 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
                                     mappingMeta.setJdbcType("TIME");
                         }
                     }
+
+                }
+                TypeHandler typeHandler = field.getDeclaredAnnotation(TypeHandler.class);
+                if (typeHandler != null) {
+                    if(typeHandler instanceof org.apache.ibatis.type.TypeHandler){
+                        mappingMeta.setTypeHandler(typeHandler.value().getTypeName());
+                    }else
+                        throw new RuntimeException("typeHandler must be implement the interface org.apache.ibatis.type.TypeHandler");
                 }
 
                 meta.getMappingMetas().add(mappingMeta);

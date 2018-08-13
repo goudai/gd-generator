@@ -112,7 +112,7 @@ public class MybatisXmlMeta {
 	public static class MybatisMappingMeta {
 		private String column;
 		private String property;
-		private String enumHandler;
+		private String typeHandler;
 		private String javaType;
 		private String jdbcType;
 
@@ -132,12 +132,12 @@ public class MybatisXmlMeta {
 			this.property = property;
 		}
 
-		public String getEnumHandler() {
-			return enumHandler;
+		public String getTypeHandler() {
+			return typeHandler;
 		}
 
-		public void setEnumHandler(String enumHandler) {
-			this.enumHandler = enumHandler;
+		public void setTypeHandler(String typeHandler) {
+			this.typeHandler = typeHandler;
 		}
 
 		public String getJdbcType() {

@@ -1,14 +1,18 @@
 package io.gd.generator.test.entity;
 
 import io.gd.generator.annotation.Field;
+import io.gd.generator.annotation.TypeHandler;
 import io.gd.generator.annotation.query.Query;
 import io.gd.generator.annotation.query.QueryModel;
 import io.gd.generator.annotation.view.*;
+import org.apache.ibatis.type.EnumTypeHandler;
+import org.apache.ibatis.type.StringTypeHandler;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 
 import static io.gd.generator.api.query.Predicate.*;
 
@@ -58,6 +62,7 @@ public class User {
 	@Column(length = 100)
 	@AssociationView(associationGroup = "UserSimpleVo", field = @Field(order = 1))
 	private String sign;
+	@TypeHandler(EnumTypeHandler.class)
 	@Enumerated(EnumType.ORDINAL)
 	private Gender gender;
 	private Long province;
@@ -65,6 +70,8 @@ public class User {
 	private Long district;
 	@Query(value = {IN})
 	private String job;
+	@TypeHandler(StringTypeHandler.class)
+	private Map<String, Object> metadata;
 
 	public String getJob() {
 		return job;
@@ -200,6 +207,15 @@ public class User {
 
 	public void setRegisterIp(String registerIp) {
 		this.registerIp = registerIp;
+	}
+
+	public Map<String, Object> getMetadata() {
+		return metadata;
+	}
+
+	public User setMetadata(Map<String, Object> metadata) {
+		this.metadata = metadata;
+		return this;
 	}
 
 	public enum Gender {
