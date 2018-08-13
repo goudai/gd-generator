@@ -108,7 +108,7 @@
 		<connection>scm:git:https://github.com/goudai/gd-generator.git</connection>
 		<developerConnection>scm:git:https://github.com/goudai/gd-generator.git</developerConnection>
 		<url>scm:git:https://github.com/goudai/gd-generator.git</url>
-	  <tag>HEAD</tag>
+	  <tag>2.0.8</tag>
   </scm>
 
 
