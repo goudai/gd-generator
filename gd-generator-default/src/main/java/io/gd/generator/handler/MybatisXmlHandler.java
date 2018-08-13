@@ -308,8 +308,10 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
                 }
                 TypeHandler typeHandler = field.getDeclaredAnnotation(TypeHandler.class);
                 if (typeHandler != null) {
-                    if(typeHandler instanceof org.apache.ibatis.type.TypeHandler){
-                        mappingMeta.setTypeHandler(typeHandler.value().getTypeName());
+                    Class typeHandlerClass = typeHandler.value();
+                    if(org.apache.ibatis.type.TypeHandler.class.isAssignableFrom(typeHandlerClass)){
+                        mappingMeta.setTypeHandler(typeHandlerClass.getTypeName());
+                        mappingMeta.setJavaType(field.getType().getName());
                     }else
                         throw new RuntimeException("typeHandler must be implement the interface org.apache.ibatis.type.TypeHandler");
                 }
