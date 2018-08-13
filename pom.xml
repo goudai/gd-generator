@@ -180,7 +180,14 @@
 					</execution>
 				</executions>
 			</plugin>
-            <!--<plugin>-->
+
+			<plugin>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+			<!--<plugin>-->
                 <!--<groupId>org.jetbrains.kotlin</groupId>-->
                 <!--<artifactId>kotlin-maven-plugin</artifactId>-->
                 <!--<version>${kotlin.version}</version>-->
