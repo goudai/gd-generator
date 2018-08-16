@@ -23,12 +23,12 @@
 ### maven 依赖
 ```xml
 <dependency>
-    <groupId>io.goudai</groupId>
+    <groupId>io.qingmu</groupId>
     <artifactId>gd-generator-api</artifactId>
     <version>2.0.8</version>
 </dependency>
 <dependency>
-    <groupId>io.goudai</groupId>
+    <groupId>io.qingmu</groupId>
     <artifactId>gd-generator-default</artifactId>
     <version>2.0.8</version>
 </dependency>
