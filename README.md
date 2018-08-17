@@ -12,25 +12,18 @@
 * 自动驼峰装换
 * 生成VO对象，提供四种注解，@View  @AssociationView @CollectionView @MapView
 * 可在开发中运行（增量运行 可随时修改，增加，删除类属性后继续运行，此时将同步数据库表结构并给出响应修复sql，自动增量的保存开发书写的个性的mybatis中的xml语句）
-
-### 安装
-
-        wget https://github.com/goudai/gd-generator/archive/gd-generator-2.0.8.zip
-        unzip gd-generator-2.0.8.zip
-        cd gd-generator-2.0.8
-        mvn clean install 
        
 ### maven 依赖
 ```xml
 <dependency>
     <groupId>io.github.goudai</groupId>
     <artifactId>gd-generator-api</artifactId>
-    <version>2.0.8</version>
+    <version>2.0.10</version>
 </dependency>
 <dependency>
     <groupId>io.github.goudai</groupId>
     <artifactId>gd-generator-default</artifactId>
-    <version>2.0.8</version>
+    <version>2.0.10</version>
 </dependency>
 ```
 
