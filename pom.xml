@@ -220,9 +220,11 @@
 	<profiles>
 		<profile>
 			<id>release</id>
+
 			<build>
 
 				<plugins>
+
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
@@ -246,7 +248,7 @@
 						<version>1.6</version>
 						<executions>
 							<execution>
-								<phase>verify</phase>
+								<phase>deploy</phase>
 								<goals>
 									<goal>sign</goal>
 								</goals>
