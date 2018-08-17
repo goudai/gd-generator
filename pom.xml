@@ -215,7 +215,7 @@
 
     </build>
     <!--
-    mvn clean package deploy -Darguments="-Dgpg.passphrase=*****" -Prelease
+    mvn release:prepare  -Darguments="-Dgpg.passphrase=*****" -Prelease
     -->
     <profiles>
         <profile>
