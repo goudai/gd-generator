@@ -50,8 +50,11 @@ public class MybatisMapperHandler extends ScopedHandler<MybatisMapperMeta> {
         String string = FileUtils.read(getMapperFilePath(entityClass));
         MybatisMapperMeta meta = new MybatisMapperMeta();
         if (StringUtils.isNotBlank(string)) {
-            String[] split2 = string.split("\\{");
-            String[] split = split2[1].split("\\}")[0].split(";");
+
+            int firstIndex = string.indexOf("{");
+            int endIndex = string.lastIndexOf("}");
+            String[] split = string.substring(firstIndex + 1, endIndex).split(";");
+
             Arrays.asList(split).forEach(
                     (m) -> {
                         if (!(m.contains("insert(") || m.contains("update(") || m.contains("findOne(") || m.contains("findAll(") || m.contains("merge(")
@@ -62,7 +65,7 @@ public class MybatisMapperHandler extends ScopedHandler<MybatisMapperMeta> {
                             }
                         }
                     });
-            String split3 = split2[0];
+            String split3 = string.substring(0, firstIndex);
             Pattern pattern = Pattern.compile("import[\\s]+([\\w\\.]+)[\\s]*;");
             Matcher m = pattern.matcher(split3);
             while (m.find()) {
