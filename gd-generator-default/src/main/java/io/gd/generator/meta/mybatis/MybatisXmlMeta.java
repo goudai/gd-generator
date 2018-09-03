@@ -21,6 +21,25 @@ public class MybatisXmlMeta {
 
 	private List<String> otherMappings = new ArrayList<>();
 
+	private String idColumnName;
+	private String idPropName;
+
+	public String getIdColumnName() {
+		return idColumnName;
+	}
+
+	public void setIdColumnName(String idColumnName) {
+		this.idColumnName = idColumnName;
+	}
+
+	public String getIdPropName() {
+		return idPropName;
+	}
+
+	public void setIdPropName(String idPropName) {
+		this.idPropName = idPropName;
+	}
+
 	public boolean isHasQueryModel() {
 		return hasQueryModel;
 	}

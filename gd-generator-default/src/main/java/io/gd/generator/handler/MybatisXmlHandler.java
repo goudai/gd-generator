@@ -173,6 +173,14 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
                 camelToUnderlineName = column.name();
             }
         }
+        if (meta.getIdColumnName() == null) {
+            Id idAnno = field.getDeclaredAnnotation(Id.class);
+            if (idAnno != null) {
+                meta.setIdColumnName(StringUtils.isNotBlank(camelToUnderlineName) ? camelToUnderlineName : "id");
+                meta.setIdPropName(name);
+            }
+        }
+
         camelToUnderlineName = "`" + meta.getTable() + "`." + camelToUnderlineName;
         Query query = field.getAnnotation(Query.class);
         String value = null;

@@ -15,6 +15,15 @@ public class MybatisMapperMeta {
 	private boolean hasQueryModel;
 	private List<String> otherMethods = new ArrayList<>(); // 其他方法
 	private List<String> otherImports = new ArrayList<>(); // 其他引包
+	private String idPropName;
+
+	public String getIdPropName() {
+		return idPropName;
+	}
+
+	public void setIdPropName(String idPropName) {
+		this.idPropName = idPropName;
+	}
 
 	public String getMapperPackage() {
 		return mapperPackage;
