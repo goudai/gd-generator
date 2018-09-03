@@ -129,9 +129,14 @@ public class MybatisMapperHandler extends ScopedHandler<MybatisMapperMeta> {
             Id declaredAnnotation = field.getDeclaredAnnotation(Id.class);
             if (declaredAnnotation != null) {
                 merged.setIdType(field.getType().getSimpleName());
+                merged.setIdPropName(field.getName());
                 break;
             }
         }
+        if (StringUtils.isBlank(merged.getIdPropName())) {
+            merged.setIdPropName("id");//id as default
+        }
+
         model.put("meta", merged);
         String mapper = renderTemplate("mybatisMapper", model);
         File file = new File(getMapperFilePath(entityClass));

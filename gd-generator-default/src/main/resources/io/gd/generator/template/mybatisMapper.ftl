@@ -25,9 +25,9 @@ public interface ${meta.entitySimpleName}Mapper {
 
 	int merge(@Param("${meta.entitySimpleName?uncap_first}") ${meta.entitySimpleName} ${meta.entitySimpleName?uncap_first}, @Param("fields")String... fields);
 
-	int delete(${meta.idType} id);
+	int delete(${meta.idType} ${meta.idPropName});
 
-	${meta.entitySimpleName} findOne(${meta.idType} id);
+	${meta.entitySimpleName} findOne(${meta.idType} ${meta.idPropName});
 	<#if !meta.hasQueryModel>
 
 	List<${meta.entitySimpleName}> findAll();
