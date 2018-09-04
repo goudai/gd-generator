@@ -18,12 +18,12 @@
 <dependency>
     <groupId>io.github.goudai</groupId>
     <artifactId>gd-generator-api</artifactId>
-    <version>2.0.10</version>
+    <version>2.0.11</version>
 </dependency>
 <dependency>
     <groupId>io.github.goudai</groupId>
     <artifactId>gd-generator-default</artifactId>
-    <version>2.0.10</version>
+    <version>2.0.11</version>
 </dependency>
 ```
 
