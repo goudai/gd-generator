@@ -184,68 +184,69 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
         camelToUnderlineName = "`" + meta.getTable() + "`." + camelToUnderlineName;
         Query query = field.getAnnotation(Query.class);
         String value = null;
-        Predicate[] predicates = null;
+        Predicate[] predicates;
         if (query != null && (predicates = query.value()) != null) {
             for (Predicate predicate : predicates) {
-                final Class<?> type = field.getType();
+                String typeHandlerClass = resolveTypeHandler(field);
                 String nameWithPredicate = name + predicate.toString();
-                String bind = null;
+                String bind;
                 switch (predicate) {
                     case EQ:
-                        if (type.isEnum()) {
-                            String enumTypeHandler = this.parseEnum(field);
-                            if (enumTypeHandler != null) {
-                                enumTypeHandler = ",typeHandler=" + enumTypeHandler;
-                            }
-                            value =
-                                    "and "
-                                            + camelToUnderlineName
-                                            + " = #{"
-                                            + nameWithPredicate
-                                            + enumTypeHandler
-                                            + "}";
-                        } else
+                        if(StringUtils.isNotBlank(typeHandlerClass))
+                            value = "and " + camelToUnderlineName + " = #{" + nameWithPredicate + ",typeHandler=" + typeHandlerClass + "}";
+                        else
                             value = "and " + camelToUnderlineName + " = #{" + nameWithPredicate + "}";
                         break;
                     case NEQ:
-                        if (type.isEnum()) {
-                            String enumTypeHandler = this.parseEnum(field);
-                            if (enumTypeHandler != null) {
-                                enumTypeHandler = ",typeHandler=" + enumTypeHandler;
-                            }
-                            value =
-                                    "and "
-                                            + camelToUnderlineName
-                                            + " != #{"
-                                            + nameWithPredicate
-                                            + enumTypeHandler
-                                            + "}";
-                        } else
+                        if(StringUtils.isNotBlank(typeHandlerClass))
+                            value = "and " + camelToUnderlineName + " != #{" + nameWithPredicate + ",typeHandler=" + typeHandlerClass + "}";
+                        else
                             value = "and " + camelToUnderlineName + " != #{" + nameWithPredicate + "}";
                         break;
                     case GT:
-                        value = "and " + camelToUnderlineName + " &gt; #{" + nameWithPredicate + "}";
+                        if(StringUtils.isNotBlank(typeHandlerClass))
+                            value = "and " + camelToUnderlineName + " &gt; #{" + nameWithPredicate + ",typeHandler=" + typeHandlerClass + "}";
+                        else
+                            value = "and " + camelToUnderlineName + " &gt; #{" + nameWithPredicate + "}";
                         break;
                     case GTE:
-                        value = "and " + camelToUnderlineName + " &gt;= #{" + nameWithPredicate + "}";
+                        if(StringUtils.isNotBlank(typeHandlerClass))
+                            value = "and " + camelToUnderlineName + " &gt;= #{" + nameWithPredicate + ",typeHandler=" + typeHandlerClass + "}";
+                        else
+                            value = "and " + camelToUnderlineName + " &gt;= #{" + nameWithPredicate + "}";
                         break;
                     case LT:
-                        value = "and " + camelToUnderlineName + " &lt; #{" + nameWithPredicate + "}";
+                        if(StringUtils.isNotBlank(typeHandlerClass))
+                            value = "and " + camelToUnderlineName + " &lt; #{" + nameWithPredicate + ",typeHandler=" + typeHandlerClass + "}";
+                        else
+                            value = "and " + camelToUnderlineName + " &lt; #{" + nameWithPredicate + "}";
                         break;
                     case LTE:
-                        value = "and " + camelToUnderlineName + " &lt;= #{" + nameWithPredicate + "}";
+                        if(StringUtils.isNotBlank(typeHandlerClass))
+                            value = "and " + camelToUnderlineName + " &lt;= #{" + nameWithPredicate + ",typeHandler=" + typeHandlerClass + "}";
+                        else
+                            value = "and " + camelToUnderlineName + " &lt;= #{" + nameWithPredicate + "}";
                         break;
                     case EW:
                         bind = "<bind name=\"" + nameWithPredicate + "\" value=\"'%' + " + nameWithPredicate + "\"/>";
-                        value = bind + " and " + camelToUnderlineName + " like #{" + nameWithPredicate + "}";
+                        if(StringUtils.isNotBlank(typeHandlerClass))
+                            value = bind + " and " + camelToUnderlineName + " like #{" + nameWithPredicate + ",typeHandler=" + typeHandlerClass + "}";
+                        else
+                            value = bind + " and " + camelToUnderlineName + " like #{" + nameWithPredicate + "}";
                         break;
                     case SW:
                         bind = "<bind name=\"" + nameWithPredicate + "\" value=\"" + nameWithPredicate + " + '%'\"/>";
-                        value = bind + " and " + camelToUnderlineName + " like #{" + nameWithPredicate + "}";
+                        if(StringUtils.isNotBlank(typeHandlerClass))
+                            value = bind + " and " + camelToUnderlineName + " like #{" + nameWithPredicate + ",typeHandler=" + typeHandlerClass + "}";
+                        else
+                            value = bind + " and " + camelToUnderlineName + " like #{" + nameWithPredicate + "}";
                         break;
                     case LK:
                         bind = "<bind name=\"" + nameWithPredicate + "\" value=\"'%' + " + nameWithPredicate + " + '%'\"/>";
-                        value = bind + " and " + camelToUnderlineName + " like #{" + nameWithPredicate + "}";
+                        if(StringUtils.isNotBlank(typeHandlerClass))
+                            value = bind + " and " + camelToUnderlineName + " like #{" + nameWithPredicate + ",typeHandler=" + typeHandlerClass + "}";
+                        else
+                            value = bind + " and " + camelToUnderlineName + " like #{" + nameWithPredicate + "}";
                         break;
                     case NL:
                         value = "and " + camelToUnderlineName + " is null";
@@ -254,32 +255,19 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
                         value = "and " + camelToUnderlineName + " is not null";
                         break;
                     case IN:
-                        if (type.isEnum()) {
-                            String enumTypeHandler = this.parseEnum(field);
-                            if (enumTypeHandler != null) {
-                                enumTypeHandler = ",typeHandler=" + enumTypeHandler;
-                            }
+                        if(StringUtils.isNotBlank(typeHandlerClass))
                             value =
-                                    "<if test=\""
-                                            + nameWithPredicate
-                                            + ".length != 0\">\r\n"
-                                            + "\t\t\t\tand "
-                                            + camelToUnderlineName
-                                            + " in\r\n"
-                                            + "\t\t\t\t<foreach collection=\""
-                                            + nameWithPredicate
-                                            + "\" item=\"item\" open=\"(\" separator=\",\" close=\")\">\r\n"
-                                            + "\t\t\t\t#{item"
-                                            + enumTypeHandler
-                                            + "}\r\n"
+                                    "<if test=\"" + nameWithPredicate + ".length != 0\">\r\n"
+                                            + "\t\t\t\tand " + camelToUnderlineName + " in\r\n"
+                                            + "\t\t\t\t<foreach collection=\"" + nameWithPredicate + "\" item=\"item\" open=\"(\" separator=\",\" close=\")\">\r\n"
+                                            + "\t\t\t\t#{item" + ",typeHandler=" + typeHandlerClass + "}\r\n"
                                             + "\t\t\t\t</foreach>\r\n"
                                             + "\t\t\t\t</if>\r\n"
-                                            + "\t\t\t\t<if test=\""
-                                            + nameWithPredicate
-                                            + ".length == 0\">\r\n"
+                                            + "\t\t\t\t<if test=\"" + nameWithPredicate + ".length == 0\">\r\n"
                                             + "\t\t\t\tand 1 = 2\r\n"
-                                            + "\t\t\t\t</if>";
-                        } else
+                                            + "\t\t\t\t</if>"
+                                    ;
+                        else
                             value =
                                     "<if test=\"" + nameWithPredicate + ".length != 0\">\r\n"
                                             + "\t\t\t\tand " + camelToUnderlineName + " in\r\n"
@@ -328,33 +316,24 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
                     mappingMeta.setColumn(StringUtils.camelToUnderline(name));
                 }
                 mappingMeta.setProperty(name);
-                if (field.getType().isEnum()) {
-                    mappingMeta.setTypeHandler(parseEnum(field));
+                String typeHandlerClass = resolveTypeHandler(field);
+                if(StringUtils.isNotBlank(typeHandlerClass)){
+                    mappingMeta.setTypeHandler(typeHandlerClass);
                     mappingMeta.setJavaType(field.getType().getName());
-                } else {
-                    if (field.getType().getName().toUpperCase().contains("Date".toUpperCase())) {
-                        Temporal dateType = field.getDeclaredAnnotation(Temporal.class);
-                        if (dateType != null) {
-                            TemporalType value = dateType.value();
-                            if (value != null)
-                                if (value.equals(TemporalType.DATE))
-                                    mappingMeta.setJdbcType("DATE");
-                                else if (value.equals(TemporalType.TIMESTAMP))
-                                    mappingMeta.setJdbcType("TIMESTAMP");
-                                else if (value.equals(TemporalType.TIME))
-                                    mappingMeta.setJdbcType("TIME");
-                        }
-                    }
-
                 }
-                TypeHandler typeHandler = field.getDeclaredAnnotation(TypeHandler.class);
-                if (typeHandler != null) {
-                    Class typeHandlerClass = typeHandler.value();
-                    if(org.apache.ibatis.type.TypeHandler.class.isAssignableFrom(typeHandlerClass)){
-                        mappingMeta.setTypeHandler(typeHandlerClass.getTypeName());
-                        mappingMeta.setJavaType(field.getType().getName());
-                    }else
-                        throw new RuntimeException("typeHandler must be implement the interface org.apache.ibatis.type.TypeHandler");
+
+                if (field.getType().getName().toUpperCase().contains("Date".toUpperCase())) {
+                    Temporal dateType = field.getDeclaredAnnotation(Temporal.class);
+                    if (dateType != null) {
+                        TemporalType value = dateType.value();
+                        if (value != null)
+                            if (value.equals(TemporalType.DATE))
+                                mappingMeta.setJdbcType("DATE");
+                            else if (value.equals(TemporalType.TIMESTAMP))
+                                mappingMeta.setJdbcType("TIMESTAMP");
+                            else if (value.equals(TemporalType.TIME))
+                                mappingMeta.setJdbcType("TIME");
+                    }
                 }
 
                 meta.getMappingMetas().add(mappingMeta);
@@ -367,13 +346,27 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
         Enumerated enumerated = field.getDeclaredAnnotation(Enumerated.class);
         if (enumerated != null) {
             EnumType value = enumerated.value();
-            if (EnumType.STRING.equals(value)) return "org.apache.ibatis.type.EnumTypeHandler";
+            if (EnumType.STRING.equals(value))
+                return "org.apache.ibatis.type.EnumTypeHandler";
         }
-        if (config.isUseEnumOrdinalTypeHandlerByDefault()) {
-            return "org.apache.ibatis.type.EnumOrdinalTypeHandler";
-        } else {
-            return null;
+        return "org.apache.ibatis.type.EnumOrdinalTypeHandler";
+
+    }
+
+    private String resolveTypeHandler(Field field){
+        TypeHandler typeHandler = field.getDeclaredAnnotation(TypeHandler.class);
+        if (typeHandler != null) {
+            Class typeHandlerClass = typeHandler.value();
+            if(org.apache.ibatis.type.TypeHandler.class.isAssignableFrom(typeHandlerClass)){
+                return typeHandlerClass.getTypeName();
+            }else
+                throw new RuntimeException("typeHandler must be implement the interface org.apache.ibatis.type.TypeHandler");
         }
+        if(field.getType().isEnum()){
+
+            return parseEnum(field);
+        }
+        return null;
     }
 
     class MyEntityResolver implements EntityResolver {

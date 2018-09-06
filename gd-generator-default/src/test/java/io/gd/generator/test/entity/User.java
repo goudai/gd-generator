@@ -62,6 +62,7 @@ public class User {
 	@Column(length = 100)
 	@AssociationView(associationGroup = "UserSimpleVo", field = @Field(order = 1))
 	private String sign;
+	@Query({EQ, NEQ, LK, IN})
 	@TypeHandler(EnumTypeHandler.class)
 	@Enumerated(EnumType.ORDINAL)
 	private Gender gender;
@@ -70,6 +71,7 @@ public class User {
 	private Long district;
 	@Query(value = {IN})
 	private String job;
+	@Query({EQ, NEQ, LK, IN})
 	@Lob
 	@TypeHandler(StringTypeHandler.class)
 	private Map<String, Object> metadata;
