@@ -8,6 +8,8 @@ public class Config {
 
 	private String entityPackage;
 
+	private boolean useEnumOrdinalTypeHandlerByDefault = true;
+
 	/* java query model */
 	private String queryModelPackage;
 	private String queryModelPath;
@@ -176,4 +178,11 @@ public class Config {
 		this.defaultEncoding = defaultEncoding;
 	}
 
+	public boolean isUseEnumOrdinalTypeHandlerByDefault() {
+		return useEnumOrdinalTypeHandlerByDefault;
+	}
+
+	public void setUseEnumOrdinalTypeHandlerByDefault(boolean useEnumOrdinalTypeHandlerByDefault) {
+		this.useEnumOrdinalTypeHandlerByDefault = useEnumOrdinalTypeHandlerByDefault;
+	}
 }

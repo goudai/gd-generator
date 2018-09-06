@@ -192,15 +192,35 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
                 String bind = null;
                 switch (predicate) {
                     case EQ:
-                        if (type.isEnum())
-                            value = "and " + camelToUnderlineName + " = #{" + nameWithPredicate + ",typeHandler=" + this.parseEnum(field) + "}";
-                        else
+                        if (type.isEnum()) {
+                            String enumTypeHandler = this.parseEnum(field);
+                            if (enumTypeHandler != null) {
+                                enumTypeHandler = ",typeHandler=" + enumTypeHandler;
+                            }
+                            value =
+                                    "and "
+                                            + camelToUnderlineName
+                                            + " = #{"
+                                            + nameWithPredicate
+                                            + enumTypeHandler
+                                            + "}";
+                        } else
                             value = "and " + camelToUnderlineName + " = #{" + nameWithPredicate + "}";
                         break;
                     case NEQ:
-                        if (type.isEnum())
-                            value = "and " + camelToUnderlineName + " != #{" + nameWithPredicate + ",typeHandler=" + this.parseEnum(field) + "}";
-                        else
+                        if (type.isEnum()) {
+                            String enumTypeHandler = this.parseEnum(field);
+                            if (enumTypeHandler != null) {
+                                enumTypeHandler = ",typeHandler=" + enumTypeHandler;
+                            }
+                            value =
+                                    "and "
+                                            + camelToUnderlineName
+                                            + " != #{"
+                                            + nameWithPredicate
+                                            + enumTypeHandler
+                                            + "}";
+                        } else
                             value = "and " + camelToUnderlineName + " != #{" + nameWithPredicate + "}";
                         break;
                     case GT:
@@ -234,19 +254,32 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
                         value = "and " + camelToUnderlineName + " is not null";
                         break;
                     case IN:
-                        if (type.isEnum())
+                        if (type.isEnum()) {
+                            String enumTypeHandler = this.parseEnum(field);
+                            if (enumTypeHandler != null) {
+                                enumTypeHandler = ",typeHandler=" + enumTypeHandler;
+                            }
                             value =
-                                    "<if test=\"" + nameWithPredicate + ".length != 0\">\r\n"
-                                            + "\t\t\t\tand " + camelToUnderlineName + " in\r\n"
-                                            + "\t\t\t\t<foreach collection=\"" + nameWithPredicate + "\" item=\"item\" open=\"(\" separator=\",\" close=\")\">\r\n"
-                                            + "\t\t\t\t#{item" + ",typeHandler=" + this.parseEnum(field) + "}\r\n"
+                                    "<if test=\""
+                                            + nameWithPredicate
+                                            + ".length != 0\">\r\n"
+                                            + "\t\t\t\tand "
+                                            + camelToUnderlineName
+                                            + " in\r\n"
+                                            + "\t\t\t\t<foreach collection=\""
+                                            + nameWithPredicate
+                                            + "\" item=\"item\" open=\"(\" separator=\",\" close=\")\">\r\n"
+                                            + "\t\t\t\t#{item"
+                                            + enumTypeHandler
+                                            + "}\r\n"
                                             + "\t\t\t\t</foreach>\r\n"
                                             + "\t\t\t\t</if>\r\n"
-                                            + "\t\t\t\t<if test=\"" + nameWithPredicate + ".length == 0\">\r\n"
+                                            + "\t\t\t\t<if test=\""
+                                            + nameWithPredicate
+                                            + ".length == 0\">\r\n"
                                             + "\t\t\t\tand 1 = 2\r\n"
-                                            + "\t\t\t\t</if>"
-                                    ;
-                        else
+                                            + "\t\t\t\t</if>";
+                        } else
                             value =
                                     "<if test=\"" + nameWithPredicate + ".length != 0\">\r\n"
                                             + "\t\t\t\tand " + camelToUnderlineName + " in\r\n"
@@ -334,11 +367,13 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
         Enumerated enumerated = field.getDeclaredAnnotation(Enumerated.class);
         if (enumerated != null) {
             EnumType value = enumerated.value();
-            if (EnumType.STRING.equals(value))
-                return "org.apache.ibatis.type.EnumTypeHandler";
+            if (EnumType.STRING.equals(value)) return "org.apache.ibatis.type.EnumTypeHandler";
         }
-        return "org.apache.ibatis.type.EnumOrdinalTypeHandler";
-
+        if (config.isUseEnumOrdinalTypeHandlerByDefault()) {
+            return "org.apache.ibatis.type.EnumOrdinalTypeHandler";
+        } else {
+            return null;
+        }
     }
 
     class MyEntityResolver implements EntityResolver {
