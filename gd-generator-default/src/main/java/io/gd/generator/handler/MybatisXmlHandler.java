@@ -349,8 +349,11 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
             if (EnumType.STRING.equals(value))
                 return "org.apache.ibatis.type.EnumTypeHandler";
         }
-        return "org.apache.ibatis.type.EnumOrdinalTypeHandler";
-
+        if (config.isUseEnumOrdinalTypeHandlerByDefault()) {
+            return "org.apache.ibatis.type.EnumOrdinalTypeHandler";
+        } else {
+            return null;
+        }
     }
 
     private String resolveTypeHandler(Field field){
