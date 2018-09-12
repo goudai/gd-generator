@@ -291,12 +291,15 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
             }
             String name = field.getName();
             String camelToUnderlineName = StringUtils.camelToUnderline(name);
-            camelToUnderlineName = "`" + meta.getTable() + "`." + camelToUnderlineName;
+            camelToUnderlineName = StringUtils.isNotBlank(camelToUnderlineName) ? camelToUnderlineName : "id";
 
+            if (config.isEscapeColumn()) {
+                camelToUnderlineName = "`" + camelToUnderlineName + "`";
+            }
             if (meta.getIdColumnName() == null) {
                 Id idAnno = field.getDeclaredAnnotation(Id.class);
                 if (idAnno != null) {
-                    meta.setIdColumnName(StringUtils.isNotBlank(camelToUnderlineName) ? camelToUnderlineName : "id");
+                    meta.setIdColumnName(camelToUnderlineName);
                     meta.setIdPropName(name);
                 }
             }
@@ -313,10 +316,13 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
                     throw new RuntimeException("version field type please use int or integer");
             } else {
                 MybatisMappingMeta mappingMeta = new MybatisMappingMeta();
-                if (StringUtils.isNotBlank(columnName)) {
-                    mappingMeta.setColumn(columnName);
+
+                String colName = StringUtils.isNotBlank(columnName) ? columnName : StringUtils.camelToUnderline(name);
+                mappingMeta.setRawColumn(colName);
+                if (config.isEscapeColumn()) {
+                    mappingMeta.setColumn("`" + colName + "`");
                 } else {
-                    mappingMeta.setColumn(StringUtils.camelToUnderline(name));
+                    mappingMeta.setColumn(colName);
                 }
                 mappingMeta.setProperty(name);
                 String typeHandlerClass = resolveTypeHandler(field);
