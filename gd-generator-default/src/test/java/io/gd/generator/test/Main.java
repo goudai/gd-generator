@@ -10,6 +10,7 @@ public class Main {
 		Config config = new Config();
 		config.setGenLogFile("gd-test.log");
 		config.setUseEnumOrdinalTypeHandlerByDefault(false);
+		config.setEscapeColumn(true);
 		/*config.setUrl("jdbc:mysql://192.168.10.240/sk");
 		config.setEntityPackage("com.sk.entity");
 		config.setUsername("root");
