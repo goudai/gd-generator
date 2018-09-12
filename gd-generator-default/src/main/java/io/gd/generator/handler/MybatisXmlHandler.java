@@ -173,6 +173,11 @@ public class MybatisXmlHandler extends ScopedHandler<MybatisXmlMeta> {
                 camelToUnderlineName = column.name();
             }
         }
+        camelToUnderlineName = StringUtils.isNotBlank(camelToUnderlineName) ? camelToUnderlineName : "id";
+        if (config.isEscapeColumn()) {
+            camelToUnderlineName = "`" + camelToUnderlineName + "`";
+        }
+
         camelToUnderlineName = "`" + meta.getTable() + "`." + camelToUnderlineName;
         Query query = field.getAnnotation(Query.class);
         String value = null;
