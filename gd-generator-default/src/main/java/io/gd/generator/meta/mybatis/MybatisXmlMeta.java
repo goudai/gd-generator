@@ -130,6 +130,7 @@ public class MybatisXmlMeta {
 
 	public static class MybatisMappingMeta {
 		private String column;
+		private String rawColumn;
 		private String property;
 		private String typeHandler;
 		private String javaType;
@@ -175,6 +176,13 @@ public class MybatisXmlMeta {
 			this.javaType = javaType;
 		}
 
+		public String getRawColumn() {
+			return rawColumn;
+		}
+
+		public void setRawColumn(String rawColumn) {
+			this.rawColumn = rawColumn;
+		}
 	}
 
 

@@ -9,15 +9,15 @@
     <resultMap id="baseResultMap" type="${meta.model}">
 		<#list meta.mappingMetas as br>
 			<#if br.column == "${meta.idColumnName}">
-		<id column="${br.column}" property="${br.property}" />
+		<id column="${br.rawColumn}" property="${br.property}" />
 			<#else>
 				<#if br.typeHandler??>
-		<result column="${br.column}" property="${br.property}" typeHandler="${br.typeHandler}" />
+		<result column="${br.rawColumn}" property="${br.property}" typeHandler="${br.typeHandler}" />
 				<#else>
 					<#if br.jdbcType??>
-		<result column="${br.column}" property="${br.property}" jdbcType="${br.jdbcType}" />
+		<result column="${br.rawColumn}" property="${br.property}" jdbcType="${br.jdbcType}" />
 					<#else>
-		<result column="${br.column}" property="${br.property}" />
+		<result column="${br.rawColumn}" property="${br.property}" />
 					</#if>
 				</#if>
 			</#if>
