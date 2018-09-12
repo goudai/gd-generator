@@ -18,7 +18,7 @@ import static io.gd.generator.api.query.Predicate.*;
 
 
 @Entity
-@Table(name = "user")
+@Table(name = "user",schema="用户信息表")
 @QueryModel
 @ViewObject(
 		groups = {"UserSimpleVo", "UserListVo", "UserDetailVo"},
@@ -37,11 +37,11 @@ public class User {
 	@Query(value = {LK})
 	@Column(length = 11, unique = true)
 	@View(name = "phone", type = String.class, groups = {"UserSimpleVo"})
-
+	@Field(label = "手机号")
 	private String phone;
 	@Column(length = 20)
 	@AssociationView
-
+	@Field(label = "密码")
 	private String password;
 	@Column(length = 6, unique = true)
 	@MapView(name = "phoneMap")
@@ -65,6 +65,7 @@ public class User {
 	@Query({EQ, NEQ, LK, IN})
 	@TypeHandler(EnumTypeHandler.class)
 	@Enumerated(EnumType.ORDINAL)
+	@Field(label = "性别")
 	private Gender gender;
 	private Long province;
 	private Long city;

@@ -1,6 +1,5 @@
 package io.gd.generator.test.service;
 
-import io.gd.generator.test.entity.Account;
 import io.gd.generator.test.entity.User;
 
 /**
@@ -28,7 +27,7 @@ public interface AccountService {
 	public void deleteById(Integer id);
 
 	// http://localhost:8090?service=userService&method=deleteById&id=1&username=wuyu&password=1
-	public Integer insert(Account user);
+	//public Integer insert(Account user);
 
 
 	// http://localhost:8090?service=userService&method=testException
