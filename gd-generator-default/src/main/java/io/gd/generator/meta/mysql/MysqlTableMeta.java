@@ -6,6 +6,7 @@ import java.util.List;
 public class MysqlTableMeta {
 
 	private String table;
+	private String comment;
 	private Class<?> klass;
 
 	private List<MysqlColumnMeta> mysqlColumnMetas = new ArrayList<MysqlColumnMeta>();
@@ -43,10 +44,19 @@ public class MysqlTableMeta {
 		this.uniques = uniques;
 	}
 
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
 	public static class MysqlColumnMeta {
 
 		private String name;
 		private String type;
+		private String comment;
 
 		public String getName() {
 			return name;
@@ -64,6 +74,13 @@ public class MysqlTableMeta {
 			this.type = type;
 		}
 
+		public String getComment() {
+			return comment;
+		}
+
+		public void setComment(String comment) {
+			this.comment = comment;
+		}
 	}
 
 }
