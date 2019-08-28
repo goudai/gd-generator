@@ -2,7 +2,6 @@ package io.gd.generator.meta.jpa;
 
 /**
  * @author jianglin
- * @date 2019-08-28
  */
 public class JpaRepositoryMeta {
     private String repositoryPackage;
