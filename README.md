@@ -18,16 +18,20 @@
 <dependency>
     <groupId>io.github.goudai</groupId>
     <artifactId>gd-generator-api</artifactId>
-    <version>2.0.15</version>
+    <version>2.0.16</version>
 </dependency>
 <dependency>
     <groupId>io.github.goudai</groupId>
     <artifactId>gd-generator-default</artifactId>
-    <version>2.0.15</version>
+    <version>2.0.16</version>
 </dependency>
 ```
 
 ### ChangeLog
+
+v2.0.16
+* 添加对jpa的支持, 生成QueryModel, Repository
+
 v2.0.14 
 * 移除guave依赖
 * 升级相关依赖支持jdk11
@@ -804,4 +808,311 @@ public class UserAdminFullVo implements Serializable {
 	private List<UserAdminSimpleVo> teammates = new ArrayList<>();
 
 }
+```
+
+### Spring Data Jpa
+
+#### Entity
+
+```java
+@QueryModel
+@Where(clause = "is_delete = 'false'")
+@Entity
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "usr_users", uniqueConstraints = {
+        @UniqueConstraint(name = "UK_CHANNEL_OPENID", columnNames = {"channel", "openId"})
+})
+public class User implements Serializable {
+    private static final long serialVersionUID = 3709248849005085055L;
+
+    @Field(label = "ID")
+    @Id
+    @Column(columnDefinition = "bigint(20)")
+    private String id;
+
+    /**
+     * 渠道
+     */
+    @Query({Predicate.EQ, Predicate.IN})
+    @Field(label = "渠道")
+    @NotBlank
+    private String channel;
+
+    /**
+     * 昵称 (第三方登录使用首渠道昵称)
+     */
+    @Query({Predicate.EQ, Predicate.LK})
+    @Field(label = "昵称")
+    @NotBlank
+    private String nickName;
+
+    /**
+     * 微信openId
+     */
+    @Query({Predicate.EQ})
+    @Field(label = "OpenID")
+    private String openId;
+
+    /**
+     * 微信unionId
+     */
+    @Query({Predicate.EQ})
+    @Field(label = "微信UnionId")
+    private String unionId;
+
+    /**
+     * 性别 0: 男 1: 女
+     */
+    @Query({Predicate.EQ})
+    @Field(label = "性别", description = "0: 男 1: 女")
+    private Integer gender;
+
+    /**
+     * 手机号
+     */
+    @Query({Predicate.EQ})
+    @Field(label = "手机号")
+    private String phone;
+
+    /**
+     * 密码 (默认为空，无法登陆，需设置密码方能使用密码登录)
+     */
+    @Field(label = "密码")
+    private String password;
+
+    /**
+     * 头像
+     */
+    @Field(label = "头像")
+    private String avatar;
+
+    /**
+     * 是否删除 False(默认): 否 True: 是
+     */
+    @Query({Predicate.EQ, Predicate.NEQ})
+    @Field(label = "删除标记", description = "False(默认): 否 True: 是")
+    private Boolean isDelete = Boolean.FALSE;
+
+    /**
+     * 注册时间
+     */
+    @Query({Predicate.GTE, Predicate.LT})
+    @Field(label = "注册时间")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date registerTime;
+
+    /**
+     * 更新时间
+     */
+    @Field(label = "最后一次更新时间")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updateTime;
+
+
+    /**
+     * 最后活跃时间
+     */
+    @Query({Predicate.GTE, Predicate.LT})
+    @Field(label = "最后一次访问时间")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastActiveTime;
+
+    /**
+     * 生日
+     */
+    @Field(label = "生日")
+    private Date birthDay;
+
+    /**
+     * 是否禁用 0(默认): 正常 1: 禁用
+     */
+    @Query({Predicate.EQ, Predicate.NEQ})
+    @Field(label = "状态标记", description = "0(默认): 正常 1: 禁用")
+    private Integer state = 0;
+
+    /**
+     * 乐观锁
+     */
+    @Version
+    private Integer version = 0;
+}
+```
+
+#### Generator
+
+```java
+public class GdGenerator {
+
+    public static void main(String[] args) throws Exception {
+        String projectPath = System.getProperties().get("user.dir") + "";
+        Config config = new Config();
+        config.setEntityPackage("com.example.users.entity");
+        config.setUseLombok(true);
+        config.setQueryModelPackage("com.example.users.model.dto");
+        config.setQueryModelPath(projectPath + "/src/main/java/com/example/users/model/dto");
+
+        Generator.generate(config,
+                new JpaQueryModelHandler(),
+                new JpaRepositoryHandler("com.example.users.repository", projectPath + "/src/main/java/com/example" +
+                                                                 "/users/repository", false)
+                      );
+    }
+}
+```
+
+#### 生成结果
+
+##### QueryModel
+
+```java
+package com.example.users.model.dto;
+
+import com.example.users.entity.User;
+import org.springframework.data.jpa.domain.Specification;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.util.Objects;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import java.util.Date;
+
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserQueryModel implements Specification<User> {
+
+    private String channelEQ;
+
+    private String[] channelIN;
+
+    private String nickNameEQ;
+
+    private String nickNameLK;
+
+    private String openIdEQ;
+
+    private String unionIdEQ;
+
+    private Integer genderEQ;
+
+    private String phoneEQ;
+
+    private Boolean isDeleteEQ;
+
+    private Boolean isDeleteNEQ;
+
+    private Date registerTimeGTE;
+
+    private Date registerTimeLT;
+
+    private Date lastActiveTimeGTE;
+
+    private Date lastActiveTimeLT;
+
+    private Integer stateEQ;
+
+    private Integer stateNEQ;
+
+
+    @Override
+    public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+
+        Predicate defaultPredicate = criteriaBuilder.and();
+        if (Objects.nonNull(getChannelEQ())) {
+            Predicate p = criteriaBuilder.equal(root.get("channel"), getChannelEQ());
+            defaultPredicate = criteriaBuilder.and(defaultPredicate, p);
+        }
+        if (Objects.nonNull(getChannelIN())
+                && getChannelIN().length > 0) {
+            Predicate p = criteriaBuilder.and(root.get("channel").in(java.util.Arrays.asList(getChannelIN())));
+            defaultPredicate = criteriaBuilder.and(defaultPredicate, p);
+        }
+        if (Objects.nonNull(getNickNameEQ())) {
+            Predicate p = criteriaBuilder.equal(root.get("nickName"), getNickNameEQ());
+            defaultPredicate = criteriaBuilder.and(defaultPredicate, p);
+        }
+        if (Objects.nonNull(getNickNameLK())) {
+            Predicate p = criteriaBuilder.like(root.get("nickName"), "%" + getNickNameLK() + "%");
+            defaultPredicate = criteriaBuilder.and(defaultPredicate, p);
+        }
+        if (Objects.nonNull(getOpenIdEQ())) {
+            Predicate p = criteriaBuilder.equal(root.get("openId"), getOpenIdEQ());
+            defaultPredicate = criteriaBuilder.and(defaultPredicate, p);
+        }
+        if (Objects.nonNull(getUnionIdEQ())) {
+            Predicate p = criteriaBuilder.equal(root.get("unionId"), getUnionIdEQ());
+            defaultPredicate = criteriaBuilder.and(defaultPredicate, p);
+        }
+        if (Objects.nonNull(getGenderEQ())) {
+            Predicate p = criteriaBuilder.equal(root.get("gender"), getGenderEQ());
+            defaultPredicate = criteriaBuilder.and(defaultPredicate, p);
+        }
+        if (Objects.nonNull(getPhoneEQ())) {
+            Predicate p = criteriaBuilder.equal(root.get("phone"), getPhoneEQ());
+            defaultPredicate = criteriaBuilder.and(defaultPredicate, p);
+        }
+        if (Objects.nonNull(getIsDeleteEQ())) {
+            Predicate p = criteriaBuilder.equal(root.get("isDelete"), getIsDeleteEQ());
+            defaultPredicate = criteriaBuilder.and(defaultPredicate, p);
+        }
+        if (Objects.nonNull(getIsDeleteNEQ())) {
+            Predicate p = criteriaBuilder.notEqual(root.get("isDelete"), getIsDeleteNEQ());
+            defaultPredicate = criteriaBuilder.and(defaultPredicate, p);
+        }
+        if (Objects.nonNull(getRegisterTimeGTE())) {
+            Predicate p = criteriaBuilder.greaterThanOrEqualTo(root.get("registerTime"), getRegisterTimeGTE());
+            defaultPredicate = criteriaBuilder.and(defaultPredicate, p);
+        }
+        if (Objects.nonNull(getRegisterTimeLT())) {
+            Predicate p = criteriaBuilder.lessThan(root.get("registerTime"), getRegisterTimeLT());
+            defaultPredicate = criteriaBuilder.and(defaultPredicate, p);
+        }
+        if (Objects.nonNull(getLastActiveTimeGTE())) {
+            Predicate p = criteriaBuilder.greaterThanOrEqualTo(root.get("lastActiveTime"), getLastActiveTimeGTE());
+            defaultPredicate = criteriaBuilder.and(defaultPredicate, p);
+        }
+        if (Objects.nonNull(getLastActiveTimeLT())) {
+            Predicate p = criteriaBuilder.lessThan(root.get("lastActiveTime"), getLastActiveTimeLT());
+            defaultPredicate = criteriaBuilder.and(defaultPredicate, p);
+        }
+        if (Objects.nonNull(getStateEQ())) {
+            Predicate p = criteriaBuilder.equal(root.get("state"), getStateEQ());
+            defaultPredicate = criteriaBuilder.and(defaultPredicate, p);
+        }
+        if (Objects.nonNull(getStateNEQ())) {
+            Predicate p = criteriaBuilder.notEqual(root.get("state"), getStateNEQ());
+            defaultPredicate = criteriaBuilder.and(defaultPredicate, p);
+        }
+        return defaultPredicate;
+    }
+}
+```
+
+##### Repository
+
+```java
+package com.example.users.repository;
+
+import com.example.users.entity.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+
+import java.util.Optional;
+
+public interface UserRepository extends JpaRepository<User, String>, JpaSpecificationExecutor<User> {
+
+}
+
 ```
