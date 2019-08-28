@@ -100,7 +100,7 @@ public class ${meta.type} implements Specification<${meta.entityName}> {
             Predicate p = criteriaBuilder.like(root.get("${queryModelField.fieldName}"), "%" + get${queryModelField.name?cap_first}());
         <#break>
     <#case "IN">
-            Predicate p = criteriaBuilder.and(root.get("${queryModelField.fieldName}").in(get${queryModelField.name?cap_first}()));
+            Predicate p = criteriaBuilder.and(root.get("${queryModelField.fieldName}").in(java.util.Arrays.asList(get${queryModelField.name?cap_first}())));
         <#break>
     </#switch>
             defaultPredicate = criteriaBuilder.and(defaultPredicate, p);
