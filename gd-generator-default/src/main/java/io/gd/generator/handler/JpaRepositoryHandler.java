@@ -16,28 +16,29 @@ import java.util.Map;
  */
 public class JpaRepositoryHandler extends ScopedHandler<JpaRepositoryMeta> {
 
+    private String jpaRepositoryPackage;
+    private String jpaRepositoryPath;
     private boolean overwrite;
 
-    public JpaRepositoryHandler(boolean overwrite) {
+    public JpaRepositoryHandler(String jpaRepositoryPackage, String jpaRepositoryPath, boolean overwrite) {
+        ConfigChecker.notBlank(jpaRepositoryPackage, "jpaRepositoryPackage is miss");
+        ConfigChecker.notBlank(jpaRepositoryPath, "jpaRepositoryPath is miss");
+        this.jpaRepositoryPackage = jpaRepositoryPackage;
+        this.jpaRepositoryPath = jpaRepositoryPath;
         this.overwrite = overwrite;
     }
 
-    public JpaRepositoryHandler() {
-        this(false);
+    public JpaRepositoryHandler(String jpaRepositoryPackage, String jpaRepositoryPath) {
+        this(jpaRepositoryPackage, jpaRepositoryPath, false);
     }
 
     private String getRepositoryFilePath(Class<?> entityClass) {
-        return config.getJpaRepositoryPath() + File.separator + entityClass.getSimpleName() + "Repository.java";
+        return jpaRepositoryPath + File.separator + entityClass.getSimpleName() + "Repository.java";
     }
 
     @Override
     protected void init() throws Exception {
         super.init();
-        ConfigChecker.notBlank(config.getJpaRepositoryPackage(), "config jpaRepositoryPackage is miss");
-        ConfigChecker.notBlank(config.getJpaRepositoryPath(), "config jpaRepositoryPath is miss");
-
-        String jpaRepositoryPath = config.getJpaRepositoryPath();
-
         /* 初始化文件夹 */
         File jpaRepositoryPathDir = new File(jpaRepositoryPath);
         if (!jpaRepositoryPathDir.exists()) {
@@ -63,7 +64,7 @@ public class JpaRepositoryHandler extends ScopedHandler<JpaRepositoryMeta> {
         JpaRepositoryMeta meta = new JpaRepositoryMeta();
         meta.setEntityName(entityClass.getName());
         meta.setEntitySimpleName(entityClass.getSimpleName());
-        meta.setRepositoryPackage(config.getJpaRepositoryPackage());
+        meta.setRepositoryPackage(jpaRepositoryPackage);
         return meta;
     }
 

@@ -21,10 +21,6 @@ public class Config {
 	private String mybatisMapperPath;
 	private String mybatisXmlPath;
 
-	/* jpa */
-	private String jpaRepositoryPackage;
-	private String jpaRepositoryPath;
-
 	/* mysql */
 	private String url = "jdbc:mysql://127.0.0.1/test";
 	private String username = "root";
@@ -141,24 +137,6 @@ public class Config {
 
 	public void setMybatisXmlPath(String mybatisXmlPath) {
 		this.mybatisXmlPath = mybatisXmlPath;
-	}
-
-	public String getJpaRepositoryPackage() {
-		return jpaRepositoryPackage;
-	}
-
-	public Config setJpaRepositoryPackage(String jpaRepositoryPackage) {
-		this.jpaRepositoryPackage = jpaRepositoryPackage;
-		return this;
-	}
-
-	public String getJpaRepositoryPath() {
-		return jpaRepositoryPath;
-	}
-
-	public Config setJpaRepositoryPath(String jpaRepositoryPath) {
-		this.jpaRepositoryPath = jpaRepositoryPath;
-		return this;
 	}
 
 	public String getUrl() {
