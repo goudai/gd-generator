@@ -22,6 +22,10 @@
             <name>qingmu</name>
             <email>247687009@qq.com</email>
         </developer>
+        <developer>
+            <name>jianglin</name>
+            <email>fx.jianglin@126.com</email>
+        </developer>
     </developers>
 
     <licenses>
@@ -88,7 +92,7 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
-                <version>2.1.4</version>
+                <version>2.10.0.pr1</version>
             </dependency>
             <dependency>
                 <groupId>io.github.goudai</groupId>
