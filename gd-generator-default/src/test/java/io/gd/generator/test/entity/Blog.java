@@ -8,12 +8,9 @@ import io.gd.generator.annotation.view.View;
 import io.gd.generator.annotation.view.ViewObject;
 import io.gd.generator.api.query.Predicate;
 
-import javax.persistence.Entity;
-
 @QueryModel
 @ViewObject(groups = {"BlogVo", "UserBlogVo"})
 @Type(label = "博客")
-@Entity
 public class Blog {
 
 	@Query(value = {Predicate.EQ})
