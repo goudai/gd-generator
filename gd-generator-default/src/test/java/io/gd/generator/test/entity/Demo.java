@@ -25,7 +25,6 @@ public class Demo {
 
     @Field(label = "创建日期")
     @Default("2019-12-26")
-    @Temporal(TemporalType.TIMESTAMP)
     private Date createtime;
 
     @Field(label = "更新时间")
