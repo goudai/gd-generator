@@ -5,6 +5,8 @@ import io.gd.generator.meta.mysql.MysqlTableMeta;
 import io.gd.generator.meta.mysql.MysqlTableMeta.MysqlColumnMeta;
 import io.gd.generator.util.ClassHelper;
 import io.gd.generator.util.StringUtils;
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -210,7 +212,6 @@ public class MysqlHandler extends ScopedHandler<MysqlTableMeta> {
 
     private String getMysqlType(Field field) {
         Column column = field.getDeclaredAnnotation(Column.class);
-        NotNull notNull = field.getDeclaredAnnotation(NotNull.class);
         Default aDefault = field.getDeclaredAnnotation(Default.class);
 
         String notnull = "", primarykey = "", defaultstr = "";
@@ -228,7 +229,9 @@ public class MysqlHandler extends ScopedHandler<MysqlTableMeta> {
             defaultstr = "DEFAULT " + defalutVal;
         }
 
-        if (notNull != null) {
+        if (field.getDeclaredAnnotation(NotNull.class) != null
+                || field.getDeclaredAnnotation(NotBlank.class) != null
+                || field.getDeclaredAnnotation(NotEmpty.class) != null) {
             notnull = "NOT NULL";
         }
 
