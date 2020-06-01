@@ -10,7 +10,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * @author jianglin
- * @date 2018/8/13
+ * date 2018/8/13
  */
 @Documented
 @Target({METHOD, FIELD})

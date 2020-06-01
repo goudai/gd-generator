@@ -9,6 +9,8 @@ public class Main {
 
 		Config config = new Config();
 		config.setGenLogFile("gd-test.log");
+		config.setUseEnumOrdinalTypeHandlerByDefault(false);
+		config.setEscapeColumn(true);
 		/*config.setUrl("jdbc:mysql://192.168.10.240/sk");
 		config.setEntityPackage("com.sk.entity");
 		config.setUsername("root");
@@ -18,10 +20,10 @@ public class Main {
 
 		config.setEntityPackage("io.gd.generator.test.entity");
 		config.setUseLombok(false);
-		config.setMybatisXmlPath("/Users/freeman/logs/amapper");
+		config.setMybatisXmlPath("/tmp/gd/mapper");
 
 		config.setQueryModelPackage("io.gd.generator.test.model.query");
-		config.setQueryModelPath("D:\\Work\\Workspace2016\\gd-generator\\src\\test\\java\\io\\gd\\generator\\test\\model\\query\\");
+		config.setQueryModelPath("/tmp/gd/xml");
 
 		Generator.generate(config
 //				,new VoHandler("io.gd.generator.test.vo", "/Users/freeman/IdeaProjects/gd-generator/gd-generator-default/src/test/java/io/gd/generator/test/vo", true)

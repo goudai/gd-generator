@@ -8,6 +8,9 @@ public class Config {
 
 	private String entityPackage;
 
+	private boolean useEnumOrdinalTypeHandlerByDefault = true;
+	private boolean escapeColumn = false;
+
 	/* java query model */
 	private String queryModelPackage;
 	private String queryModelPath;
@@ -176,4 +179,19 @@ public class Config {
 		this.defaultEncoding = defaultEncoding;
 	}
 
+	public boolean isUseEnumOrdinalTypeHandlerByDefault() {
+		return useEnumOrdinalTypeHandlerByDefault;
+	}
+
+	public void setUseEnumOrdinalTypeHandlerByDefault(boolean useEnumOrdinalTypeHandlerByDefault) {
+		this.useEnumOrdinalTypeHandlerByDefault = useEnumOrdinalTypeHandlerByDefault;
+	}
+
+	public boolean isEscapeColumn() {
+		return escapeColumn;
+	}
+
+	public void setEscapeColumn(boolean escapeColumn) {
+		this.escapeColumn = escapeColumn;
+	}
 }

@@ -61,6 +61,14 @@ public class MysqlHandler extends ScopedHandler<MysqlTableMeta> {
         MysqlTableMeta mtm = new MysqlTableMeta();
         mtm.setTable(ClassHelper.resolveTableName(entityClass));
         mtm.setKlass(entityClass);
+
+        io.gd.generator.annotation.Type type = entityClass.getDeclaredAnnotation(io.gd.generator.annotation.Type.class);
+        if (type != null) {
+            mtm.setComment(type.label());
+        }
+        if (StringUtils.isBlank(mtm.getComment())) {
+            mtm.setComment(table.schema());
+        }
         UniqueConstraint[] uniqueConstraints = table.uniqueConstraints();
         Arrays.asList(uniqueConstraints).forEach((un) -> {
             String[] columnNames = un.columnNames();
@@ -100,13 +108,20 @@ public class MysqlHandler extends ScopedHandler<MysqlTableMeta> {
                 DatabaseMetaData metaData = connection.getMetaData();
                 String string = metaData.getURL().toString();
                 String db = string.substring(string.lastIndexOf("/") + 1);
-
+                if(db.contains("?")){
+                    db = db.substring(0, db.indexOf("?"));
+                }
                 for (MysqlColumnMeta cm : merged.getMysqlColumnMetas()) {
                     String sql = "SELECT * FROM information_schema.columns WHERE table_schema='" + db + "' and table_name = '" + table
                             + "' AND column_name = '" + cm.getName() + "'";
                     try (ResultSet rs = st.executeQuery(sql)) {
                         if (!rs.next()) {
                             String addColumn = "ALTER TABLE `" + table + "` ADD COLUMN `" + cm.getName() + "` " + cm.getType();
+
+                            if (StringUtils.isNotBlank(cm.getComment())) {
+                                addColumn += " COMMENT '" + cm.getComment() + "'";
+                            }
+
                             st.executeUpdate(addColumn);
                             genLog.info(addColumn);
                             logger.info(addColumn);
@@ -169,16 +184,23 @@ public class MysqlHandler extends ScopedHandler<MysqlTableMeta> {
     private MysqlColumnMeta parseColumn(Field field) {
         String type = getMysqlType(field);
         Column column = field.getDeclaredAnnotation(Column.class);
-        String name;
-        if (column != null)
-            name = column.name();
-        else
+        String name, label = null;
+        if (column != null) {
+            name = StringUtils.isBlank(column.name()) ? field.getName() : column.name();
+        } else {
             name = field.getName();
-        if (!StringUtils.isNotBlank(name))
-            name = field.getName();
+        }
+
+        final io.gd.generator.annotation.Field fieldAnno = field.getDeclaredAnnotation(io.gd.generator.annotation.Field.class);
+
+        if (fieldAnno != null) {
+            label = fieldAnno.label();
+        }
+
         MysqlColumnMeta mysqlColumnMeta = new MysqlColumnMeta();
         mysqlColumnMeta.setName(StringUtils.camelToUnderline(name));
         mysqlColumnMeta.setType(type);
+        mysqlColumnMeta.setComment(label);
         return mysqlColumnMeta;
     }
 
