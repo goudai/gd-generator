@@ -22,7 +22,7 @@ v2.0.15
 * 修复在spring boot下使用stringProlie标签配置logback后，导致生成日志不能正确输出到console的问题
 
 
-v2.0.17
+v2.0.16
 * 添加对jpa，生成QueryModel, Repository 支持联合主键支持
 
        
@@ -31,12 +31,12 @@ v2.0.17
 <dependency>
     <groupId>io.github.goudai</groupId>
     <artifactId>gd-generator-api</artifactId>
-    <version>2.0.17</version>
+    <version>2.0.16</version>
 </dependency>
 <dependency>
     <groupId>io.github.goudai</groupId>
     <artifactId>gd-generator-default</artifactId>
-    <version>2.0.17</version>
+    <version>2.0.16</version>
 </dependency>
 ```
 
