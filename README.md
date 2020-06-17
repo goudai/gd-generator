@@ -21,11 +21,9 @@ v2.0.14
 v2.0.15  
 * 修复在spring boot下使用stringProlie标签配置logback后，导致生成日志不能正确输出到console的问题
 
-v2.0.16
-* 添加对jpa的支持, 生成QueryModel, Repository
 
 v2.0.17
-* 添加对jpa联合主键支持
+* 添加对jpa，生成QueryModel, Repository 支持联合主键支持
 
        
 ### maven 依赖
