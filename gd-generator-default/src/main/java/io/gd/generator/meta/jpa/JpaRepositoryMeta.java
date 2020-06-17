@@ -1,5 +1,8 @@
 package io.gd.generator.meta.jpa;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * @author jianglin
  */
@@ -8,6 +11,7 @@ public class JpaRepositoryMeta {
     private String entityName;
     private String idType;
     private String entitySimpleName;
+    private Set<String> importFullTypes = new HashSet<>();
 
     public String getRepositoryPackage() {
         return repositoryPackage;
@@ -43,5 +47,14 @@ public class JpaRepositoryMeta {
     public JpaRepositoryMeta setEntitySimpleName(String entitySimpleName) {
         this.entitySimpleName = entitySimpleName;
         return this;
+    }
+
+    public JpaRepositoryMeta addImportFullType(String s) {
+        this.importFullTypes.add(s);
+        return this;
+    }
+
+    public Set<String> getImportFullTypes() {
+        return this.importFullTypes;
     }
 }
