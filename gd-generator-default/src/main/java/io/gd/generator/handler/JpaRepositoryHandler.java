@@ -3,6 +3,7 @@ package io.gd.generator.handler;
 import io.gd.generator.meta.jpa.JpaRepositoryMeta;
 import io.gd.generator.util.ConfigChecker;
 
+import javax.persistence.EmbeddedId;
 import javax.persistence.Id;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -86,9 +87,14 @@ public class JpaRepositoryHandler extends ScopedHandler<JpaRepositoryMeta> {
                 merged.setIdType(field.getType().getSimpleName());
                 break;
             }
+            EmbeddedId embeddedId = field.getDeclaredAnnotation(EmbeddedId.class);
+            if (embeddedId != null) {
+                merged.setIdType(field.getType().getSimpleName());
+                merged.addImportFullType(field.getType().getName());
+            }
         }
+        ConfigChecker.notBlank(merged.getIdType(), "ID must not be null");
         model.put("meta", merged);
-        String mapper = renderTemplate("jpaRepository", model);
         File file = new File(getRepositoryFilePath(entityClass));
 
         if (file.exists()) {
@@ -99,6 +105,7 @@ public class JpaRepositoryHandler extends ScopedHandler<JpaRepositoryMeta> {
             logger.info("overwrite {}", file.getName());
         }
         file.createNewFile();
+        String mapper = renderTemplate("jpaRepository", model);
         try (FileOutputStream os = new FileOutputStream(file)) {
             os.write(mapper.getBytes());
         }
