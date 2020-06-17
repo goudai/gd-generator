@@ -12,29 +12,35 @@
 * 自动驼峰装换
 * 生成VO对象，提供四种注解，@View  @AssociationView @CollectionView @MapView
 * 可在开发中运行（增量运行 可随时修改，增加，删除类属性后继续运行，此时将同步数据库表结构并给出响应修复sql，自动增量的保存开发书写的个性的mybatis中的xml语句）
+
+### ChangeLog
+v2.0.14 
+* 移除guave依赖
+* 升级相关依赖支持jdk11
+
+v2.0.15  
+* 修复在spring boot下使用stringProlie标签配置logback后，导致生成日志不能正确输出到console的问题
+
+v2.0.16
+* 添加对jpa的支持, 生成QueryModel, Repository
+
+v2.0.17
+* 添加对jpa联合主键支持
+
        
 ### maven 依赖
 ```xml
 <dependency>
     <groupId>io.github.goudai</groupId>
     <artifactId>gd-generator-api</artifactId>
-    <version>2.0.16</version>
+    <version>2.0.17</version>
 </dependency>
 <dependency>
     <groupId>io.github.goudai</groupId>
     <artifactId>gd-generator-default</artifactId>
-    <version>2.0.16</version>
+    <version>2.0.17</version>
 </dependency>
 ```
-
-### ChangeLog
-
-v2.0.16
-* 添加对jpa的支持, 生成QueryModel, Repository
-
-v2.0.14 
-* 移除guave依赖
-* 升级相关依赖支持jdk11
 
 ### 注解对照表
 #### @ViewObject
