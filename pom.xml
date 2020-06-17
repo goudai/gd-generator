@@ -221,6 +221,7 @@
 
     </build>
     <!--
+    mvn release:prepare -Darguments="-Dgpg.passphrase=*****" -Prelease
     mvn release:perform  -Darguments="-Dgpg.passphrase=*****" -Prelease
     -->
     <profiles>
