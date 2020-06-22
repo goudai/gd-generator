@@ -5,12 +5,12 @@ import io.gd.generator.meta.mysql.MysqlTableMeta;
 import io.gd.generator.meta.mysql.MysqlTableMeta.MysqlColumnMeta;
 import io.gd.generator.util.ClassHelper;
 import io.gd.generator.util.StringUtils;
-import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
