@@ -1,6 +1,5 @@
 package io.gd.generator.handler;
 
-import io.gd.generator.annotation.Default;
 import io.gd.generator.meta.mysql.MysqlTableMeta;
 import io.gd.generator.meta.mysql.MysqlTableMeta.MysqlColumnMeta;
 import io.gd.generator.util.ClassHelper;
@@ -9,9 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
@@ -25,8 +21,6 @@ public class MysqlHandler extends ScopedHandler<MysqlTableMeta> {
     static final Logger logger = LoggerFactory.getLogger(MysqlHandler.class);
 
     protected Connection connection;
-
-    private static String SPACE = " ";
 
     private boolean useGeneratedKeys = true;
 
@@ -211,145 +205,111 @@ public class MysqlHandler extends ScopedHandler<MysqlTableMeta> {
     }
 
     private String getMysqlType(Field field) {
-        Column column = field.getDeclaredAnnotation(Column.class);
-        Default aDefault = field.getDeclaredAnnotation(Default.class);
-
-        String notnull = "", primarykey = "", defaultstr = "";
-
-        if (aDefault != null) {
-            notnull = "NOT NULL";
-
-            String defalutVal = "'" + aDefault.value() + "'";
-
-            //关键字不加引号
-            if (aDefault.type() == Default.DefaultType.DBKEY) {
-                defalutVal = aDefault.value();
-            }
-
-            defaultstr = "DEFAULT " + defalutVal;
-        }
-
-        if (field.getDeclaredAnnotation(NotNull.class) != null
-                || field.getDeclaredAnnotation(NotBlank.class) != null
-                || field.getDeclaredAnnotation(NotEmpty.class) != null) {
-            notnull = "NOT NULL";
-        }
-
-        if (column != null) {
-            String columnDefinition = column.columnDefinition();
-
-            if (!column.nullable()) {
-                notnull = "NOT NULL";
-            }
-
-            if (StringUtils.isNotBlank(columnDefinition)) {
-                if (!columnDefinition.toUpperCase().contains(notnull)) {
-                    columnDefinition += SPACE + notnull;
-                }
-                if (!columnDefinition.toUpperCase().contains(defaultstr)) {
-                    columnDefinition += SPACE + defaultstr;
-                }
-
-                return columnDefinition;
-            }
-        }
-
-        Id id = field.getDeclaredAnnotation(Id.class);
-
-        if (id != null) {
-            primarykey = "PRIMARY KEY";
-
-            if (useGeneratedKeys) {
-                primarykey = "AUTO_INCREMENT" + SPACE + primarykey;
-            }
-        }
-
         Type genericType = field.getType();
-        String typeName = genericType.getTypeName().toLowerCase();
+        String typeName = genericType.getTypeName();
+        Lob lob = field.getDeclaredAnnotation(Lob.class);
+        if (lob != null) {
+            if (field.getType().isAssignableFrom(String.class))
+                return "longtext";
+            return "blob";
+        }
 
-        String columntype = "";
+        if (typeName.toUpperCase().contains("boolean".toUpperCase()))
+            return "bit(1)";
 
-        if (field.getDeclaredAnnotation(Lob.class) != null) {
-            columntype = "blob";
-
-            if (field.getType().isAssignableFrom(String.class)) {
-                columntype = "longtext";
-            }
-        }else if (typeName.contains("boolean")) {
-            columntype = "bit(1)";
-        }else if (typeName.contains("date")) {
-            columntype = "datetime";
-
+        if (typeName.toUpperCase().contains("Date".toUpperCase())) {
             Temporal dateType = field.getDeclaredAnnotation(Temporal.class);
             if (dateType != null) {
                 TemporalType value = dateType.value();
-                if (value != null) {
-                    columntype = value.name().toLowerCase();
-                }
+                if (value != null)
+                    if (value.equals(TemporalType.DATE))
+                        return "date";
+                    else if (value.equals(TemporalType.TIMESTAMP))
+                        return "datetime";
+                    else if (value.equals(TemporalType.TIME))
+                        return "time";
             }
-        } else if (typeName.contains("long")) {
+            return "datetime";
+        }
+        if (typeName.toUpperCase().contains("long".toUpperCase())) {
+            Column column = field.getDeclaredAnnotation(Column.class);
             int length = 32;
             if (column != null) {
-                if (column.length() != 255 && column.length() > 0 && column.length() < 255) {
-                    length = column.length();
+                final int length1 = column.length();
+                if (length1 != 255 && length1 > 0 && length1 < 255) {
+                    length = length1;
                 }
             }
-            columntype = "bigInt(" + length + ")";
-        }else if (typeName.contains("int")) {
-            columntype = "int(11)";
-        }else if (typeName.contains("string")) {
+            Id id = field.getDeclaredAnnotation(Id.class);
+            if (id == null)
+                return "bigInt(" + length + ")";
+            if (useGeneratedKeys)
+                return "bigInt(" + length + ") not null AUTO_INCREMENT PRIMARY KEY";
+            return "bigInt(" + length + ") not null PRIMARY KEY";
+        }
+        if (typeName.toUpperCase().contains("int".toUpperCase())) {
+            Id id = field.getDeclaredAnnotation(Id.class);
+            if (id == null)
+                return "int(11)";
+            if (useGeneratedKeys)
+                return "int(11) not null AUTO_INCREMENT PRIMARY KEY";
+            return "int(11) not null  PRIMARY KEY";
+        }
+
+        if (typeName.toUpperCase().contains("string".toUpperCase())) {
+            Id id = field.getDeclaredAnnotation(Id.class);
             if (id == null) {
-                if (column == null) {
-                    columntype = "varchar(255)";
-                } else {
-                    int length = column.length();
-                    columntype = "varchar(" + length + ")";
+                Column column = field.getDeclaredAnnotation(Column.class);
+                if (column == null)
+                    return "varchar(255)";
+                else {
+                    final String columnDefinition = column.columnDefinition();
+                    if (columnDefinition == null || "".equals(columnDefinition)) {
+                        int length = column.length();
+                        return "varchar(" + length + ")";
+                    }
+                    return columnDefinition;
                 }
-            }else{
-                columntype="BIGINT(20)";
             }
-        }else if (field.getType().isEnum()) {
+            if (useGeneratedKeys)
+                return "BIGINT(20) not null AUTO_INCREMENT PRIMARY KEY";
+            return "BIGINT(20) not null  PRIMARY KEY";
+        }
+
+        if (field.getType().isEnum()) {
             Enumerated enumd = field.getDeclaredAnnotation(Enumerated.class);
+            Column column = field.getDeclaredAnnotation(Column.class);
             int length = 255;
-            if (column != null && column.length() > 0) {
+            if(column!= null && column.length() > 0){
                 length = column.length();
             }
             if (enumd != null) {
                 EnumType value = enumd.value();
-                if (value.equals(EnumType.ORDINAL)) {
-                    columntype = "int(2)";
-                }
-                columntype = "varchar(" + length + ")";
+                if (value.equals(EnumType.ORDINAL))
+                    return "int(2)";
+                return "varchar("+length+")";
             }
-            columntype = "int(2)";
-        } else if (field.getType().isAssignableFrom(BigDecimal.class)) {
+            return "int(2)";
+        }
+        if (field.getType().isAssignableFrom(BigDecimal.class)) {
+            Column column = field.getAnnotation(Column.class);
             if (column == null) {
-                columntype = "decimal(19,2)";
+                return "decimal(19,2)";
             } else {
                 int precision = column.precision() == 0 ? 19 : column.precision();
                 int scale = column.scale() == 0 ? 19 : column.scale();
-                columntype = "decimal(" + precision + "," + scale + ")";
-            }
-        }else if (field.getType().isAssignableFrom(Float.class)) {
-            if (column == null) {
-                columntype = "float(9,2)";
-            } else {
-                int precision = column.precision() == 0 ? 9 : column.precision();
-                int scale = column.scale() == 0 ? 9 : column.scale();
-                columntype = "float(" + precision + "," + scale + ")";
-            }
-        } else if (field.getType().isAssignableFrom(Double.class)) {
-            if (column == null) {
-                columntype = "double(19,2)";
-            } else {
-                int precision = column.precision() == 0 ? 19 : column.precision();
-                int scale = column.scale() == 0 ? 19 : column.scale();
-                columntype = "double(" + precision + "," + scale + ")";
+                return "decimal(" + precision + "," + scale + ")";
             }
         }
-
-        if (StringUtils.isNotBlank(columntype)) {
-            return columntype + SPACE + notnull + SPACE + defaultstr + SPACE + primarykey;
+        if (field.getType().isAssignableFrom(Double.class)) {
+            Column column = field.getAnnotation(Column.class);
+            if (column == null) {
+                return "double(19,2)";
+            } else {
+                int precision = column.precision() == 0 ? 19 : column.precision();
+                int scale = column.scale() == 0 ? 19 : column.scale();
+                return "double(" + precision + "," + scale + ")";
+            }
         }
 
         throw new RuntimeException(typeName + " 无法解析。请检查getMysqlType解析方法");
