@@ -30,12 +30,21 @@ public class MysqlHandler extends ScopedHandler<MysqlTableMeta> {
 
     private boolean useGeneratedKeys = true;
 
+    /**
+     * 是否全部映射到表，false时default\notnull将不起作用
+     */
+    private boolean mappingAll = false;
+
     public MysqlHandler() {
         this.useGeneratedKeys = true;
     }
 
     public MysqlHandler(boolean useGeneratedKeys) {
         this.useGeneratedKeys = useGeneratedKeys;
+    }
+
+    public void setMappingAll(boolean mappingAll) {
+        this.mappingAll = mappingAll;
     }
 
     @Override
@@ -114,7 +123,7 @@ public class MysqlHandler extends ScopedHandler<MysqlTableMeta> {
                 DatabaseMetaData metaData = connection.getMetaData();
                 String string = metaData.getURL().toString();
                 String db = string.substring(string.lastIndexOf("/") + 1);
-                if(db.contains("?")){
+                if (db.contains("?")) {
                     db = db.substring(0, db.indexOf("?"));
                 }
                 for (MysqlColumnMeta cm : merged.getMysqlColumnMetas()) {
@@ -212,45 +221,47 @@ public class MysqlHandler extends ScopedHandler<MysqlTableMeta> {
 
     private String getMysqlType(Field field) {
         Column column = field.getDeclaredAnnotation(Column.class);
-        Default aDefault = field.getDeclaredAnnotation(Default.class);
-
         String notnull = "", primarykey = "", defaultstr = "";
 
-        if (aDefault != null) {
-            notnull = "NOT NULL";
+        if (mappingAll) {
+            Default aDefault = field.getDeclaredAnnotation(Default.class);
 
-            String defalutVal = "'" + aDefault.value() + "'";
+            if (aDefault != null) {
+                notnull = "NOT NULL";
 
-            //关键字不加引号
-            if (aDefault.type() == Default.DefaultType.DBKEY) {
-                defalutVal = aDefault.value();
+                String defalutVal = "'" + aDefault.value() + "'";
+
+                //关键字不加引号
+                if (aDefault.type() == Default.DefaultType.DBKEY) {
+                    defalutVal = aDefault.value();
+                }
+
+                defaultstr = "DEFAULT " + defalutVal;
             }
 
-            defaultstr = "DEFAULT " + defalutVal;
-        }
-
-        if (field.getDeclaredAnnotation(NotNull.class) != null
-                || field.getDeclaredAnnotation(NotBlank.class) != null
-                || field.getDeclaredAnnotation(NotEmpty.class) != null) {
-            notnull = "NOT NULL";
-        }
-
-        if (column != null) {
-            String columnDefinition = column.columnDefinition();
-
-            if (!column.nullable()) {
+            if (field.getDeclaredAnnotation(NotNull.class) != null
+                    || field.getDeclaredAnnotation(NotBlank.class) != null
+                    || field.getDeclaredAnnotation(NotEmpty.class) != null) {
                 notnull = "NOT NULL";
             }
 
-            if (StringUtils.isNotBlank(columnDefinition)) {
-                if (!columnDefinition.toUpperCase().contains(notnull)) {
-                    columnDefinition += SPACE + notnull;
-                }
-                if (!columnDefinition.toUpperCase().contains(defaultstr)) {
-                    columnDefinition += SPACE + defaultstr;
+            if (column != null) {
+                String columnDefinition = column.columnDefinition();
+
+                if (!column.nullable()) {
+                    notnull = "NOT NULL";
                 }
 
-                return columnDefinition;
+                if (StringUtils.isNotBlank(columnDefinition)) {
+                    if (!columnDefinition.toUpperCase().contains(notnull)) {
+                        columnDefinition += SPACE + notnull;
+                    }
+                    if (!columnDefinition.toUpperCase().contains(defaultstr)) {
+                        columnDefinition += SPACE + defaultstr;
+                    }
+
+                    return columnDefinition;
+                }
             }
         }
 
@@ -275,9 +286,9 @@ public class MysqlHandler extends ScopedHandler<MysqlTableMeta> {
             if (field.getType().isAssignableFrom(String.class)) {
                 columntype = "longtext";
             }
-        }else if (typeName.contains("boolean")) {
+        } else if (typeName.contains("boolean")) {
             columntype = "bit(1)";
-        }else if (typeName.contains("date")) {
+        } else if (typeName.contains("date")) {
             columntype = "datetime";
 
             Temporal dateType = field.getDeclaredAnnotation(Temporal.class);
@@ -295,9 +306,9 @@ public class MysqlHandler extends ScopedHandler<MysqlTableMeta> {
                 }
             }
             columntype = "bigInt(" + length + ")";
-        }else if (typeName.contains("int")) {
+        } else if (typeName.contains("int")) {
             columntype = "int(11)";
-        }else if (typeName.contains("string")) {
+        } else if (typeName.contains("string")) {
             if (id == null) {
                 if (column == null) {
                     columntype = "varchar(255)";
@@ -305,10 +316,10 @@ public class MysqlHandler extends ScopedHandler<MysqlTableMeta> {
                     int length = column.length();
                     columntype = "varchar(" + length + ")";
                 }
-            }else{
-                columntype="BIGINT(20)";
+            } else {
+                columntype = "BIGINT(20)";
             }
-        }else if (field.getType().isEnum()) {
+        } else if (field.getType().isEnum()) {
             Enumerated enumd = field.getDeclaredAnnotation(Enumerated.class);
             int length = 255;
             if (column != null && column.length() > 0) {
@@ -330,7 +341,7 @@ public class MysqlHandler extends ScopedHandler<MysqlTableMeta> {
                 int scale = column.scale() == 0 ? 19 : column.scale();
                 columntype = "decimal(" + precision + "," + scale + ")";
             }
-        }else if (field.getType().isAssignableFrom(Float.class)) {
+        } else if (field.getType().isAssignableFrom(Float.class)) {
             if (column == null) {
                 columntype = "float(9,2)";
             } else {
@@ -349,7 +360,11 @@ public class MysqlHandler extends ScopedHandler<MysqlTableMeta> {
         }
 
         if (StringUtils.isNotBlank(columntype)) {
-            return columntype + SPACE + notnull + SPACE + defaultstr + SPACE + primarykey;
+            if (mappingAll) {
+                return columntype + SPACE + notnull + SPACE + defaultstr + SPACE + primarykey;
+            } else {
+                return columntype + SPACE + primarykey;
+            }
         }
 
         throw new RuntimeException(typeName + " 无法解析。请检查getMysqlType解析方法");
