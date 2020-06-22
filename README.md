@@ -1153,19 +1153,28 @@ schema    | String    | 表注释
 属性 | 类型 | 描述
 -----|------|----
 label    | String    | 字段注释
-columnDefinition    | String    | 数据库字段类型，不设置自动根据java类型转换
 
+以下注解需使用AllMappingMysqlHandler且mappingAll为True才会生效
 
-##### @Default
-生成表字段时，设置默认值
-
-属性 | 类型 | 描述
------|------|----
-value    | String    | 要设置的默认值
-type    | DefaultType    | 值类型，VALUE为设置的值，DBKEY为数据库关键字，用于设置当前日期之类的特殊默认值
-
-
-##### @javax.validation.constraints.NotBlank
-##### @javax.validation.constraints.NotEmpty
-##### @javax.validation.constraints.NotNull
-设置表字段为NOT NULL
+>##### @Column
+>生成字段信息
+>
+>属性 | 类型 | 描述
+>-----|------|----
+>nullable    | boolean    |    用于控制NOT NULL
+>columnDefinition    | String    | 数据库字段类型，不设置自动根据java类型转换
+>
+>
+>##### @Default
+>生成表字段时，设置默认值
+>
+>属性 | 类型 | 描述
+>-----|------|----
+>value    | String    | 要设置的默认值
+>type    | DefaultType    | 值类型，VALUE为设置的值，DBKEY为数据库关键字，用于设置当前日期之类的特殊默认值
+>
+>
+>##### @javax.validation.constraints.NotBlank
+>##### @javax.validation.constraints.NotEmpty
+>##### @javax.validation.constraints.NotNull
+>设置表字段为NOT NULL

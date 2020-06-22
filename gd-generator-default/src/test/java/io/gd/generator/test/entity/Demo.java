@@ -40,7 +40,6 @@ public class Demo {
     private Date updatetime;
 
     @Query(Predicate.EQ)
-    @Default("1")
     @Field(label = "是否有效")
     private Boolean valid;
 }
