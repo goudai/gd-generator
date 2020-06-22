@@ -270,7 +270,13 @@ public class AllMappingMysqlHandler extends ScopedHandler<MysqlTableMeta> {
         if (id != null) {
             primarykey = "PRIMARY KEY";
 
-            if (useGeneratedKeys) {
+            GeneratedValue generatedValue = field.getDeclaredAnnotation(GeneratedValue.class);
+
+            if (generatedValue != null) {
+                if (generatedValue.strategy() == GenerationType.IDENTITY) {
+                    primarykey = "AUTO_INCREMENT" + SPACE + primarykey;
+                }
+            } else if (useGeneratedKeys) {
                 primarykey = "AUTO_INCREMENT" + SPACE + primarykey;
             }
         }
