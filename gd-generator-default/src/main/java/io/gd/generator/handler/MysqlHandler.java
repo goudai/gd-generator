@@ -123,7 +123,7 @@ public class MysqlHandler extends ScopedHandler<MysqlTableMeta> {
                 DatabaseMetaData metaData = connection.getMetaData();
                 String string = metaData.getURL().toString();
                 String db = string.substring(string.lastIndexOf("/") + 1);
-                if (db.contains("?")) {
+                if(db.contains("?")){
                     db = db.substring(0, db.indexOf("?"));
                 }
                 for (MysqlColumnMeta cm : merged.getMysqlColumnMetas()) {
